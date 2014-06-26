@@ -1,0 +1,466 @@
+<div class="container" id="checkoutPage">
+<div ng-controller="CheckoutCtrl" class="cart-container container ng-scope">
+<div class="row hidden-phone" style="display: block;">
+    <div class="span12 logo">
+        <!--<img alt="Diamond Candles - Home Fragrance Made Fun" src="https://d20b8ckvu6gb0w.cloudfront.net/diamondcandles/images/logo.png">-->
+    </div>
+</div>
+
+<div class="row">
+<div class="span12" style="display: block;" alreadyloaded="true">
+    <div class="cart-page cart-page-empty ng-hide">
+        <div span-class="span4" title="Other Products You Might Like" num-products="3" product-fn="random" class="ng-isolate-scope">
+            <div ng-show="title" class="row">
+                <div class="span12">
+                    <div class="page-featured-products-heading">
+                        <h2><span class="ng-binding">{{messages['other_products_you_might_like']}}</span></h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <ul ng-controller="ProductListCtrl" class="product-list ng-scope">
+                    <!-- ngRepeat: product in products --><li ng-class="spanClass" ng-repeat="product in products" class="ng-scope span4">
+                    <div class="product-cell ng-isolate-scope" product="product">
+                        <div class="product-image">
+                            <a ng-href="" href="/products/sweety-pea-ring-candle">
+                                <!-- ngIf: product.large -->
+                                <!-- ngIf: !product.large -->
+                                <!--<img class="product ng-scope" ng-src="" src="//dbj5iadmj0fg6.cloudfront.net/diamondcandles/small/sweety-pea.jpg" title="Sweety Pea Ring Candle" alt="Sweety Pea Ring Candle" ng-if="!product.large">&lt;!&ndash; end ngIf: !product.large &ndash;&gt;-->
+                            </a>
+                            <!-- ngIf: inlineAddToCart -->
+                        </div>
+
+                        <div class="product-info clearfix">
+                            <div class="product-title">
+                                <a href="/products/sweety-pea-ring-candle" class="ng-binding">Sweety Pea Ring Candle</a>
+                            </div>
+                            <div ng-class="{ 'product-wholesale': showWholesalePricing() }" class="product-price ng-isolate-scope" product="product">
+                                <!-- ngIf: showProductPricing -->
+                                        <span on="pricingType" ng-switch="" ng-if="showProductPricing" class="ng-scope">
+                                            <!-- ngSwitchWhen: SOLD_OUT -->
+                                            <!-- ngSwitchWhen: SUBSCRIPTION -->
+                                            <!-- ngSwitchWhen: VARIANT_RANGE -->
+                                            <!-- ngSwitchWhen: VARIANT_SINGLE -->
+                                            <!-- ngSwitchWhen: SALE -->
+                                            <!-- ngSwitchDefault:  -->
+                                            <span class="product-retail-price ng-scope ng-binding" ng-switch-default="">$24.95</span>
+                                        </span><!-- end ngIf: showProductPricing -->
+
+                                <!-- ngIf: showWholesalePricing() -->
+
+                                <!-- ngIf: pricingType != 'SOLD_OUT' && wholesalePricing && !showWholesalePricing() -->
+                            </div>
+                            <!-- ngIf: storeShowColorPicker -->
+                        </div>
+                    </div></li><!-- end ngRepeat: product in products --><li ng-class="spanClass" ng-repeat="product in products" class="ng-scope span4">
+                    <div class="product-cell ng-isolate-scope" product="product">
+                        <div class="product-image">
+                            <a ng-href="" href="/products/apple-slice-ring-candle">
+                                <!-- ngIf: product.large -->
+                                <!-- ngIf: !product.large -->
+                                <!--<img class="product ng-scope" ng-src="" src="//dbj5iadmj0fg6.cloudfront.net/diamondcandles/small/apple-slice.jpg" title="Apple Slice Ring Candle" alt="Apple Slice Ring Candle" ng-if="!product.large">&lt;!&ndash; end ngIf: !product.large &ndash;&gt;-->
+                            </a>
+                            <!-- ngIf: inlineAddToCart -->
+                        </div>
+
+                        <div class="product-info clearfix">
+                            <div class="product-title">
+                                <a href="/products/apple-slice-ring-candle" class="ng-binding">Apple Slice Ring Candle</a>
+                            </div>
+                            <div ng-class="{ 'product-wholesale': showWholesalePricing() }" class="product-price ng-isolate-scope" product="product">
+                                <!-- ngIf: showProductPricing --><span on="pricingType" ng-switch="" ng-if="showProductPricing" class="ng-scope">
+                <!-- ngSwitchWhen: SOLD_OUT -->
+                <!-- ngSwitchWhen: SUBSCRIPTION -->
+                <!-- ngSwitchWhen: VARIANT_RANGE -->
+                <!-- ngSwitchWhen: VARIANT_SINGLE -->
+                <!-- ngSwitchWhen: SALE -->
+                <!-- ngSwitchDefault:  --><span class="product-retail-price ng-scope ng-binding" ng-switch-default="">$24.95</span>
+            </span><!-- end ngIf: showProductPricing -->
+
+                                <!-- ngIf: showWholesalePricing() -->
+
+                                <!-- ngIf: pricingType != 'SOLD_OUT' && wholesalePricing && !showWholesalePricing() -->
+                            </div>
+                            <!-- ngIf: storeShowColorPicker -->
+                        </div>
+                    </div></li><!-- end ngRepeat: product in products --><li ng-class="spanClass" ng-repeat="product in products" class="ng-scope span4">
+                    <div class="product-cell ng-isolate-scope" product="product">
+                        <div class="product-image">
+                            <a ng-href="" href="/products/cinnamon-roll-ring-candle">
+                                <!-- ngIf: product.large -->
+                                <!-- ngIf: !product.large -->
+                                <!--<img class="product ng-scope" ng-src="" src="//dbj5iadmj0fg6.cloudfront.net/diamondcandles/small/cinnamon-roll.jpg" title="Cinnamon Roll Ring Candle" alt="Cinnamon Roll Ring Candle" ng-if="!product.large">&lt;!&ndash; end ngIf: !product.large &ndash;&gt;-->
+                            </a>
+                            <!-- ngIf: inlineAddToCart -->
+                        </div>
+
+                        <div class="product-info clearfix">
+                            <div class="product-title">
+                                <a href="/products/cinnamon-roll-ring-candle" class="ng-binding">Cinnamon Roll Ring Candle</a>
+                            </div>
+                            <div ng-class="{ 'product-wholesale': showWholesalePricing() }" class="product-price ng-isolate-scope" product="product">
+                                <!-- ngIf: showProductPricing --><span on="pricingType" ng-switch="" ng-if="showProductPricing" class="ng-scope">
+                <!-- ngSwitchWhen: SOLD_OUT -->
+                <!-- ngSwitchWhen: SUBSCRIPTION -->
+                <!-- ngSwitchWhen: VARIANT_RANGE -->
+                <!-- ngSwitchWhen: VARIANT_SINGLE -->
+                <!-- ngSwitchWhen: SALE -->
+                <!-- ngSwitchDefault:  --><span class="product-retail-price ng-scope ng-binding" ng-switch-default="">$24.95</span>
+            </span><!-- end ngIf: showProductPricing -->
+
+                                <!-- ngIf: showWholesalePricing() -->
+
+                                <!-- ngIf: pricingType != 'SOLD_OUT' && wholesalePricing && !showWholesalePricing() -->
+                            </div>
+                            <!-- ngIf: storeShowColorPicker -->
+                        </div>
+                    </div></li><!-- end ngRepeat: product in products -->
+                </ul>
+            </div>
+        </div></div>
+</div>
+
+<div class="span12">
+<div class="cart-page">
+<div class="row">
+<div class="span5">
+    <!-- Cart Summary -->
+    <div class="cart-summary ng-scope">
+        <h2 class="order-summary-heading">{{messages['order_summary']}}</h2>
+
+        <ul class="cart-items media-list">
+            <li ng-repeat="item in payment.items" class="ng-scope" x-ng-controller="ItemSelectionCtrl">
+                <div>
+                    <div class="media">
+                        <div class="media-wrapper" style="width:104px;margin:4px;float:left;">
+                            <img class="media-object" src="{{defaultImage()}}" style="width:100px"/>
+                        </div>
+                        <div class="media-body">
+                            <div class="cart-item-title"><div class="media-heading">
+                                <div class="product-title">
+                                    <strong class="ng-binding">
+                                        <span>{{item.title}}</span>
+                                    </strong>
+                                </div>
+                                <div class="cart-item-price">
+                                    <div class="ng-binding">{{formatCurrency(itemPrice(item))}}</div>
+                                </div>
+                            </div>
+                            <div class="cart-units" ng-show="item.available>1">
+                                <div class="cart-item-quantity clearfix">
+                                    <div class="cart-item-label" style="float:left;margin-top:2px;">{{messages.quantity}}</div>
+                                    <div class="page-up-down">
+                                        <button type="button" ng-show="item.quantity!=0" class="decreaseQuantity" id="decreaseQuantity"  ng-click="decreaseItemQuantity(item)"
+                                                style="background: url('/static/${pom.version}/img/button_arrow_bottom.png') no-repeat scroll left top transparent;border: medium none;cursor: pointer;height: 26px;width: 26px;float: left;margin-left: 2px;overflow: hidden;text-indent: -100px;">-</button>
+                                        <input value="{{item.quantity}}" ng-disabled="true" id="userSelectionQuantity" name="userSelectionQuantity" class="itemQuantity"
+                                               style="-moz-border-bottom-colors: none;-moz-border-image: none;-moz-border-left-colors: none;-moz-border-right-colors: none;-moz-border-top-colors: none;float: left;font-size: 1.091em;margin: 0 3px;padding: 4px 0 !important;text-align: center;width: 24px;height:16px;border:1px solid #DDDDDD" spellcheck="false">
+                                        <button type="button" class="increaseQuantity" id="increaseQuantity" ng-click="increaseItemQuantity(item)"
+                                                ng-show="item.quantity!=item.available"
+                                                style="background: url('/static/${pom.version}/img/button_arrow_top.png') no-repeat scroll left top transparent;border: medium none;cursor: pointer;height: 26px;width: 26px;float: left;margin-right: 2px;overflow: hidden;text-indent: -100px;">+</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cart-item-attrs">
+                                <select name="variationSelection" ng-model="item.selection"
+                                        x-select-required="true"
+                                        ng-if="item.multivariate"
+                                        style="margin-top: 6px;width:95%"
+                                        x-ng-options="obj.id as obj.title for obj in item.variations" />
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <ul class="cart-pricing unstyled" ng-if="offer!=null">
+            <li class="cart-pricing-subtotal"><div class="cart-pricing-label">{{messages['subtotal']}}</div> <div class="ng-binding">{{formatCurrency(subtotalNet())}}</div>
+
+            </li><li><div class="cart-pricing-label">{{messages['tax']}}</div> <div class="ng-binding">{{formatCurrency(subtotalTax())}}</div></li>
+
+            <li><div class="cart-pricing-label">{{messages['shipping']}}</div><div class="ng-binding">{{formatCurrency(shippingCost())}}</div></li>
+
+            <li class="cart-pricing-total"><div class="cart-pricing-label">{{messages['total']}}</div><div class="ng-binding">{{formatCurrency(total())}}</div></li>
+        </ul>
+    </div>
+</div>
+
+<div class="span7">
+<!-- Billing/Shipping Information -->
+<div class="cart-user-info">
+<h2 class="order-billing-shipping-heading"><span ng-bind-html="messages['billing_and_shipping']" /></h2>
+<div class="ng-binding">
+
+<!-- Billing -->
+<form id="checkoutForm" name="checkoutForm" method="POST" novalidate="">
+    <div class="cart-section ng-pristine ng-invalid ng-invalid-required">
+        <div class="cart-section-header">
+            <strong>{{messages['billing_info']}}</strong>
+            <i class="cart-icon cart-icon-edit"></i>
+        </div>
+
+        <div class="cart-section-body">
+            <div class="ng-scope"><div class="row-fluid">
+                <div class="controls controls-row">
+                    <input type="text" autocomplete="off"
+                           nullifempty
+                           placeholder="{{messages['first_name']}}" name="firstname" ng-model="billing.first_name"
+                           class="span6" ng-class="{fieldError: checkoutForm.firstname.$dirty && checkoutForm.firstname.$invalid}" required="true">
+                    <input type="text" autocomplete="off"
+                           nullifempty
+                           placeholder="{{messages['last_name']}}" name="lastname" ng-model="billing.last_name"
+                           class="span6" ng-class="{fieldError: checkoutForm.lastname.$dirty && checkoutForm.lastname.$invalid}" required="true">
+                </div>
+
+                <div class="controls">
+                    <input type="text" autocomplete="off" ng-model="billing.address1" name="address1"
+                           nullifempty
+                           placeholder="{{messages['address_1']}}" ng-maxlength="150" maxlength="150"
+                           class="span12"  ng-class="{fieldError: checkoutForm.address1.$dirty && checkoutForm.address1.$invalid}"
+                           required="true">
+                </div>
+
+                <div class="controls">
+                    <input type="text" autocomplete="off" ng-model="billing.address2" name="address2"
+                           nullifempty
+                           placeholder="{{messages['address_2']}}" class="span12">
+                </div>
+
+                <div class="controls controls-row">
+                    <select name="country" ng-model="billing.country" id="country"
+                            class="span6" x-select-required="true"
+                            ng-class="{fieldError: checkoutForm.country.$dirty && checkoutForm.country.$invalid}"
+                            x-ng-options="obj.code as obj.label for obj in countries">
+                    </select>
+                    <input type="text" autocomplete="off" placeholder="{{messages['city']}}" ng-model="billing.city" name="city"
+                           nullifempty class="span6" ng-class="{fieldError: checkoutForm.city.$dirty && checkoutForm.city.$invalid}" required="true">
+                </div>
+
+                <div class="controls controls-row">
+                    <input type="text" autocomplete="true" name="postal" ng-model="billing.postal_code"
+                           nullifempty placeholder="{{messages['post_code']}}" class="span6" ng-class="{fieldError: checkoutForm.postal.$dirty && checkoutForm.postal.$invalid}"
+                           required="true">
+
+                    <input type="text" placeholder="{{messages['county']}}" name="county"
+                           nullifempty
+                           ng-class="{fieldError: checkoutForm.county.$dirty && checkoutForm.county.$invalid}"
+                           ng-show="billing.country!=='' && billing.country!=='fr' && billing.country!=='de'"
+                           ng-model="billing.county" class="span6"
+                           ng-required="billing.country!=='' && billing.country!=='fr' && billing.country!=='de'">
+                </div>
+            </div></div>
+            <div class="controls email-section row-fluid">
+                <input type="email" autocomplete="off" placeholder="{{messages['email']}}" name="email"
+                       nullifempty ng-model="billing.email" class="span12 email-input"
+                       ng-class="{fieldError: checkoutForm.email.$dirty && checkoutForm.email.$invalid}"
+                       required="required">
+            </div>
+
+            <div class="row">
+                <div class="span3">
+                    <label class="checkbox">
+                        <input type="checkbox" ng-model="billing.same_address" ng-checked="true" defaultchecked="true"
+                               checked="checked" class="show-cursor ng-pristine ng-valid" name="sameaddress"> {{messages['use_above_for_shipping']}}
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Shipping -->
+    <div ng-if="!billing.same_address" id="shippingInfo" class="cart-section">
+        <div class="cart-section-header">
+            <strong>{{messages['shipping_info']}}</strong>
+            <i class="cart-icon cart-icon-edit"></i>
+        </div>
+
+        <div class="cart-section-body">
+
+            <div class="ng-scope"><div class="row-fluid">
+                <div class="controls controls-row">
+                    <input type="text" autocomplete="off" placeholder="{{messages['first_name']}}" ng-model="shipping.first_name"
+                           nullifempty class="span6" ng-class="{fieldError: checkoutForm.sfirstname.$dirty && checkoutForm.sfirstname.$invalid}"
+                           ng-required="!billing.same_address" name="sfirstname">
+                    <input type="text" autocomplete="off" placeholder="{{messages['last_name']}}" ng-model="shipping.last_name"
+                           nullifempty class="span6" ng-class="{fieldError: checkoutForm.slastname.$dirty && checkoutForm.slastname.$invalid}"
+                           ng-required="!billing.same_address" name="slastname">
+                </div>
+                <div class="controls controls-row">
+                    <input type="text" autocomplete="off" ng-model="shipping.address1" name="saddress1" placeholder="{{messages['address_1']}}" ng-maxlength="150" maxlength="150"
+                           nullifempty class="span12" ng-class="{fieldError: checkoutForm.saddress1.$dirty && checkoutForm.saddress1.$invalid}" ng-required="!billing.same_address">
+                </div>
+
+                <div class="controls">
+                    <input type="text" nullifempty autocomplete="off" ng-model="shipping.address2" name="saddress2" placeholder="{{messages['address_2']}}" class="span12 ng-pristine ng-valid">
+                </div>
+
+                <div class="controls controls-row">
+                    <select name="scountry" ng-model="shipping.country" class="span6"
+                            x-select-required="true" ng-class="{fieldError: checkoutForm.scountry.$dirty && checkoutForm.scountry.$invalid}"
+                            x-ng-options="obj.code as obj.label for obj in countries">
+                    </select>
+                    <input type="text" nullifempty autocomplete="off" placeholder="{{messages['city']}}"
+                           ng-class="{fieldError: checkoutForm.scity.$dirty && checkoutForm.scity.$invalid}"
+                           ng-model="shipping.city" name="scity" class="span6" ng-required="!billing.same_address"/>
+                </div>
+
+                <div class="controls controls-row">
+                    <input type="text" nullifempty autocomplete="off" name="spostal" ng-model="shipping.postal_code"
+                           ng-class="{fieldError: checkoutForm.spostal.$dirty && checkoutForm.spostal.$invalid}"
+                           placeholder="{{messages['post_code']}}"
+                           class="span6" ng-required="!billing.same_address"/>
+
+                    <input type="text" nullifempty placeholder="{{messages['county']}}" name="scounty"
+                           ng-show="shipping.country!=='' && shipping.country!=='fr' && shipping.country!=='de'"
+                           ng-model="shipping.county" class="span6"
+                           ng-class="{fieldError: checkoutForm.scounty.$dirty && checkoutForm.scounty.$invalid}"
+                           ng-required="shipping.country!=='' && shipping.country!=='fr' && shipping.country!=='de'">
+                </div>
+                <div class="controls controls-row">
+                    <div>
+                        <input type="text" autocomplete="off" nullifempty name="company" ng-model="shipping.company" placeholder="{{messages['company']}}" class="span12 ng-pristine ng-valid">
+                    </div>
+                </div>
+                <div class="controls controls-row">
+                    <input type="text" autocomplete="off" nullifempty name="phoneNumber" ng-model="shipping.phone_number" placeholder="{{messages['phone']}}" class="span12 ng-pristine ng-valid">
+                </div>
+
+                <div class="controls controls-row">
+                    <input type="email" autocomplete="off" nullifempty placeholder="{{messages['email']}}" name="semail"
+                           ng-class="{fieldError: checkoutForm.semail.$dirty && checkoutForm.semail.$invalid}"
+                           ng-model="shipping.email" class="span12" required="">
+                </div>
+            </div></div>
+        </div>
+    </div>
+
+    <!-- Finally, submit -->
+    <div>
+        <div class="subscribe row-fluid">
+            <input type="checkbox" checked="checked" ng-model="subscribe" name="subscribe" class="ng-pristine ng-valid">
+            <span class="span10">{{messages['subscribe']}}</span>
+        </div>
+    </div>
+    <div class="cart-section">
+        <div class="cart-section-header">
+            <strong>{{messages['payment_options']}}</strong>
+            <i class="cart-icon cart-icon-edit"></i>
+        </div>
+
+        <div class="cart-section-body">
+            <table cellspacing="0" cellpadding="0" align="center" style="width:90%">
+                <tbody><tr>
+                    <td style="padding:6px;border-left:1px solid #cccccc;border-top:1px solid #cccccc;border-right:1px solid #cccccc;width:170px;text-align:center;">
+                        <img src="/static/${pom.version}/img/cards/visa.png" style="">
+                        <img src="/static/${pom.version}/img/cards/american-express.png" style="">
+                        <img src="/static/${pom.version}/img/cards/mastercard.png" style="">
+                    </td>
+                    <td style="padding:6px;border-bottom:1px solid #cccccc;">
+                        <a href="#" id="paypalPayment" ng-click="pay($event, 'pcc'); $event.stopImmediatePropagation();">Paypal<span id="paypalPaymentWait"></span></a>
+                    </td>
+                    <td style="border-bottom:1px solid #cccccc;"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="padding:6px;border-left:1px solid #cccccc;border-right:1px solid #cccccc;border-bottom:1px solid #cccccc;">
+                        <div style="margin-top:6px;margin-bottom:0px;">
+                            <span class="payment-errors" style="color:red;"></span>
+                            <div>
+                                <div class="form-row" style="float:left;width:60%;height:60px;">
+                                    <label><span>{{messages['card_number']}}</span></label>
+                                    <input type="text" size="20" data-stripe="number" name="number"
+                                           ng-class="{fieldError: checkoutForm.number.$dirty && checkoutForm.number.$invalid}"
+                                           autocomplete="off"
+                                           ng-model="payment.number" ng-required="true" placeholder="•••• •••• •••• ••••">
+                                </div>
+
+                                <div class="form-row" style="float:left;height:60px;">
+                                    <label><span>{{messages['expires']}}</span></label>
+                                    <select data-stripe="exp-month" style="width:60px;" name="month"
+                                            ng-class="{fieldError: checkoutForm.month.$dirty && checkoutForm.month.$invalid}"
+                                            x-select-required="true" ng-model="payment.month">
+                                        <option value="">MM</option>
+                                        <option value="01">01</option>
+                                        <option value="02">02</option>
+                                        <option value="03">03</option>
+                                        <option value="04">04</option>
+                                        <option value="05">05</option>
+                                        <option value="06">06</option>
+                                        <option value="07">07</option>
+                                        <option value="08">08</option>
+                                        <option value="09">09</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                    </select>
+                                    <span> / </span>
+                                    <select data-stripe="exp-year" x-select-required="true"
+                                            ng-class="{fieldError: checkoutForm.year.$dirty && checkoutForm.year.$invalid}"
+                                            name="year" style="width:70px;" ng-model="payment.year">
+                                        <option value="">YYYY</option>
+                                        <option ng-repeat="opt in expiryyears" value="{{ opt.code }}">{{opt.label}}</option>
+                                    </select>
+                                </div>
+                                <div class="clearfix" style="height:1px;"></div>
+                                <div class="form-row" style="float:left;width:60%;height:60px;">
+                                    <label><span>{{messages['name_on_card']}}</span></label>
+                                    <input type="text" size="40" data-stripe="name" ng-required="true"
+                                           name="name"
+                                           autocomplete="off"
+                                           ng-class="{fieldError: checkoutForm.name.$dirty && checkoutForm.name.$invalid}"
+                                           ng-model="payment.name"/>
+                                </div>
+                                <div class="form-row" style="float:left;height:60px;">
+                                    <label><span>{{messages['card_code']}}</span></label>
+                                    <input type="text" size="4" data-stripe="cvc"
+                                           autocomplete="off"
+                                           name="cvc" ng-class="{fieldError: checkoutForm.cvc.$dirty && checkoutForm.cvc.$invalid}"
+                                           placeholder="CVC" style="width:132px;" ng-model="payment.cvc"/>
+                                </div>
+                            </div>
+                            <div class="clearfix" style="height:1px;"></div>
+                            <table align="center" style="margin-left:auto;margin-right:auto;">
+                                <tbody><tr>
+                                    <td>
+                                        <button style="border: medium none; display: block; height: 40px; width: 184px; margin-bottom: 10px; overflow: hidden; text-align: center; color: white; background-color: #69C1E7; text-transform: uppercase;font-size:15px;margin-left:auto;margin-right:auto;margin-top:20px;" class="projector_butttons_buy" id="ccPayment" ng-click="pay($event, 'cc')" type="submit" ng-if="offer!=null">{{messages['pay']}}
+                                            {{formatCurrency(total())}}
+                                        </button>
+                                    </td>
+                                    <td id="ccPaymentWait">
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <br>
+                        <a href="#" id="alternativePayment" ng-click="pay($event, 'pcc'); $event.stopImmediatePropagation();">
+                            {{messages['alternative']}}
+                            <img src="/static/${pom.version}/img/cards/visa.png" style="width:32px;">
+                            <img src="/static/${pom.version}/img/cards/american-express.png" style="width:32px;">
+                            <img src="/static/${pom.version}/img/cards/mastercard.png" style="width:32px;">
+                            {{messages['payment_with_paypal']}}</a><span id="alternativePaymentWait"></span>
+                        <div style="font-size:10px;margin-top:6px;">( {{messages['after_clicking']}} <span style="font-size:12px;">"</span>
+                            <span style="font-style:italic;">
+                                <span ng-bind-html="messages['dont_have_account']" />
+                            </span><span style="font-size:12px;">"</span> )</div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</form>
+<form id="paymentForm" name="paymentForm" action="/pg/paypal/init" method="GET">
+    <input type="hidden" name="orderId" id="orderId" value="" />
+</form>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>

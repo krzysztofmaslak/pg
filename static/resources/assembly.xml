@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<assembly>
+
+	<id>HouseholdStatic</id>
+	
+	<formats>
+		<format>tar.gz</format>
+		<format>dir</format>
+	</formats>
+	
+	<includeBaseDirectory>false</includeBaseDirectory>
+
+	
+	<fileSets>
+
+		<fileSet>
+			<directory>src/main/</directory>
+			<outputDirectory>paymentgw-static</outputDirectory>
+			<includes>
+				<include>*.html</include>
+				<include>css/*.*</include>
+				<include>img/*.*</include>
+                <include>img/**/*.*</include>
+                <include>images/*.*</include>
+                <include>images/**/*.*</include>
+                <include>js/*.*</include>
+				<include>lib/angular/angular.min.js</include>
+                <include>lib/angular/angular-route.min.js</include>
+                <include>lib/jquery.js</include>
+                <include>lib/jquery.ui.widget.js</include>
+                <include>lib/jquery.iframe-transport.js</include>
+                <include>lib/jquery.fileupload.js</include>
+                <include>partials/**/*.*</include>
+                <include>template/**/*.*</include>
+			</includes>
+			
+			<excludes>
+				<exclude>*-dev.html</exclude>
+				<exclude>*-async.html</exclude>
+				<exclude>resources</exclude>
+			</excludes>
+		</fileSet>
+
+		<!-- Include the minified JS files -->
+		<!--
+		<fileSet>
+			<directory>target/wro</directory>
+			<outputDirectory>hh2j/js</outputDirectory>
+			<includes>
+				<include>*.js</include>
+			</includes>
+		</fileSet>
+		-->
+
+	</fileSets>
+</assembly>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="no-js ie6 oldie" ><![endif]-->
+<!--[if IE 7]><html class="no-js ie7 oldie" ><![endif]-->
+<!--[if IE 8]><html class="no-js ie8 oldie" ><![endif]-->
+<!--[if IE 9]><html class="no-js ie9 oldie" ><![endif]-->
+<!--[if gt IE 9]><html class="no-js" ><![endif]-->
+<!--[if !IE]><html class="no-js" ><![endif]-->
+<head>
+    <link href="/static/{{ project_version }}/css/bootstrap.min.css" rel="stylesheet" media="screen" />
+    <link href="/static/{{ project_version }}/css/style.css" rel="stylesheet" media="screen" />
+    <script src="/static/{{ project_version }}/lib/jquery.js"></script>
+    <script type="text/javascript">
+        var jq = jQuery.noConflict();
+    </script>
+</head>
+
+<body id="x-ng-app">
+    <input type="hidden" id="clientCurrency" name="clientCurrency"/>
+    <div x-ng-app='pgapp'>
+        <div data-loading></div>
+        <div x-ng-controller='PGAppCtrl'>
+            <div x-ng-view></div>
+        </div>
+    </div>
+
+    <!--#include virtual="/static/{{ project_version }}/template/footer.html" -->
+
+    <script type="text/javascript">
+        window.messages = JSON.parse('{{ messages }}'.replaceAll('&#39;', '"').replace('&amp;#39;', "'"))
+    </script>
+    <script type="text/javascript">
+        window.language = '{{ language }}';
+    </script>
+    <script type="text/javascript">
+        window.client_country = '{{ country }}';
+    </script>
+    <script type="text/javascript">
+        window.countries = JSON.parse('{{ countries }}'.replaceAll('&#39;', '"'));
+    </script>
+
+    <spreadline:currencies />
+    <script type="text/javascript">
+        Stripe.setPublishableKey('{{ stripe_publishable }}');
+    </script>
+
+</body>
+<!--[if lt IE 7]></html><![endif]-->
+<!--[if IE 7]></html><![endif]-->
+<!--[if IE 8]></html><![endif]-->
+<!--[if IE 9]></html><![endif]-->
+<!--[if gt IE 9]></html><![endif]-->
+<!--[if !IE]></html><![endif]-->
