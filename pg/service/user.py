@@ -1,5 +1,3 @@
-from pg.app import db
-
 __author__ = 'xxx'
 
 from pg import model
@@ -17,5 +15,5 @@ class UserService:
         if isinstance(u, model.User)==False:
             raise TypeError("Expected User type in UserService.add_user actual %s"%type(u))
 
-        db.session.add(u)
-        db.session.commit()
+        model.base.db.session.add(u)
+        model.base.db.session.commit()

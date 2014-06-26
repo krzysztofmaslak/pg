@@ -1,18 +1,16 @@
 import datetime
-from pg.model.base import JsonSerializable
+from pg.model import base
 
 __author__ = 'xxx'
 
-from ..app import db
-
-class User(db.Model, JsonSerializable):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), unique=True)
-    password = db.Column(db.String(50))
-    creation_date = db.Column(db.DateTime)
-    account_id = db.Column(db.Integer, db.ForeignKey('account.id'))
-    account = db.relationship('Account',
-        backref=db.backref('users', lazy='dynamic'))
+class User(base.db.Model, base.JsonSerializable):
+    id = base.db.Column(base.db.Integer, primary_key=True)
+    username = base.db.Column(base.db.String(50), unique=True)
+    password = base.db.Column(base.db.String(50))
+    creation_date = base.db.Column(base.db.DateTime)
+    account_id = base.db.Column(base.db.Integer, base.db.ForeignKey('account.id'))
+    account = base.db.relationship('Account',
+        backref=base.db.backref('users', lazy='dynamic'))
 
     def __init__(self, username, password, creation_date=datetime.datetime.now()):
         self.username = username

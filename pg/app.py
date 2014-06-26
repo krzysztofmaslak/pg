@@ -1,9 +1,7 @@
 __author__ = 'xxx'
 
 from flask import Flask
-from pg import rest, wsgi
-from pg.payments import stripe
-from flask_sqlalchemy import SQLAlchemy
+from pg import rest, wsgi, payments, model
 
 DEFAULT_BLUEPRINTS = [
     rest.offer,
@@ -11,10 +9,8 @@ DEFAULT_BLUEPRINTS = [
     rest.offer_item_variation,
     rest.payment,
     wsgi.wsgi_blueprint,
-    stripe.stripe_rest
+    payments.striper.stripe_rest
 ]
-
-db = SQLAlchemy()
 
 
 class App:
@@ -39,7 +35,7 @@ class App:
 
     def configure_extensions(self, app):
         app.config['SQLALCHEMY_DATABASE_URI'] = self.ioc.get_config()['SQLALCHEMY_DATABASE_URI']
-        db.init_app(app)
+        model.base.db.init_app(app)
 
     def configure_session(self, app):
         app.secret_key = self.ioc.get_config()['SESSION_SECRET_KEY']
@@ -57,6 +53,6 @@ class App:
         with self.app.app_context():
             # Extensions like Flask-SQLAlchemy now know what the "current" app
             # is while within this block. Therefore, you can now run........
-            db.drop_all()
-            db.create_all()
+            model.base.db.drop_all()
+            model.base.db.create_all()
 

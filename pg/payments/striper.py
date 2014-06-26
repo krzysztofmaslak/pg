@@ -1,9 +1,10 @@
 __author__ = 'krzysztof.maslak'
 
+from pg import model
 import traceback
 import sys
 from werkzeug.exceptions import BadRequest
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, Response
 from flask import request, session
 stripe_rest = Blueprint('stripe_rest', __name__, url_prefix='/rest/stripe')
 
@@ -26,16 +27,17 @@ def process():
         currency = order.currency.lower()
         try:
             stripe_rest.logger.info('['+request.remote_addr+'] stripe charge order=%s, amount=%s'%(request.json['order_id'], amount))
-            resp = stripe.ioc.new_stripe_service().charge(
+            resp = stripe_rest.ioc.new_stripe_service().charge(
                 amount=int(amount*100),
                 currency=currency,
                 card=request.json['stripe_token'],
                 description=order.order_number
             )
             stripe_rest.logger.info('['+request.remote_addr+'] Success - stripe response '+str(resp)+' order number: '+order.order_number)
-            stripe_message = StripeMessage(resp.id, str(resp), resp.order_id)
-            stripe.ioc.new_stripe_service().save(stripe_message)
-            stripe.ioc.new_payment_processor_service(stripe_rest.logger).process_paid_order(order)
+            stripe_message = model.StripeMessage(resp.id, str(resp), int(request.json['order_id']))
+            stripe_rest.ioc.new_stripe_service().save(stripe_message)
+            stripe_rest.ioc.new_payment_processor_service(stripe_rest.logger).process_paid_order(order)
+            return Response(status=200)
         except:
             traceback.print_exc(file=sys.stdout)
             raise BadRequest('['+request.remote_addr+'] Failed to collect payment')

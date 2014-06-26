@@ -1,5 +1,5 @@
-from pg.resource_bundle import ResourceBundle
-from pg.util.security import Security
+from pg import resource_bundle
+from pg.util import security
 
 __author__ = 'krzysztof.maslak'
 from flask import Blueprint
@@ -11,7 +11,7 @@ def process_init():
     order_id = request.args.get('offer_id')
     paypal_init.logger.info('['+request.remote_addr+'] Paypal init [order_id:'+order_id+']')
     order = paypal_init.ioc.new_order_service().find_by_id(int(order_id))
-    payment_reference = Security().encrypt(order.id+"#"+order.order_number)
+    payment_reference = security.Security().encrypt(order.id+"#"+order.order_number)
 
     html = """<html>
                 <head></head>
@@ -40,7 +40,7 @@ def process_init():
                 for c in range(i.quantity-1):
                     shipping = shipping + i.shipping_additional
         i = i+1
-    resource_bundle = ResourceBundle()
+    resource_bundle = resource_bundle.ResourceBundle()
     basket_items = basket_items+'<input type="hidden" name="item_name_"'+(i+1)+'" value="'+resource_bundle.get_text(order.lang, "shipping")+'"/>'
     basket_items = basket_items+'<input type="hidden" name="amount_"'+(i+1)+'" value="'+paypal_init.ioc.new_currency_service().convert(order.currency, shipping)+'"/>'
     ipn_host = ''

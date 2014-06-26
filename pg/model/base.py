@@ -1,10 +1,11 @@
 import datetime
 from datetime import date
-from flask import json
-from sqlalchemy.ext.declarative import DeclarativeMeta
+from flask_sqlalchemy import SQLAlchemy
 
 __author__ = 'root'
 primitive = (int, str, float, bool)
+
+db = SQLAlchemy()
 
 def json_date(datetime):
     return ''

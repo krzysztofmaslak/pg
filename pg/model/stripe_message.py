@@ -1,14 +1,14 @@
 __author__ = 'krzysztof.maslak'
 import datetime
 
-from pg.app import db
+from pg.model import base
 
-class StripeMessage(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    tid = db.Column(db.String(50), unique=True)
-    message = db.Column(db.Text)
-    order_id = db.Column(db.Integer)
-    creation_date = db.Column(db.DateTime)
+class StripeMessage(base.db.Model):
+    id = base.db.Column(base.db.Integer, primary_key=True)
+    tid = base.db.Column(base.db.String(50), unique=True)
+    message = base.db.Column(base.db.Text)
+    order_id = base.db.Column(base.db.Integer)
+    creation_date = base.db.Column(base.db.DateTime)
 
     def __init__(self, tid, message, order_id, creation_date=datetime.datetime.now()):
         self.tid = tid

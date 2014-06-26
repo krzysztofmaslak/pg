@@ -1,21 +1,20 @@
-from pg.model.base import JsonSerializable
+from pg.model import base
 
 __author__ = 'krzysztof.maslak'
 
-from ..app import db
 
-class OrderItem(db.Model, JsonSerializable):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(80))
-    quantity = db.Column(db.Integer)
-    net = db.Column(db.Float)
-    tax = db.Column(db.Float)
-    shipping = db.Column(db.Float)
-    shipping_additional = db.Column(db.Float)
-    multivariate = db.Column(db.Integer)
-    order_id = db.Column(db.Integer, db.ForeignKey('order.id'))
-    offer_item_id = db.Column(db.Integer)
-    variations = db.relationship('OrderItemVariation', backref='order_item', lazy='dynamic')
+class OrderItem(base.db.Model, base.JsonSerializable):
+    id = base.db.Column(base.db.Integer, primary_key=True)
+    title = base.db.Column(base.db.String(80))
+    quantity = base.db.Column(base.db.Integer)
+    net = base.db.Column(base.db.Float)
+    tax = base.db.Column(base.db.Float)
+    shipping = base.db.Column(base.db.Float)
+    shipping_additional = base.db.Column(base.db.Float)
+    multivariate = base.db.Column(base.db.Integer)
+    order_id = base.db.Column(base.db.Integer, base.db.ForeignKey('order.id'))
+    offer_item_id = base.db.Column(base.db.Integer)
+    variations = base.db.relationship('OrderItemVariation', backref='order_item', lazy='dynamic')
 
     def __init__(self, order, title='', quantity=0, net=0, tax=0, shipping=0):
         self.order = order

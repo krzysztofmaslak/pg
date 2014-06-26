@@ -1,5 +1,5 @@
 from multiprocessing.context import Process
-from pg import model, app
+from pg import model
 
 __author__ = 'krzysztof.maslak'
 
@@ -34,7 +34,7 @@ class PaymentProcessorService:
         customer_email.addon2 = invoice.id
         self.ioc.new_email_service().save(customer_email)
         order.confirmation_email = 1
-        app.db.session.commit()
+        model.base.db.session.commit()
 
         admin_email = model.Email()
         admin_email.type = 'PURCHASE_CONFIRMATION_ADMIN'

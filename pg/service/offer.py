@@ -1,7 +1,6 @@
 from datetime import date
 __author__ = 'xxx'
 
-from pg import app
 from pg import model
 
 
@@ -107,7 +106,7 @@ class OfferService:
                             item.shipping_additional = offer_item_dto.shipping_additional
 
 
-        app.db.session.commit()
+        model.base.db.session.commit()
         return o
 
     def find_item_by_id(self, id, items):
@@ -121,8 +120,8 @@ class OfferService:
         if isinstance(account, model.Account)==False:
             raise TypeError("Expected Account type in OfferService.new_offer %s"%type(account))
         o = model.Offer(account)
-        app.db.session.add(o)
-        app.db.session.commit()
+        model.base.db.session.add(o)
+        model.base.db.session.commit()
         return o
 
     def new_offer_item(self, account, offer_id):
@@ -132,8 +131,8 @@ class OfferService:
         if o.account_id!=account.id:
             raise RuntimeError("Trying to save offer for different account")
         oi = model.OfferItem(o)
-        app.db.session.add(oi)
-        app.db.session.commit()
+        model.base.db.session.add(oi)
+        model.base.db.session.commit()
         return oi
 
     def new_offer_item_variation(self, account, offer_item_id):
@@ -143,8 +142,8 @@ class OfferService:
         if oi.offer.account_id!=account.id:
             raise RuntimeError('Tried to save offer variation for other users offer')
         oiv = model.OfferItemVariation(oi)
-        app.db.session.add(oiv)
-        app.db.session.commit()
+        model.base.db.session.add(oiv)
+        model.base.db.session.commit()
         return oiv
 
     def delete_offer(self, account, offer_id):
@@ -153,8 +152,8 @@ class OfferService:
             raise TypeError("Expected Account type in OfferService.new_offer_item %s"%type(account))
         if o is None:
             raise RuntimeError('No offer to delete')
-        app.db.session.delete(o)
-        app.db.session.commit()
+        model.base.db.session.delete(o)
+        model.base.db.session.commit()
 
     def list(self):
         return model.Offer.query.all()

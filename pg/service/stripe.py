@@ -1,4 +1,3 @@
-from pg import app
 from pg import model
 import stripe
 
@@ -15,8 +14,8 @@ class StripeService:
         if isinstance(stripe_message, model.StripeMessage)==False:
             raise TypeError("Expected StripeMessage type in StripeService.save actual %s"%type(stripe_message))
 
-        app.db.session.add(stripe_message)
-        app.db.session.commit()
+        model.base.db.session.add(stripe_message)
+        model.base.db.session.commit()
 
     def charge(self, amount, currency, card, description):
         stripe.api_key = self.ioc.get_config()['stripe.secret']

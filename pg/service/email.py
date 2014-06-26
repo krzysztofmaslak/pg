@@ -1,4 +1,4 @@
-from pg import db, Email
+from pg import model
 
 __author__ = 'krzysztof.maslak'
 
@@ -9,9 +9,9 @@ class EmailService:
         self.ioc = ioc
 
     def save(self, email):
-        if isinstance(email, Email):
-            db.session.add(email)
-            db.session.commit()
+        if isinstance(email, model.Email):
+            model.base.db.session.add(email)
+            model.base.db.session.commit()
             return email
         else:
             raise TypeError("Expected Email type in EmailService.save %s"%type(email))

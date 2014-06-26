@@ -1,4 +1,4 @@
-from pg import model, app, resource_bundle
+from pg import model, resource_bundle
 
 __author__ = 'krzysztof.maslak'
 import datetime

@@ -22,6 +22,7 @@ setup(
         'stripe',
         'apscheduler',
         'WAND',
+        'mock',
         # 'Flask-Babel',
         'Flask-Testing',
         # 'Flask-Mail',

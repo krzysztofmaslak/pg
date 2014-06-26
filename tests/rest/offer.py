@@ -1,24 +1,16 @@
-import os
-import sys
+__author__ = 'xxx'
 from flask import json
 from werkzeug.security import generate_password_hash
-from pg import User, Account, Offer, OfferItem
-from .. import *
-
-__author__ = 'xxx'
-
+from tests import base
+from pg import model, app as application
 from flask.ext.testing import TestCase as Base
-from factory import ServiceFactory
-from pg.app import App, db
-sys.path.append(os.path.abspath(os.path.dirname(__file__) + '/' + '..'))
-from base import *
 
 
 class OfferTest(Base):
     environ_base={'REMOTE_ADDR': '127.0.0.1'}
     def create_app(self):
-        self.ioc = TestServiceFactory()
-        self.application = App(self.ioc)
+        self.ioc = base.TestServiceFactory()
+        self.application = application.App(self.ioc)
         app = self.application.create_app()
         app.testing = True
         self.client = app.test_client()
@@ -33,14 +25,14 @@ class OfferTest(Base):
         # db.drop_all()
 
     def test_list(self):
-        a = Account()
-        u = User('dublin.krzysztof.maslak@gmail.com', generate_password_hash('abcd'))
+        a = model.account.Account()
+        u = model.user.User('dublin.krzysztof.maslak@gmail.com', generate_password_hash('abcd'))
         a.users.append(u)
-        o = Offer(a, status=1)
+        o = model.Offer(a, status=1)
         a.offers.append(o)
-        o.items = [OfferItem(o, 'Item1'), OfferItem(o, 'Item2'), OfferItem(o, 'Item3')]
-        db.session.add(a)
-        db.session.commit()
+        o.items = [model.OfferItem(o, 'Item1'), model.OfferItem(o, 'Item2'), model.OfferItem(o, 'Item3')]
+        model.base.db.session.add(a)
+        model.base.db.session.commit()
         r = self.client.get('/rest/offer/?page=1', environ_base=self.environ_base)
         self.assertEqual(401, r.status_code)
 
@@ -53,11 +45,11 @@ class OfferTest(Base):
         self.assertEqual(r.json['offers'][0]['items'][0], {'status': 0, 'title': 'Item1', 'quantity': 0, 'id': 1, 'tax': 0.0, 'offer_id': 1, 'net': 0.0, 'variations': [], 'shipping': 0.0})
 
     def test_new_offer(self):
-        a = Account()
-        u = User('dublin.krzysztof.maslak@gmail.com', generate_password_hash('abcd'))
+        a = model.account.Account()
+        u = model.user.User('dublin.krzysztof.maslak@gmail.com', generate_password_hash('abcd'))
         a.users.append(u)
-        db.session.add(a)
-        db.session.commit()
+        model.base.db.session.add(a)
+        model.base.db.session.commit()
         r = self.client.post('/rest/offer/new', environ_base=self.environ_base)
         self.assertEqual(401, r.status_code)
 
@@ -70,13 +62,13 @@ class OfferTest(Base):
 
 
     def test_new_offer_item(self):
-        a = Account()
-        u = User('dublin.krzysztof.maslak@gmail.com', generate_password_hash('abcd'))
+        a = model.account.Account()
+        u = model.user.User('dublin.krzysztof.maslak@gmail.com', generate_password_hash('abcd'))
         a.users.append(u)
-        o = Offer(a, status=1)
+        o = model.Offer(a, status=1)
         a.offers.append(o)
-        db.session.add(a)
-        db.session.commit()
+        model.base.db.session.add(a)
+        model.base.db.session.commit()
         r = self.client.post('/rest/offer_item/new', data=json.dumps({'offer_id':o.id}), content_type='application/json', headers=[('Content-Type', 'application/json')], environ_base=self.environ_base)
         self.assertEqual(401, r.status_code)
 
@@ -88,15 +80,15 @@ class OfferTest(Base):
         self.assertTrue(r.json['id']>0)
 
     def test_new_offer_item_variation(self):
-        a = Account()
-        u = User('dublin.krzysztof.maslak@gmail.com', generate_password_hash('abcd'))
+        a = model.account.Account()
+        u = model.user.User('dublin.krzysztof.maslak@gmail.com', generate_password_hash('abcd'))
         a.users.append(u)
-        o = Offer(a, status=1)
-        oi = OfferItem(o, 'Item1')
+        o = model.Offer(a, status=1)
+        oi = model.OfferItem(o, 'Item1')
         o.items = [oi]
         a.offers.append(o)
-        db.session.add(a)
-        db.session.commit()
+        model.base.db.session.add(a)
+        model.base.db.session.commit()
         r = self.client.post('/rest/offer_item_variation/new', data=json.dumps({'offer_item_id':oi.id, 'count':3}), content_type='application/json', headers=[('Content-Type', 'application/json')], environ_base=self.environ_base)
         self.assertEqual(401, r.status_code)
 
@@ -107,15 +99,15 @@ class OfferTest(Base):
         self.assertEqual(r.json, [1, 2, 3])
 
     def test_delete(self):
-        a = Account()
-        u = User('dublin.krzysztof.maslak@gmail.com', generate_password_hash('abcd'))
+        a = model.account.Account()
+        u = model.user.User('dublin.krzysztof.maslak@gmail.com', generate_password_hash('abcd'))
         a.users.append(u)
-        o = Offer(a, status=0)
-        oi = OfferItem(o, 'Item1')
+        o = model.Offer(a, status=0)
+        oi = model.OfferItem(o, 'Item1')
         o.items = [oi]
         a.offers.append(o)
-        db.session.add(a)
-        db.session.commit()
+        model.base.db.session.add(a)
+        model.base.db.session.commit()
         r = self.client.delete('/rest/offer/'+str(o.id), environ_base=self.environ_base)
         self.assertEqual(401, r.status_code)
 
@@ -123,18 +115,18 @@ class OfferTest(Base):
         self.assertEqual(302, r.status_code)
         r = self.client.delete('/rest/offer/'+str(o.id), environ_base=self.environ_base)
         self.assertEqual(200, r.status_code)
-        offer = Offer.query.filter(Offer.id==o.id).first()
+        offer = model.Offer.query.filter(model.Offer.id==o.id).first()
         self.assertIsNone(offer)
 
     def test_get_by_hash(self):
-        a = Account()
-        u = User('admin', 'password')
+        a = model.account.Account()
+        u = model.user.User('admin', 'password')
         a.users.append(u)
-        o = Offer(a)
+        o = model.Offer(a)
         a.offers.append(o)
-        o.items = [OfferItem(o, 'Item1'), OfferItem(o, 'Item2'), OfferItem(o, 'Item3')]
-        db.session.add(a)
-        db.session.commit()
+        o.items = [model.OfferItem(o, 'Item1'), model.OfferItem(o, 'Item2'), model.OfferItem(o, 'Item3')]
+        model.base.db.session.add(a)
+        model.base.db.session.commit()
         items = []
         item_id = 0
         for item in o.items:
@@ -144,7 +136,7 @@ class OfferTest(Base):
             items.append(item)
         # modify item 2
         offer_service = self.ioc.new_offer_service()
-        o = offer_service.save_offer(a, An(items= items, id= o.id, title='My offer', currency='USD'))
+        o = offer_service.save_offer(a, base.An(items= items, id= o.id, title='My offer', currency='USD'))
 
         r = self.client.get('/rest/offer/'+o.hash, environ_base=self.environ_base)
         self.assertEqual(200, r.status_code)

@@ -1,14 +1,13 @@
 import datetime
-from ..app import db
-from pg.model.base import JsonSerializable
+from pg.model import base
 
 __author__ = 'xxx'
 
 
-class Account(db.Model, JsonSerializable):
-    id = db.Column(db.Integer, primary_key=True)
-    creation_date = db.Column(db.DateTime)
-    properties = db.relationship('Property', backref='account', lazy='dynamic')
+class Account(base.db.Model, base.JsonSerializable):
+    id = base.db.Column(base.db.Integer, primary_key=True)
+    creation_date = base.db.Column(base.db.DateTime)
+    properties = base.db.relationship('Property', backref='account', lazy='dynamic')
 
     def __init__(self, creation_date=datetime.datetime.now()):
         self.creation_date = creation_date

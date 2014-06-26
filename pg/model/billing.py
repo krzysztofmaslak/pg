@@ -1,22 +1,21 @@
-from ..app import db
-from pg.model.base import JsonSerializable
+from pg.model import base
 
 __author__ = 'krzysztof.maslak'
 
 
-class Billing(db.Model, JsonSerializable):
-    id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(50))
-    last_name = db.Column(db.String(50))
-    address1 = db.Column(db.String(50))
-    address2 = db.Column(db.String(50))
-    country = db.Column(db.String(3))
-    city = db.Column(db.String(20))
-    postal_code = db.Column(db.String(10))
-    county = db.Column(db.String(10))
-    email = db.Column(db.String(50))
-    same_address = db.Column(db.Boolean)
-    order_id = db.Column(db.Integer, db.ForeignKey('order.id'))
+class Billing(base.db.Model, base.JsonSerializable):
+    id = base.db.Column(base.db.Integer, primary_key=True)
+    first_name = base.db.Column(base.db.String(50))
+    last_name = base.db.Column(base.db.String(50))
+    address1 = base.db.Column(base.db.String(50))
+    address2 = base.db.Column(base.db.String(50))
+    country = base.db.Column(base.db.String(3))
+    city = base.db.Column(base.db.String(20))
+    postal_code = base.db.Column(base.db.String(10))
+    county = base.db.Column(base.db.String(10))
+    email = base.db.Column(base.db.String(50))
+    same_address = base.db.Column(base.db.Boolean)
+    order_id = base.db.Column(base.db.Integer, base.db.ForeignKey('order.id'))
 
 
 

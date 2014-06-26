@@ -1,4 +1,5 @@
 __author__ = 'krzysztof.maslak'
 
-from .paypal import *
-from .stripe import *
+from pg.payments import striper
+# from .paypal import *
+# from .stripe import *

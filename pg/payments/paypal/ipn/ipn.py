@@ -3,7 +3,6 @@ from pg.util.security import Security
 __author__ = 'krzysztof.maslak'
 
 from pg.payments.paypal.ipn import IPNMessageParser, IPNNotificationValidation
-from pg.payments import PaymentProcessor
 from flask import Blueprint
 from flask import request, session, redirect
 ipn = Blueprint('ipn', __name__, url_prefix='/paypal/ipn')
@@ -23,4 +22,4 @@ def process_ip():
         orderId = int(data[0])
         order = ipn.ioc.new_order_service().find_by_id(orderId);
         if order.order_number==data[1]:
-            PaymentProcessor(ipn.logger, ipn.ioc).process_paid_order(order);
+            stripe_rest.ioc.new_payment_processor_service(ipn.logger).process_paid_order(order);

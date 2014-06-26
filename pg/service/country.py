@@ -1,9 +1,6 @@
-from pg.app import db
+from pg import model
 
 __author__ = 'xxx'
-
-from ..model import User, Currency, CurrencyRate, Country
-
 
 class CountryService:
 
@@ -12,12 +9,12 @@ class CountryService:
         self.ioc = ioc
 
     def find_all(self):
-        return Country.query.all()
+        return model.Country.query.all()
 
     def save(self, country):
-        if isinstance(country, Country):
-            db.session.add(country)
-            db.session.commit()
+        if isinstance(country, model.Country):
+            model.base.db.session.add(country)
+            model.base.db.session.commit()
             return country
         else:
             raise TypeError("Expected Country type in CountryService.save %s"%type(country))

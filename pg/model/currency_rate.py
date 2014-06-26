@@ -1,15 +1,13 @@
 import datetime
-from pg.model.base import JsonSerializable
+from pg.model import base
 
 __author__ = 'krzysztof.maslak'
 
-from ..app import db
-
-class CurrencyRate(db.Model, JsonSerializable):
-    id = db.Column(db.Integer, primary_key=True)
-    code = db.Column(db.String(3))
-    rate = db.Column(db.Float)
-    last_update = db.Column(db.DateTime)
+class CurrencyRate(base.db.Model, base.JsonSerializable):
+    id = base.db.Column(base.db.Integer, primary_key=True)
+    code = base.db.Column(base.db.String(3))
+    rate = base.db.Column(base.db.Float)
+    last_update = base.db.Column(base.db.DateTime)
 
     def __init__(self, code, rate, last_update=datetime.datetime.now()):
         self.code = code

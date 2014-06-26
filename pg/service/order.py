@@ -2,7 +2,6 @@ from datetime import date
 import random
 
 __author__ = 'xxx'
-from pg import app
 from pg.exception import quantity_not_available
 from pg import model
 
@@ -35,7 +34,7 @@ class OrderService:
                 for offer_item in offer.items:
                     if offer_item.id==item.offer_item_id:
                         offer_item.quantity = offer_item.quantity - item.quantity
-        app.db.session.commit()
+        model.base.db.session.commit()
 
     def find_order_total(self, order):
         if isinstance(order, model.Order)==False:
@@ -145,8 +144,8 @@ class OrderService:
                     raise ValueError("No quantity specified or variation")
 
 
-        app.db.session.add(o)
-        app.db.session.commit()
+        model.base.db.session.add(o)
+        model.base.db.session.commit()
         return o
 
     def generate_order_number(self):

@@ -1,20 +1,19 @@
-from pg.model.base import JsonSerializable
+from pg.model import base
 
 __author__ = 'krzysztof.maslak'
 
-from ..app import db
 
-class OrderItemVariation(db.Model, JsonSerializable):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(80))
-    quantity = db.Column(db.Integer)
-    net = db.Column(db.Float)
-    tax = db.Column(db.Float)
-    shipping = db.Column(db.Float)
-    shipping_additional = db.Column(db.Float)
-    multivariate = db.Column(db.Integer)
-    offer_item_variation_id = db.Column(db.Integer)
-    order_item_id = db.Column(db.Integer, db.ForeignKey('order_item.id'))
+class OrderItemVariation(base.db.Model, base.JsonSerializable):
+    id = base.db.Column(base.db.Integer, primary_key=True)
+    title = base.db.Column(base.db.String(80))
+    quantity = base.db.Column(base.db.Integer)
+    net = base.db.Column(base.db.Float)
+    tax = base.db.Column(base.db.Float)
+    shipping = base.db.Column(base.db.Float)
+    shipping_additional = base.db.Column(base.db.Float)
+    multivariate = base.db.Column(base.db.Integer)
+    offer_item_variation_id = base.db.Column(base.db.Integer)
+    order_item_id = base.db.Column(base.db.Integer, base.db.ForeignKey('order_item.id'))
 
     def __init__(self, order_item, title='', quantity=0, net=0, tax=0, shipping=0):
         self.order_item = order_item

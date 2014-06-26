@@ -1,6 +1,6 @@
 from collections import namedtuple
 import json
-from pg.rest.base import authenticated
+from pg.rest import base
 
 __author__ = 'xxx'
 
@@ -12,7 +12,7 @@ offer_item = Blueprint('offer_item', __name__, url_prefix='/rest/offer_item')
 offer_item_variation = Blueprint('offer_item_variation', __name__, url_prefix='/rest/offer_item_variation')
 
 @offer.route('/')
-@authenticated
+@base.authenticated
 def list():
     offer.logger.debug('['+request.remote_addr+'] list offers username %s, page=%s'%(session['username'], request.args.get('page')))
     user = offer.ioc.new_user_service().find_by_username(session['username'])
@@ -29,14 +29,14 @@ def get_by_hash(hash):
     return Response(json.dumps(js),  mimetype='application/json')
 
 @offer.route('/new', methods=['POST'])
-@authenticated
+@base.authenticated
 def new_offer():
     user = offer.ioc.new_user_service().find_by_username(session['username'])
     o = offer.ioc.new_offer_service().new_offer(user.account)
     return jsonify({'id':o.id})
 
 @offer_item.route('/new', methods=['POST'])
-@authenticated
+@base.authenticated
 def new_offer_item():
     user = offer_item.ioc.new_user_service().find_by_username(session['username'])
     print(request.json)
@@ -44,7 +44,7 @@ def new_offer_item():
     return jsonify({'id':oi.id})
 
 @offer_item_variation.route('/new', methods=['POST'])
-@authenticated
+@base.authenticated
 def new_offer_item_variation():
     user = offer_item_variation.ioc.new_user_service().find_by_username(session['username'])
     count = int(request.json['count'])
@@ -57,7 +57,7 @@ def new_offer_item_variation():
     return Response(json.dumps(ids),  mimetype='application/json')
 
 @offer.route('/', methods=['POST'])
-@authenticated
+@base.authenticated
 def save():
     user = offer.ioc.new_user_service().find_by_username(session['username'])
     offer.logger.debug('['+request.remote_addr+'] save offer %s'%json.dumps(request.json))
@@ -66,7 +66,7 @@ def save():
     return Response(json.dumps(o.as_json()),  mimetype='application/json')
 
 @offer.route('/<offer_id>', methods=['DELETE'])
-@authenticated
+@base.authenticated
 def delete(offer_id):
     user = offer.ioc.new_user_service().find_by_username(session['username'])
     offer.ioc.new_offer_service().delete_offer(user.account, offer_id)

@@ -1,8 +1,5 @@
-from pg.service import *
+from pg import service
 import os
-from pg.service.country import CountryService
-from pg.service.ipn import IpnMessageService
-from pg.service.processor import PaymentProcessorService
 
 __author__ = 'xxx'
 
@@ -29,37 +26,37 @@ class ServiceFactory:
                 d[key] = value
 
     def new_offer_service(self):
-        return OfferService(self)
+        return service.OfferService(self)
 
     def new_order_service(self):
-        return OrderService(self)
+        return service.OrderService(self)
 
     def new_user_service(self):
-        return UserService(self)
+        return service.UserService(self)
 
     def new_currency_service(self):
-        return CurrencyService(self)
+        return service.CurrencyService(self)
 
     def new_stripe_service(self):
-        return StripeService(self)
+        return service.StripeService(self)
 
     def new_ipn_message_service(self):
-        return IpnMessageService(self)
+        return service.IpnMessageService(self)
 
     def new_invoice_service(self):
-        return InvoiceService(self)
+        return service.InvoiceService(self)
 
     def new_account_service(self):
-        return AccountService(self)
+        return service.AccountService(self)
 
     def new_property_service(self):
-        return PropertyService(self)
+        return service.PropertyService(self)
 
     def new_email_service(self):
-        return EmailService(self)
+        return service.EmailService(self)
 
     def new_country_service(self):
-        return CountryService(self)
+        return service.CountryService(self)
 
     def new_payment_processor_service(self, logger):
-        return PaymentProcessorService(self, logger)
+        return service.PaymentProcessorService(self, logger)

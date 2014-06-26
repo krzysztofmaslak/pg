@@ -1,4 +1,4 @@
-from pg.model.ipn import IpnMessage
+from pg import model
 
 __author__ = 'root'
 
@@ -14,7 +14,7 @@ class IPNMessageParser:
             if len(full_message)>0:
                 full_message = full_message+'&'
             full_message = full_message+k+'='+v
-        ipn_message = IpnMessage()
+        ipn_message = model.ipn.IpnMessage()
         ipn_message.full_message = full_message
         for k, v in self.form:
             self.add_variable(ipn_message, k, v)

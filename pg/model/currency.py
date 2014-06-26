@@ -1,13 +1,12 @@
-from pg.model.base import JsonSerializable
+from pg.model import base
 
 __author__ = 'krzysztof.maslak'
 
-from ..app import db
 
-class Currency(db.Model, JsonSerializable):
-    id = db.Column(db.Integer, primary_key=True)
-    code = db.Column(db.String(3))
-    active = db.Column(db.Integer)
+class Currency(base.db.Model, base.JsonSerializable):
+    id = base.db.Column(base.db.Integer, primary_key=True)
+    code = base.db.Column(base.db.String(3))
+    active = base.db.Column(base.db.Integer)
 
     def __init__(self, code, active):
         self.code = code

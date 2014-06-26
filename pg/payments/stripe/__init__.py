@@ -1,3 +1,3 @@
 __author__ = 'krzysztof.maslak'
 
-from .stripe import stripe_rest
+# from .stripe import stripe_rest

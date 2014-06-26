@@ -1,23 +1,21 @@
 import datetime
-from pg.model.base import JsonSerializable
+from pg.model import base
 
 
 __author__ = 'xxx'
 
-from ..app import db
 
+class Offer(base.db.Model, base.JsonSerializable):
+    id = base.db.Column(base.db.Integer, primary_key=True)
+    creation_date = base.db.Column(base.db.DateTime)
+    title = base.db.Column(base.db.String(80))
+    hash = base.db.Column(base.db.String(80))
+    status = base.db.Column(base.db.Integer)
+    currency = base.db.Column(base.db.String(3))
 
-class Offer(db.Model, JsonSerializable):
-    id = db.Column(db.Integer, primary_key=True)
-    creation_date = db.Column(db.DateTime)
-    title = db.Column(db.String(80))
-    hash = db.Column(db.String(80))
-    status = db.Column(db.Integer)
-    currency = db.Column(db.String(3))
-
-    account_id = db.Column(db.Integer, db.ForeignKey('account.id'))
-    account = db.relationship('Account', backref=db.backref('offers', lazy='dynamic'))
-    items = db.relationship('OfferItem', backref='offer', lazy='dynamic')
+    account_id = base.db.Column(base.db.Integer, base.db.ForeignKey('account.id'))
+    account = base.db.relationship('Account', backref=base.db.backref('offers', lazy='dynamic'))
+    items = base.db.relationship('OfferItem', backref='offer', lazy='dynamic')
 
     def __init__(self, account, title='', hash='', status=0, currency='', creation_date=datetime.datetime.now()):
         self.title = title
