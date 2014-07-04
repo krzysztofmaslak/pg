@@ -60,3 +60,6 @@ class ServiceFactory:
 
     def new_payment_processor_service(self, logger):
         return service.PaymentProcessorService(self, logger)
+
+    def new_paypal_service(self):
+        return service.PaypalService(self)

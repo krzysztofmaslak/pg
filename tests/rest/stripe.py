@@ -76,6 +76,10 @@ class StripeTest(Base):
         r = self.client.post('/rest/stripe/process', data=json.dumps({'order_id': r.json['id'], 'stripe_token': 'cardToken'}), content_type='application/json', headers=[('Content-Type', 'application/json')],
                              environ_base=self.environ_base)
         self.assertEqual(200, r.status_code)
+        mock_charge.assert_called_once_with(amount=434,
+                currency='eur',
+                card='cardToken',
+                description=order.order_number)
         mock_save.assert_called_once_with(model.StripeMessage(base.An(id=123).id, str(base.An(id=123)), order.id))
         order_copy = copy.copy(order)
         order_copy.id = order_id

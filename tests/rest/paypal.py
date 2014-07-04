@@ -4,7 +4,8 @@ __author__ = 'xxx'
 
 from flask.ext.testing import TestCase as Base
 from tests import base
-from pg import model, app as application
+from pg import resource_bundle, model, app as application
+from pg.util import security
 import mock
 import copy
 
@@ -28,11 +29,9 @@ class PaypalTest(Base):
         # db.drop_all()
 
     def test_process(self):
-        mock_charge = mock.MagicMock(return_value=base.An(id=123))
-        mock_save = mock.MagicMock()
-        mock_process_paid_order = mock.MagicMock()
-        self.ioc.new_stripe_service = mock.MagicMock(return_value=base.An(charge= mock_charge, save= mock_save))
-        self.ioc.new_payment_processor_service = mock.MagicMock(return_value=base.An(process_paid_order= mock_process_paid_order))
+        mock_paypal_service_generate_init_html = mock.MagicMock()
+        self.ioc.new_paypal_service = mock.MagicMock(return_value=base.An(generate_init_html= mock_paypal_service_generate_init_html))
+
         u = model.User('admin', 'password')
         o = model.Offer(u)
         o.currency = 'eur'
@@ -71,12 +70,37 @@ class PaypalTest(Base):
 
         r = self.client.post('/rest/payment/', data=json.dumps(payment.as_json()), content_type='application/json', headers=[('Content-Type', 'application/json')], environ_base=self.environ_base)
         self.assertEqual(200, r.status_code)
-        self.assertIsNotNone(r.json['id'])
         order_id = int(r.json['id'])
-        r = self.client.post('/rest/stripe/process', data=json.dumps({'order_id': r.json['id'], 'stripe_token': 'cardToken'}), content_type='application/json', headers=[('Content-Type', 'application/json')],
-                             environ_base=self.environ_base)
-        self.assertEqual(200, r.status_code)
-        mock_save.assert_called_once_with(model.StripeMessage(base.An(id=123).id, str(base.An(id=123)), order.id))
+        self.assertIsNotNone(r.json['id'])
+        r = self.client.get('/paypal/init?order_id='+r.json['id'], environ_base=self.environ_base)
         order_copy = copy.copy(order)
         order_copy.id = order_id
-        mock_process_paid_order.assert_called_once_with(order_copy)
+        payment_reference = security.Security().encrypt(order.id+"#"+order.order_number)
+        seller = self.ioc.get_config()['paypal.seller']
+        paypal_url = self.ioc.get_config()['paypal.url']
+        ipn_host = self.ioc.get_config()['address.www']
+        i = 0
+        shipping = 0.0
+        basket_items = []
+        for i in order.items:
+            if i.variations is not None and len(i.variations)>0:
+                itotal = 0.0
+                for iv in i.variations:
+                    itotal = itotal+(iv.quantity*iv.total)
+                    if iv.quantity==1:
+                        shipping = shipping + iv.shipping
+                    else:
+                        for c in range(iv.quantity-1):
+                            shipping = shipping + iv.shipping_additional
+                basket_items.append({'index':(i+1), 'title':i.title, 'value':self.ioc.new_currency_service().convert(order.currency, itotal)})
+            else:
+                basket_items.append({'index':(i+1), 'title':i.title, 'value':self.ioc.new_currency_service().convert(order.currency, (i.quantity*i.total))})
+                if i.quantity==1:
+                    shipping = shipping + i.shipping
+                else:
+                    for c in range(i.quantity-1):
+                        shipping = shipping + i.shipping_additional
+            i = i+1
+        basket_items.append({'index':(i+1), 'title':resource_bundle.ResourceBundle().get_text(order.lang, "shipping"), 'value':self.ioc.new_currency_service().convert(order.currency, shipping)})
+
+        mock_paypal_service_generate_init_html.assert_called_once_with(order_copy, payment_reference, basket_items, seller, paypal_url, ipn_host)
