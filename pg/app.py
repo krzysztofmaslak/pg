@@ -11,7 +11,8 @@ DEFAULT_BLUEPRINTS = [
     wsgi.wsgi_blueprint,
     payments.striper.stripe_rest,
     payments.paypal_init,
-    payments.paypal_success
+    payments.paypal_success,
+    payments.ipn
 ]
 
 
