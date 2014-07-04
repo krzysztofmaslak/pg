@@ -8,7 +8,7 @@ from pg import model, app as application
 import mock
 import copy
 
-class StripeTest(Base):
+class PaypalTest(Base):
     environ_base={'REMOTE_ADDR': '127.0.0.1'}
 
     def create_app(self):

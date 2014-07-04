@@ -18,3 +18,6 @@ class StripeMessage(base.db.Model):
 
     def __repr__(self):
         return '<StripeMessage %r>' % self.tid
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.tid==other.tid and self.id==other.id
