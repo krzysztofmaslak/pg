@@ -38,22 +38,6 @@ class PaymentTest(Base):
         model.base.db.session.add(o)
         model.base.db.session.commit()
 
-        order = model.Order()
-        order.offer_id = o.id
-        or1 = model.OrderItem(order, 'Strings', 1, 10.32, 0, 1.65)
-        or1.shipping_additional = 1
-        or1.offer_item_id = o1.id
-        order.items.append(or1)
-        oi = model.OrderItem(order, 'Toy', 0, 0, 0, 0)
-        oi.offer_item_id = o2.id
-        orv1 = model.OrderItemVariation(oi, "Big", 1, 11.21, 0, 1.65)
-        orv1.shipping_additional = 1
-        orv1.offer_item_variation_id = blue.id
-        oi.variations.append(orv1)
-        order.items.append(oi)
-        model.base.db.session.add(order)
-        model.base.db.session.commit()
-
         items = [base.An(id=o1.id, quantity=1, variations=[])]
         payment = base.An(offer_id=o.id, subscribe=True, payment_method='cc', currency='eur', country='fr', lang='eng', session_id='kdkdkdkd', items=items)
         payment.billing = base.An(first_name='Mickey', last_name='Mouse', address1='Withworth', address2='Drumcondra', country='ie', city='Dublin', postal_code='10', county='Dublin', email='dublin.krzysztof.maslak@gmail.com', same_address=False)

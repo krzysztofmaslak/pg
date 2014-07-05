@@ -8,9 +8,10 @@ from pg import model
 class OrderService:
     dictionary = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "A", "S", "D", "F", "G", "H", "J", "K", "L", "Z", "X", "C", "V", "B", "N", "M", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
 
-    def __init__(self, ioc):
+    def __init__(self, ioc, logger):
         super().__init__()
         self.ioc = ioc
+        self.logger = logger
 
     def find_by_id(self, order_id):
         return model.Order.query.filter(model.Order.id == order_id).first()
@@ -39,7 +40,6 @@ class OrderService:
     def find_order_total(self, order):
         if isinstance(order, model.Order)==False:
             raise TypeError("Expected Order type in OrderService.find_order_total %s"%type(order))
-
         total = 0.0
         shipping = 0.0
         for i in order.items:

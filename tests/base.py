@@ -40,9 +40,11 @@ class An:
 
 class TestServiceFactory(ServiceFactory):
     def get_config(self):
-        return {
+        config = super(TestServiceFactory, self).get_config()
+        config.update({
             'SQLALCHEMY_DATABASE_URI':'sqlite:///:memory:',
             'SESSION_SECRET_KEY':'ASJAFLSDFJOWEJIFOWEJF',
             'IS_DEBUG': True,
             'UPLOAD_FOLDER':'/tmp/upload'
-        }
+        })
+        return config

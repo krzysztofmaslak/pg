@@ -3,10 +3,10 @@ from flask import json
 __author__ = 'xxx'
 
 from flask.ext.testing import TestCase as Base
-from tests import base
 from pg import model, app as application
 import mock
 import copy
+from tests import base
 
 class StripeTest(Base):
     environ_base={'REMOTE_ADDR': '127.0.0.1'}
@@ -37,7 +37,7 @@ class StripeTest(Base):
         o = model.Offer(u)
         o.currency = 'eur'
         o.status = 1
-        o1 = model.OfferItem(o, "My offer item", 2)
+        o1 = model.OfferItem(o, "My offer item", 2, 3.45, 0, 1.65)
         o2 = model.OfferItem(o, "My offer item2")
         blue = model.OfferItemVariation(o2, "Blue", 3)
         red = model.OfferItemVariation(o2, "Red", 1)
@@ -46,22 +46,6 @@ class StripeTest(Base):
         o.items.append(o2)
         model.base.db.session.add(u)
         model.base.db.session.add(o)
-        model.base.db.session.commit()
-
-        order = model.Order()
-        order.offer_id = o.id
-        or1 = model.OrderItem(order, 'Strings', 1, 10.32, 0, 1.65)
-        or1.shipping_additional = 1
-        or1.offer_item_id = o1.id
-        order.items.append(or1)
-        oi = model.OrderItem(order, 'Toy', 0, 0, 0, 0)
-        oi.offer_item_id = o2.id
-        orv1 = model.OrderItemVariation(oi, "Big", 1, 11.21, 0, 1.65)
-        orv1.shipping_additional = 1
-        orv1.offer_item_variation_id = blue.id
-        oi.variations.append(orv1)
-        order.items.append(oi)
-        model.base.db.session.add(order)
         model.base.db.session.commit()
 
         items = [base.An(id=o1.id, quantity=1, variations=[])]
@@ -76,11 +60,9 @@ class StripeTest(Base):
         r = self.client.post('/rest/stripe/process', data=json.dumps({'order_id': r.json['id'], 'stripe_token': 'cardToken'}), content_type='application/json', headers=[('Content-Type', 'application/json')],
                              environ_base=self.environ_base)
         self.assertEqual(200, r.status_code)
-        mock_charge.assert_called_once_with(amount=434,
+        mock_charge.assert_called_once_with(amount=510,
                 currency='eur',
                 card='cardToken',
-                description=order.order_number)
-        mock_save.assert_called_once_with(model.StripeMessage(base.An(id=123).id, str(base.An(id=123)), order.id))
-        order_copy = copy.copy(order)
-        order_copy.id = order_id
-        mock_process_paid_order.assert_called_once_with(order_copy)
+                description=self.ioc.new_order_service(mock.MagicMock()).find_by_id(order_id).order_number)
+        mock_save.assert_called_once_with(model.StripeMessage(base.An(id=123).id, str(base.An(id=123)), order_id))
+        mock_process_paid_order.assert_called_once_with(self.ioc.new_order_service(mock.MagicMock()).find_by_id(order_id))
