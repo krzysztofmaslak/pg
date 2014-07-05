@@ -35,14 +35,19 @@ class PaypalTest(Base):
         mock_process_paid_order = mock.MagicMock()
         self.ioc.new_stripe_service = mock.MagicMock(return_value=base.An(charge= mock_charge, save= mock_save))
         self.ioc.new_payment_processor_service = mock.MagicMock(return_value=base.An(process_paid_order= mock_process_paid_order))
+        a = model.Account()
         u = model.User('admin', 'password')
-        o = model.Offer(u)
+        a.users.append(u)
+        o = model.Offer(a)
         o.currency = 'eur'
         o.status = 1
-        o1 = model.OfferItem(o, "My offer item", 2, 3.45, 0, 1.65)
+        o1 = model.OfferItem(o, "My offer item", 2, 3.45, 0, 1.65, 1)
         o2 = model.OfferItem(o, "My offer item2")
+        o2.status = 1
         blue = model.OfferItemVariation(o2, "Blue", 3)
+        blue.status = 1
         red = model.OfferItemVariation(o2, "Red", 1)
+        red.status = 1
         o2.variations = [blue, red]
         o.items.append(o1)
         o.items.append(o2)

@@ -30,8 +30,9 @@
             <div class="navbar-inner">
                 <a class="brand" href="#">Administrator:</a>
                 <ul class="nav">
-                    <li><a href="#/offer">Offers</a></li>
-                    <li><a href="#/order">Orders</a></li>
+                    <li><a href="#/offers">Offers</a></li>
+                    <li><a href="#/orders">Orders</a></li>
+                    <li><a href="#/settings">Settings</a></li>
                 </ul>
             </div>
             <a href="/admin/logout" style="position:absolute;top:11px;right:20px;">Logout</a>
@@ -42,6 +43,9 @@
                 <div x-ng-view></div>
             </div>
         </div>
+        <script type="text/javascript">
+            window.countries = JSON.parse('{{ countries }}'.replaceAll('&#39;', '"'));
+        </script>
         <!--#include virtual="/static/{{ project_version }}/template/footer.html" -->
 </body>
 <!--[if lt IE 7]></html><![endif]-->

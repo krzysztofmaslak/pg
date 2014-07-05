@@ -31,12 +31,12 @@ def login_required(f):
 
 @wsgi_blueprint.route('/x/<offer_code>', methods=['GET'])
 def show_offer(offer_code):
-    resource_bundle = resource_bundle.ResourceBundle()
+    messages = resource_bundle.ResourceBundle()
     # todo calculate customer language
     lang = 'eng'
     wsgi_blueprint.logger.info('['+request.remote_addr+'] loading offer page by hash: %s'%offer_code)
     return render_template('offer.html',
-                           messages=resource_bundle.get_all(lang),
+                           messages=messages.get_all(lang),
                            language = lang,
                            countries = [c.as_json() for c in wsgi_blueprint.ioc.new_country_service().find_all()],
                            project_version=wsgi_blueprint.ioc.get_config()['PROJECT_VERSION'],
@@ -114,4 +114,6 @@ def login():
 @wsgi_blueprint.route('/admin/')
 @login_required
 def admin_landing():
-    return render_template('admin/landing.html', project_version=wsgi_blueprint.ioc.get_config()['PROJECT_VERSION'])
+    return render_template('admin/landing.html',
+                           countries = [c.as_json() for c in wsgi_blueprint.ioc.new_country_service().find_all()],
+                           project_version=wsgi_blueprint.ioc.get_config()['PROJECT_VERSION'])

@@ -17,6 +17,9 @@ class Billing(base.db.Model, base.JsonSerializable):
     same_address = base.db.Column(base.db.Boolean)
     order_id = base.db.Column(base.db.Integer, base.db.ForeignKey('order.id'))
 
+    def as_json(self, exclude=(), extra=()):
+        return self._as_json(exclude=['order'])
+
 
 
 

@@ -27,20 +27,20 @@ def init_db():
 
 @manager.command
 def add_root():
-    with gateway.app_context():
-        a = model.Account()
-        a.properties.append(model.Property(a, 'invoice', 'invoice.issue.city', ''))
-        u = model.User('dublin.krzysztof.maslak@gmail.com', generate_password_hash('abcd'))
-        a.users.append(u)
-        gateway.ioc.new_account_service().save(a)
-        # TODO create start currencies
-        # TODO add all countries
-        for code in ['au', 'at', 'be', 'ca', 'hr', 'cz', 'dk', 'fi', 'fr', 'de', 'gi', 'gb', 'gr', 'gl', 'gg', 'va',
-                     'hk', 'hu', 'is', 'ie', 'im', 'it', 'jp', 'je', 'li', 'lt', 'lu', 'nl', 'nz', 'no', 'pl', 'pt',
-                     'ru', 'sg', 'sk', 'za', 'es', 'se', 'ch', 'uk', 'us']:
-            gateway.ioc.new_country_service().save(model.Country(code))
-        for code in ['aud', 'cad', 'chf', 'dkk', 'eur', 'gbp', 'nok', 'nzd', 'pln', 'sek', 'usd']:
-            gateway.ioc.new_currency_service().save_currency(model.Currency(code, 1))
+    a = model.Account()
+    a.properties.append(model.Property(a, 'sales.email', 'spreadline.limited@gmail.com'))
+    a.properties.append(model.Property(a, 'order_confirmation', 'Order confirmation'))
+    u = model.User('dublin.krzysztof.maslak@gmail.com', generate_password_hash('abcd'))
+    a.users.append(u)
+    gateway.ioc.new_account_service().save(a)
+    # TODO create start currencies
+    # TODO add all countries
+    for code in ['au', 'at', 'be', 'ca', 'hr', 'cz', 'dk', 'fi', 'fr', 'de', 'gi', 'gb', 'gr', 'gl', 'gg', 'va',
+                 'hk', 'hu', 'is', 'ie', 'im', 'it', 'jp', 'je', 'li', 'lt', 'lu', 'nl', 'nz', 'no', 'pl', 'pt',
+                 'ru', 'sg', 'sk', 'za', 'es', 'se', 'ch', 'uk', 'us']:
+        gateway.ioc.new_country_service().save(model.Country(code))
+    for code in ['aud', 'cad', 'chf', 'dkk', 'eur', 'gbp', 'nok', 'nzd', 'pln', 'sek', 'usd']:
+        gateway.ioc.new_currency_service().save_currency(model.Currency(code, 1))
 
 if __name__ == '__main__':
     manager.run()

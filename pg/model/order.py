@@ -15,9 +15,11 @@ class Order(base.db.Model, base.JsonSerializable):
     payment_status = base.db.Column(base.db.String(20))
     delivery_status = base.db.Column(base.db.String(20))
     order_number = base.db.Column(base.db.String(10))
+    total = base.db.Column(base.db.Float)
     billing = base.db.relationship('Billing', backref='order', lazy='dynamic')
     shipping = base.db.relationship('Shipping', backref='order', lazy='dynamic')
     offer_id = base.db.Column(base.db.Integer, base.db.ForeignKey('offer.id'))
+    account_id = base.db.Column(base.db.Integer, base.db.ForeignKey('account.id'))
     offer = base.db.relationship('Offer',
         backref=base.db.backref('orders', lazy='dynamic'))
 
@@ -30,3 +32,6 @@ class Order(base.db.Model, base.JsonSerializable):
     def __eq__(self, other):
         print("Calling order eq %s"%(isinstance(other, self.__class__) and self.id==other.id))
         return isinstance(other, self.__class__) and self.id==other.id
+
+    def as_json(self, exclude=(), extra=()):
+        return self._as_json(exclude=['offer'])

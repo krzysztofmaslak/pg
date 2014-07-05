@@ -1,6 +1,5 @@
 from datetime import date
 import random
-
 __author__ = 'xxx'
 from pg.exception import quantity_not_available
 from pg import model
@@ -16,10 +15,22 @@ class OrderService:
     def find_by_id(self, order_id):
         return model.Order.query.filter(model.Order.id == order_id).first()
 
+    def find_paid_orders_count(self, account):
+        if isinstance(account, model.Account):
+            return model.Order.query.filter(model.Order.payment_status == 'Completed', model.Order.account_id == account.id).count()
+        else:
+            raise TypeError("Expected Account type in OrderService.find_orders_count %s"%type(account))
+
+    def find_by_page(self, account, page):
+        if isinstance(account, model.Account):
+            return model.Order.query.filter(model.Order.payment_status == 'Completed', model.Order.account_id == account.id).paginate(page, 10, False).items
+        else:
+            raise TypeError("Expected Account type in OrderService.find_by_page %s"%type(account))
+
     def process_paid_order(self, o):
         if isinstance(o, model.Order)==False:
             raise TypeError("Expected Order type in OrderService.process_paid_order actual %s"%type(o))
-
+        o.payment_status = 'Completed'
         offer = model.Offer.query.filter(model.Offer.id==o.offer_id).first()
         if offer is None:
             raise RuntimeError("Couldn't find offer for offer id %s"%o.offer_id)
@@ -45,12 +56,12 @@ class OrderService:
         for i in order.items:
             if i.variations is not None and i.variations.count()!=0:
                 for v in i.variations:
-                    total = total+(v.quantity*(v.net+v.tax))
-                    if v.quantity==1:
-                        shipping = shipping + v.shipping
-                    else:
-                        for c in range(v.quantity-1):
-                            shipping = shipping + v.shipping_additional
+                        total = total+(v.quantity*(v.net+v.tax))
+                        if v.quantity==1:
+                            shipping = shipping + v.shipping
+                        else:
+                            for c in range(v.quantity-1):
+                                shipping = shipping + v.shipping_additional
             else:
                 total = total+(i.quantity*(i.net+i.tax))
                 if i.quantity==1:
@@ -105,29 +116,31 @@ class OrderService:
             raise ValueError("Couldn't find offer by id:"+payment.offer_id)
         if payment.items is None or len(payment.items)==0:
             raise ValueError("No items specified")
+        o.account_id = offer.account_id
         # validate requested availability
         for item_dto in payment.items:
             if hasattr(item_dto, 'variations') and len(item_dto.variations)!=0:
                 item = self.find_item_by_id(offer.items, item_dto.id)
-                if item is not None:
+                if item is not None and item.status==1:
                     variations = []
                     oi = model.OrderItem(o, item.title, item_dto.quantity, item.net, item.tax, item.shipping, item.shipping_additional)
                     oi.multivariate = item.multivariate
                     for item_var_dto in item_dto.variations:
                         item_variation = self.find_item_by_id(item.variations, item_var_dto.id)
-                        if item_var_dto.quantity>item_variation.quantity:
-                            raise quantity_not_available.QuantityNotAvailable("Trying to buy more products then are available")
-                        else:
-                            oiv = model.OrderItemVariation(oi, item_variation.title, item_variation.quantity, item_variation.net, item_variation.tax, item_variation.shipping, item_variation.shipping_additional)
-                            variations.append(oiv)
+                        if item_variation is not None and item_variation.status==1:
+                            if item_var_dto.quantity>item_variation.quantity:
+                                raise quantity_not_available.QuantityNotAvailable("Trying to buy more products then are available")
+                            else:
+                                oiv = model.OrderItemVariation(oi, item_variation.title, item_variation.quantity, item_variation.net, item_variation.tax, item_variation.shipping, item_variation.shipping_additional)
+                                variations.append(oiv)
                     oi.variations = variations
                     o.items.append(oi)
                 else:
-                        raise ValueError("Couldn't find offer item for id:"+item_dto.id)
+                    raise ValueError("Couldn't find offer item for id:"+item_dto.id)
             else:
                 if item_dto.quantity is not None and item_dto.quantity!=0:
                     item = self.find_item_by_id(offer.items, item_dto.id)
-                    if item is not None:
+                    if item is not None and item.status==1:
                         if item.variations is not None and item.variations.count()!=0:
                             raise ValueError("Requesting item where there is variation selection")
                         else:
@@ -144,6 +157,7 @@ class OrderService:
                     raise ValueError("No quantity specified or variation")
 
 
+        o.total = self.find_order_total(o)
         model.base.db.session.add(o)
         model.base.db.session.commit()
         return o

@@ -24,13 +24,18 @@ class PaymentTest(Base):
         # db.drop_all()
 
     def test_apply_payment(self):
+        a = model.Account()
         u = model.User('admin', 'password')
-        o = model.Offer(u)
+        a.users.append(u)
+        o = model.Offer(a)
         o.status = 1
-        o1 = model.OfferItem(o, "My offer item", 2)
+        o1 = model.OfferItem(o, "My offer item", 2, 3.99, 1.20, 1.65, 1)
         o2 = model.OfferItem(o, "My offer item2")
+        o2.status = 1
         blue = model.OfferItemVariation(o2, "Blue", 3)
+        blue.status = 1
         red = model.OfferItemVariation(o2, "Red", 1)
+        red.status = 1
         o2.variations = [blue, red]
         o.items.append(o1)
         o.items.append(o2)

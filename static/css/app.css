@@ -56,6 +56,15 @@
 .detailsTitle:after {
     content: "Details:";
 }
+.bilingDetailsTitle:after {
+    content: "Billing:";
+}
+.shippingDetailsTitle:after {
+    content: "Billing:";
+}
+.settingsTitle:after {
+    content: "Settings:";
+}
 .issuedPromotionsTitle:after {
     content: "Promotions sent:";
 }

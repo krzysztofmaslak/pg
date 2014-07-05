@@ -10,7 +10,7 @@
 <div class="row-fluid">
 <div class="span3" ng-show="offers.length!=0">
     <div class="formSection">
-        <form name="offerForm" novalidate>
+        <form novalidate>
             <!--<table style="margin-top:10px;margin-bottom:20px;" >-->
                 <!--<tr>-->
                     <!--<td>-->
@@ -64,7 +64,7 @@
         <span ng-if="offer!=null">{{formatDate(offer.creation_date)}}</span>
     </div>
     <div ng-show="offer.hash && offer.hash.length>0">
-        <label><b>Retrieve link</b></label>
+        <label><b>Direct link</b></label>
         <input type="text" readonly="true" id="retrieveLink" value="https://www.e-littleangel.com/x/{{offer.hash}}" style="width:400px;cursor:pointer;"/>
     </div>
     <div ng-show="offer.items.length>0">

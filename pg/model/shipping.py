@@ -18,4 +18,7 @@ class Shipping(base.db.Model, base.JsonSerializable):
     phone_number = base.db.Column(base.db.String(50))
     order_id = base.db.Column(base.db.Integer, base.db.ForeignKey('order.id'))
 
+    def as_json(self, exclude=(), extra=()):
+        return self._as_json(exclude=['order'])
+
     

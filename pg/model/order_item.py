@@ -24,3 +24,5 @@ class OrderItem(base.db.Model, base.JsonSerializable):
         self.tax = tax
         self.shipping = shipping
 
+    def as_json(self, exclude=(), extra=()):
+        return self._as_json(exclude=['order'])

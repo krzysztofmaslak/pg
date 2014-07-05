@@ -8,6 +8,7 @@ DEFAULT_BLUEPRINTS = [
     rest.offer_item,
     rest.offer_item_variation,
     rest.payment,
+    rest.order,
     wsgi.wsgi_blueprint,
     payments.striper.stripe_rest,
     payments.paypal.paypal_init,

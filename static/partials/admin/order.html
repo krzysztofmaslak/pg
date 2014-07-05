@@ -8,8 +8,8 @@
         Data saved successfully
     </div>
     <div class="row-fluid">
-        <div class="span5">
-            <div ng-show="offers.length!=0" class="formSection">
+        <div class="span3">
+            <div ng-show="orders.length!=0" class="formSection">
                 <form name="offerForm" novalidate>
                     <!--<table style="margin-top:10px;margin-bottom:20px;" >-->
                     <!--<tr>-->
@@ -24,21 +24,16 @@
                     <!--</table>-->
                     <table class="table table-hover">
                         <tr>
-                            <th>
-                                Identifier
-                            </th>
                             <th>Date</th>
                             <th>Total</th>
                             <th></th>
                         </tr>
-                        <tr ng-repeat="offer in offers">
-                            <td>{{offer.identifier}}</td>
-                            <td>{{formatDate(offer.creationDate)}}</td>
-                            <td>{{total(offer)}}</td>
+                        <tr ng-repeat="order in orders">
+                            <td>{{formatDate(order.creation_date)}}</td>
+                            <td>{{formatPrice(order.total)}}</td>
                             <td>
                                 <div style="white-space: nowrap;">
-                                    <button ng-click="edit(offer)" class="btn btn-success">Edit</button>
-                                    <button ng-click="delete(offer.id)" class="btn btn-danger">Delete</button>
+                                    <button ng-click="show(order)" class="btn btn-success">Show</button>
                                 </div>
                             </td>
                         </tr>
@@ -50,93 +45,169 @@
                     </div>
                 </form>
             </div>
-            <div ng-show="offers.length==0">
+            <div ng-show="orders.length==0">
                 There are no orders
             </div>
         </div>
-        <div class="span7">
-            <form name="invoiceForm" ng-show="offer!=null" novalidate>
+        <div class="span9">
+            <form name="orderForm" ng-show="order!=null" novalidate>
                 <div class="formSection detailsTitle">
                     <div>
-                        <label><b>Invoice identifier</b></label>
-                        <input type="text" x-ng-model="offer.identifier" style="width:400px;" ng-required="true"/>
-                    </div>
-                    <div ng-show="offer.id>0">
-                        <label><b>Creation date</b></label>
-                        {{formatDate(offer.creationDate)}}
-                    </div>
-                    <div ng-show="offer.id>0">
-                        <label><b>Retrieve link</b></label>
-                        <input type="text" readonly="true" id="retrieveLink" value="https://www.e-littleangel.com/pg/{{offer.hash}}" style="width:400px;cursor:pointer;"/>
+                        <label><b>Order number</b></label>
+                        <input type="text" name="order_number" id="order_number" x-ng-model="order.order_number" style="width:400px;" readonly="true"/>
                     </div>
                     <div>
-                        <label><b>Language</b></label>
-                        <select x-ng-model="offer.lang">
-                            <option value="en">eng</option>
-                            <option value="fr">fre</option>
-                            <option value="de">ger</option>
-                        </select>
+                        <label><b>Total</b></label>
+                        <input type="text" name="total" id="total" value="{{ formatPrice(order.total) }}" style="width:400px;" readonly="true"/>
                     </div>
-                    <div>
-                        <label><b>Shipping</b></label>
-                        <input type="text" x-ng-model="offer.shipping"/>
-                    </div>
-                    <div ng-show="offer.items.length>0">
-                        <label><b>Items</b></label>
-                        <div ng-repeat="item in offer.items">
-                            Item No. {{$index+1}}
-                            <div class="form-group">
-                                <label>Title</label>
-                                <input type="text" x-ng-model="item.title" style="width:350px" ng-required="true"/>
-                            </div>
-                            <div class="form-group">
-                                <label>Img 1</label>
-                                <input type="text" x-ng-model="item.img1" style="width:350px" ng-required="true"/>
-                            </div>
-                            <div class="form-group" style="display:none;">
-                                <label>Img 2</label>
-                                <input type="text" x-ng-model="item.img2" style="width:350px" ng-required="true"/>
-                            </div>
-                            <div>
-                                <table>
-                                    <tr>
-                                        <td>Net</td>
-                                        <td>Vat</td>
-                                        <td>Vat Percentage</td>
-                                        <td>Total</td>
-                                        <td>Quantity</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input type="text" x-ng-model="item.net" style="width:80px" ng-required="true"/>
-                                        </td>
-                                        <td>
-                                            <input type="text" x-ng-model="item.vat" style="width:80px" ng-required="true"/>
-                                        </td>
-                                        <td>
-                                            <input type="text" x-ng-model="item.vatPercentage" style="width:80px" ng-required="true"/>
-                                        </td>
-                                        <td>
-                                            <input type="text" x-ng-model="item.total" style="width:80px" ng-required="true"/>
-                                        </td>
-                                        <td>
-                                            <input type="text" x-ng-model="item.quantity" style="width:80px" ng-required="true"/>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                        <button ng-click="deleteItem($index)" class="btn btn-danger" ng-show="offer.deliveryStatus=='PAYMENT'" style="margin-bottom:10px;">Delete item</button>
-                        <div class="clearfix"></div>
-                        <button x-ng-click="addItem()" class="btn btn-success">Add Item</button>
-                    </div>
-                    <div class="clearfix"></div>
                 </div>
-                <div>
+                <div class="formSection bilingDetailsTitle">
+                    <div>
+                        <table>
+                            <tr>
+                                <td>
+                                    <div>
+                                         <label><b>First name</b></label>
+                                         <input type="text" name="first_name" id="first_name" x-ng-model="order.billing[0].first_name" style="width:200px;" readonly="true"/>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <label><b>Last name</b></label>
+                                        <input type="text" name="last_name" id="last_name" x-ng-model="order.billing[0].last_name" style="width:200px;" readonly="true"/>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div>
+                        <label><b>Email</b></label>
+                        <input type="text" name="email" id="email" x-ng-model="order.billing[0].email" style="width:400px;" readonly="true"/>
+                    </div>
+                    <div>
+                        <label><b>Address1</b></label>
+                        <input type="text" name="address1" id="address1" x-ng-model="order.billing[0].address1" style="width:400px;" readonly="true"/>
+                    </div>
+                    <div>
+                        <label><b>Address2</b></label>
+                        <input type="text" name="address2" id="address2" x-ng-model="order.billing[0].address2" style="width:400px;" readonly="true"/>
+                    </div>
+
+                    <div>
+                        <table>
+                            <tr>
+                                <td>
+                                    <div>
+                                        <label><b>County</b></label>
+                                        <input type="text" name="county" id="county" x-ng-model="order.billing[0].county" style="width:200px;" readonly="true"/>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <label><b>Postal code</b></label>
+                                        <input type="text" name="postal_code" id="postal_code" x-ng-model="order.billing[0].postal_code" style="width:200px;" readonly="true"/>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div>
+                        <table>
+                            <tr>
+                                <td>
+                                    <div>
+                                        <label><b>Country</b></label>
+                                        <input type="text" name="country" id="country" x-ng-model="order.billing[0].country" style="width:200px;" readonly="true"/>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <label><b>City</b></label>
+                                        <input type="text" name="city" id="city" x-ng-model="order.billing[0].city" style="width:200px;" readonly="true"/>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="formSection bilingDetailsTitle" ng-show="!order.billing[0].same_address">
+                    <div>
+                        <div>
+                            <table>
+                                <tr>
+                                    <td>
+                                        <div>
+                                            <label><b>First name</b></label>
+                                            <input type="text" name="first_name" id="first_name" x-ng-model="order.shipping[0].first_name" style="width:200px;" readonly="true"/>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <label><b>Last name</b></label>
+                                            <input type="text" name="last_name" id="last_name" x-ng-model="order.shipping[0].last_name" style="width:200px;" readonly="true"/>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div>
+                            <label><b>Address1</b></label>
+                            <input type="text" name="address1" id="address1" x-ng-model="order.shipping[0].address1" style="width:400px;" readonly="true"/>
+                        </div>
+                        <div>
+                            <label><b>Address2</b></label>
+                            <input type="text" name="address2" id="address2" x-ng-model="order.shipping[0].address2" style="width:400px;" readonly="true"/>
+                        </div>
+                        <div>
+                            <label><b>Country</b></label>
+                            <input type="text" name="country" id="country" x-ng-model="order.shipping[0].country" style="width:400px;" readonly="true"/>
+                        </div>
+                        <div>
+                            <label><b>City</b></label>
+                            <input type="text" name="city" id="city" x-ng-model="order.shipping[0].city" style="width:400px;" readonly="true"/>
+                        </div>
+                        <div>
+                            <label><b>County</b></label>
+                            <input type="text" name="county" id="county" x-ng-model="order.shipping[0].county" style="width:400px;" readonly="true"/>
+                        </div>
+                        <div>
+                            <label><b>Postal code</b></label>
+                            <input type="text" name="postal_code" id="postal_code" x-ng-model="order.shipping[0].postal_code" style="width:400px;" readonly="true"/>
+                        </div>
+                        <div>
+                            <label><b>Company</b></label>
+                            <input type="text" name="company" id="company" x-ng-model="order.shipping[0].company" style="width:400px;" readonly="true"/>
+                        </div>
+                        <div>
+                            <label><b>Phone number</b></label>
+                            <input type="text" name="phone_number" id="phone_number" x-ng-model="order.shipping[0].phone_number" style="width:400px;" readonly="true"/>
+                        </div>
+                        <div>
+                            <label><b>Email</b></label>
+                            <input type="text" name="email" id="email" x-ng-model="order.shipping[0].email" style="width:400px;" readonly="true"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="formSection categoryProducts">
+                    <table class="table table-hover">
+                        <tr>
+                            <th>Title</th>
+                            <th>Quantity</th>
+                            <th>Net</th>
+                            <th>Tax</th>
+                        </tr>
+                        <tr ng-repeat="item in order.items">
+                            <td>{{item.title}}</td>
+                            <td>{{item.quantity}}</td>
+                            <td>{{item.net}}</td>
+                            <td>{{item.tax}}</td>
+                        </tr>
+                    </table>
+
                 </div>
             </form>
-            <button x-ng-click="new()" class="btn btn-success">New</button>
-            <button x-ng-click="save()" class="btn btn-success" ng-show="offer!=null">Save</button>
         </div>
     </div>
 </div>

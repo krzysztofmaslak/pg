@@ -22,7 +22,7 @@ class Offer(base.db.Model, base.JsonSerializable):
         self.hash = hash
         self.status = status
         self.currency = currency
-        self.account_id = account.id
+        self.account = account
         self.creation_date = creation_date
 
     def __repr__(self):

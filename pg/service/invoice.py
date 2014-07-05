@@ -1,4 +1,4 @@
-from pg import model, resource_bundle
+from pg import model, resource_bundle, app
 
 __author__ = 'krzysztof.maslak'
 import datetime
@@ -71,8 +71,8 @@ class InvoiceService:
             invoice.shipping = An(title=item.title, quantity=item.quantity, net_price=item.net,
                                             net_value=item.net*item.quantity,
                                             vat_percentage=item.tax, vat_value = tax_value, total=total_value)
-            resource_bundle = resource_bundle.ResourceBundle()
-            invoice_items.append(An(title=resource_bundle.get_text(order.lang, "shipping"), total=shipping))
+            messages = resource_bundle.ResourceBundle()
+            invoice_items.append(An(title=messages.get_text(order.lang, "shipping"), total=shipping))
             invoice.subtotals = {}
             for i in invoice_items:
                 if invoice.subtotals[item.vat_percentage] is not None:
@@ -94,10 +94,10 @@ class InvoiceService:
     # //                        );
     # //                    }
     # //                }
-            messages = {'invoicing_invoice_jm_title':resource_bundle.get_text(order.lang, 'unit'),
-                        'invoicing_invoice_no':resource_bundle.get_text(order.lang, 'ret_short'),
-                        'invoicing_invoice_system_name':resource_bundle.get_text(order.lang, 'returns_info'),
-                        'invoicing_invoice_system_name':resource_bundle.get_text(order.lang, 'invoice_thank_you')}
+            messages = {'invoicing_invoice_jm_title':messages.get_text(order.lang, 'unit'),
+                        'invoicing_invoice_no':messages.get_text(order.lang, 'ret_short'),
+                        'invoicing_invoice_system_name':messages.get_text(order.lang, 'returns_info'),
+                        'invoicing_invoice_system_name':messages.get_text(order.lang, 'invoice_thank_you')}
             return self.generate_invoice(order.offer.account_id, invoice, messages, order.lang)
         else:
             raise TypeError("Expected Order type in InvoiceService.new_invoice_from_order %s"%type(order))

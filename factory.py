@@ -32,6 +32,9 @@ class ServiceFactory:
     def new_offer_service(self):
         return service.OfferService(self)
 
+    def new_inovice_service(self):
+        return service.InvoiceService(self)
+
     def new_order_service(self, logger):
         return service.OrderService(self, logger)
 

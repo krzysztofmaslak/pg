@@ -38,7 +38,6 @@
         window.countries = JSON.parse('{{ countries }}'.replaceAll('&#39;', '"'));
     </script>
 
-    <spreadline:currencies />
     <script type="text/javascript">
         Stripe.setPublishableKey('{{ stripe_publishable }}');
     </script>

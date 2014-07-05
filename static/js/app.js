@@ -49,7 +49,9 @@ window.clickOnParentSibling = function(element, nodeType) {
 angular.module('pgadminapp', ['ngRoute', 'hh.filters', 'hh.services', 'hh.directives', 'hh.controllers', 'LoadingModule', 'ui.bootstrap.modal']).
 	config(['$routeProvider', function($routeProvider) {
         $routeProvider.when('/landing',      {templateUrl: '/static/${pom.version}/partials/admin/landing.html'});
-        $routeProvider.when('/offer',      {templateUrl: '/static/${pom.version}/partials/admin/offer.html'});
+        $routeProvider.when('/offers',      {templateUrl: '/static/${pom.version}/partials/admin/offer.html'});
+        $routeProvider.when('/orders',      {templateUrl: '/static/${pom.version}/partials/admin/order.html'});
+        $routeProvider.when('/settings',      {templateUrl: '/static/${pom.version}/partials/admin/settings.html'});
         $routeProvider.otherwise({redirectTo: '/landing'});
 	}]);
 angular.module('pgapp', ['ngRoute', 'hh.filters', 'hh.services', 'hh.directives', 'hh.controllers', 'LoadingModule', 'ui.bootstrap.modal']).

@@ -12,7 +12,7 @@ class PaymentProcessorService:
 
     def process_paid_order(self, order):
         self.logger.info(order.order_number+" - process")
-        self.ioc.new_order_service().process_paid_order(order)
+        self.ioc.new_order_service(self.logger).process_paid_order(order)
         p = Process(target=self.inform_customer, args=(self.ioc, order,))
         p.start()
         p.join()
@@ -21,7 +21,7 @@ class PaymentProcessorService:
         return self.ioc.new_inovice_service().new_invoice_from_order(order)
 
     def inform_customer(self, ioc, order):
-        invoice = self.generate_invoice(order)
+        # invoice = self.generate_invoice(order)
         customer_email = model.Email()
         customer_email.type = "PURCHASE_CONFIRMATION"
         customer_email.ref_id = order.id
@@ -30,8 +30,8 @@ class PaymentProcessorService:
         customer_email.to_address = order.billing.first().email
         customer_email.language = order.lang
         customer_email.subject = ps.find_value_by_code(order.offer.account, 'order_confirmation')
-        customer_email.addon1 = invoice.file_name
-        customer_email.addon2 = invoice.id
+        # customer_email.addon1 = invoice.file_name
+        # customer_email.addon2 = invoice.id
         self.ioc.new_email_service().save(customer_email)
         order.confirmation_email = 1
         model.base.db.session.commit()
@@ -40,5 +40,5 @@ class PaymentProcessorService:
         admin_email.type = 'PURCHASE_CONFIRMATION_ADMIN'
         admin_email.from_address = ps.find_value_by_code(order.offer.account, 'sales.email')
         admin_email.to_address = ps.find_value_by_code(order.offer.account, 'sales.email')
-        admin_email.subject = "Order #"+order.order_number+" payment confirmation: "+invoice.total_gross
+        admin_email.subject = "Order #"+order.order_number+" payment confirmation: "+str(ioc.new_order_service(self.logger).find_order_total(order))
         self.ioc.new_email_service().save(admin_email)

@@ -136,8 +136,62 @@ angular.module('hh.controllers', [])
             return euroPrice;
         }
     }])
-    .controller('OrderCtrl', ['$scope', '$routeParams', '$location', 'jaxrs', function ($scope, $routeParams, $location, jaxrs) {
+    .controller('SettingsCtrl', ['$scope', '$routeParams', '$location', 'jaxrs', function ($scope, $routeParams, $location, jaxrs) {
 
+    }])
+    .controller('OrderCtrl', ['$scope', '$routeParams', '$location', 'jaxrs', function ($scope, $routeParams, $location, jaxrs) {
+        $scope.orders = [];
+        $scope.errors = [];
+        $scope.order = null;
+        $scope.current = 1;
+        jaxrs.query('order/?page=1', null, function (response) {
+            $scope.orders = response.orders;
+            $scope.pages = Math.ceil(response.count/10);
+        });
+        $scope.paginatorItemClass = function (page) {
+            if ($scope.current == (page + 1)) {
+                return 'btn-info';
+            } else {
+                return 'btn-inverse';
+            }
+        };
+        $scope.formatDate = function (date) {
+            if ( date==undefined )return '';
+            if ( date.indexOf('T')!=-1 ) date = date.substring(0, date.indexOf('T'));
+            return date;
+        };
+        $scope.previous = function() {
+            $scope.current -= 1;
+            $scope.go($scope.current);
+        };
+        $scope.next = function() {
+            $scope.current += 1;
+            $scope.go($scope.current);
+        };
+        $scope.go = function(page) {
+            $scope.current = page;
+            jaxrs.query('order/?page='+$scope.current, null, function (response) {
+                $scope.orders = response.orders;
+            });
+        };
+        $scope.show = function(order) {
+            $scope.order = order;
+            var items = [];
+            if ( $scope.order.items ) {
+                for ( var i=0;i<$scope.order.items.length;i++) {
+                    var item = $scope.order.items[i];
+                    if ( item.variations && item.variations.length!==0 ) {
+                        for(var j=0;j<item.variations.length;j++) {
+                            var variation = item.variations[j];
+                            items[items.length] = {title:item.title+'('+variation.title+')', quantity: variation.quantity, net:variation.net, tax:variation.tax};
+                        }
+                    } else {
+                        items[items.length] = {title:item.title, quantity: item.quantity, net:item.net, tax:item.tax};
+                    }
+                }
+                $scope.order.items = items;
+            }
+        }
     }])
     .controller('OfferCtrl', ['$scope', '$routeParams', '$location', 'jaxrs', 'ValidationService', function ($scope, $routeParams, $location, jaxrs, ValidationService) {
         $scope.offers = [];
@@ -352,16 +406,16 @@ angular.module('hh.controllers', [])
         for(i=currentYear;i<currentYear+10;i++) {
             $scope.expiryyears[$scope.expiryyears.length] = {code:(i+'').substring(2), label: i+''};
         }
-        $scope.defaultImage = function() {
+        $scope.defaultImage = function(item) {
             var img = new Image();
-            img.src = '/static/images/offer_item/'+$scope.offer.id+'_thumb.png';
+            img.src = '/static/images/offer_item/'+item.id+'_thumb.png';
             if ( img.height != 0 ) {
                 return img.src;
             } else {
-                if ( $scope.offer.variations && $scope.offer.variations.length!=0 ) {
-                    for(var i=0;i<$scope.offer.variations.length;i++) {
+                if ( item.variations && item.variations.length!=0 ) {
+                    for(var i=0;i<item.variations.length;i++) {
                         var img = new Image();
-                        img.src = '/static/images/offer_item_variation/'+$scope.offer.variations[i].id+'_thumb.png';
+                        img.src = '/static/images/offer_item_variation/'+item.variations[i].id+'_thumb.png';
                         if ( img.height != 0 ) {
                             return img.src
                         }
