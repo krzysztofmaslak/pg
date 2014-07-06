@@ -183,17 +183,22 @@
                         </div>
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        <div>
+                            <label>Photos</label>
+                            <input id="imageupload" type="file" imageupload name="file" uploadTarget="offer_item" uploadTargetId="{{item.id}}" style="display: none;"/>
+                            <div style="width:100px;">
+                                <img class='thumbnail' src="/static/${pom.version}/img/blank.png" imagecheck="/static/images/offer_item/{{item.id}}_thumb.png" style="width:100px;display:none;"/>
+                                <img src="/static/${pom.version}/img/chooseimageabove.png"
+                                     style="cursor:pointer;" onclick="clickOnParentSibling(this, 'input');event.preventDefault();return false;"/>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
             </table>
         </div>
-        <div ng-if="offer.items.length>0">
-            <label>Shared photos</label>
-            <input id="imageupload" type="file" imageupload name="file" uploadTarget="offer_item" uploadTargetId="{{offer.id}}" style="display: none;"/>
-            <div style="width:100px;">
-                <img class='thumbnail' src="/static/${pom.version}/img/blank.png" imagecheck="/static/images/offer_item/{{offer.id}}_thumb.png" style="width:100px;display:none;"/>
-                <img src="/static/${pom.version}/img/chooseimageabove.png"
-                     style="cursor:pointer;" onclick="clickOnParentSibling(this, 'input');event.preventDefault();return false;"/>
-            </div>
-        </div>
+
         <div ng-show="offer.items.length>0">
             <label>Amounts in</label>
             <select x-ng-model="offer.currency" name="currency" select-required="true">

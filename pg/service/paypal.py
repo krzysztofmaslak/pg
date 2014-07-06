@@ -19,19 +19,19 @@ class PaypalService:
 
     def generate_init_html(self, order, payment_reference, basket_items, ipn_host, seller, paypal_url):
          html = """<html>
-                <head></head>
-                <body>
-                <div>
-                    <form id="paypalForm" action='"""+paypal_url+'/cgi-bin/webscr" method="post">'+"""
-                    <input type="hidden" name="cmd" value="_cart"/>
-                    <input type="hidden" name="custom" value='"""+payment_reference+"""'/>
-                    <input type="hidden" name="upload" value="1"/>
-                    <input type="hidden" name="business" value='"""+seller+"""'/>
-                    <input type="hidden" name="currency_code" id="currency_code" value='"""+order.currency+"""'/>
-                    """
+                        <head></head>
+                        <body>
+                        <div>
+                            <form id="paypalForm" action='"""+paypal_url+'/cgi-bin/webscr" method="post">'+"""
+                                <input type="hidden" name="cmd" value="_cart"/>
+                                <input type="hidden" name="custom" value='"""+payment_reference+"""'/>
+                                <input type="hidden" name="upload" value="1"/>
+                                <input type="hidden" name="business" value='"""+seller+"""'/>
+                                <input type="hidden" name="currency_code" id="currency_code" value='"""+order.currency+"""'/>
+                                """
          for item in basket_items:
-            basket_items = basket_items+"""<input type="hidden" name="item_name_"""+item['index']+'" value="'+item['title']+'"/>'
-            basket_items = basket_items+'<input type="hidden" name="amount_"'+item['index']+'" value="'+ item['value']+'"/>'
+            html += """<input type="hidden" name="item_name_"""+str(item['index'])+'" value="'+item['title']+'"/>'
+            html += '<input type="hidden" name="amount_"'+str(item['index'])+'" value="'+ str(item['value'])+'"/>'
          html += """
                     <input type="hidden" name="item_number" value="BB-PROD1"/>
                     <input type="hidden" name="notify_url" value='"""+ipn_host+"""/pg/paypal/ipn'/>"""
@@ -48,7 +48,7 @@ class PaypalService:
         <input type="hidden" name="first_name" value='"""+b.first_name+"""'/>
         <input type="hidden" name="last_name" value='"""+b.last_name+"""'/>
         <input type="hidden" name="payer_email" value='"""+b.email+"""'/>
-        <input type="hidden" name="payer_id" value='"""+b.id+"""'/>
+        <input type="hidden" name="payer_id" value='"""+str(b.id)+"""'/>
         <script type="text/javascript">document.getElementById('paypalForm').submit()</script>
         </form>
         </div>

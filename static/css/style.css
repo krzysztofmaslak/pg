@@ -23,6 +23,7 @@ body {
     background-color: #FFFFFF;
     border-left: 1px solid #DDDDDD;
     border-right: 1px solid #DDDDDD;
+    border-bottom: 1px solid #DDDDDD;
     padding: 0 6px;
 }
 .cart-page .cart-summary {
@@ -200,4 +201,36 @@ ul.unstyled, ol.unstyled {
 }
 #shippingInfo {
     margin-top: 20px;
+}
+.itemQuantityOk {
+    border:1px solid #DDDDDD
+}
+.itemQuantityErr {
+    border:1px solid #E9322D;
+}
+#Loading .modal-body {
+    font-size: 20px;
+    height: 110px;
+    margin-top: 40px;
+    text-align: center;
+}
+#loadingIndicator {
+    z-index: 11000;
+    /*background-position: 50% 50%;*/
+    /*background-repeat: no-repeat;*/
+    width: 100%;
+    display: none;
+    height: 100%;
+    min-height: 100%;
+    background-color: rgb(255,255,255);
+    background-color: rgba(255,255,255,0.2);
+    /* For IE 5.5 - 7*/
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#11ffffff, endColorstr=#11ffffff);
+    /* For IE 8*/
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#11ffffff, endColorstr=#11ffffff)";
+    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#11ffffff', endColorstr='#11ffffff'); /* IE: bf = 0.75 in hex */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    zoom:1;
 }

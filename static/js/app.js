@@ -31,8 +31,16 @@ String.prototype.replaceAll = function( token, newToken, ignoreCase ) {
         }
 
     }
-return str;
+    return str;
 };
+window.showLoadingIndicator = function() {
+    jq('#loadingIndicator').css('display', 'block');
+    jq('#loadingIndicator').addClass('hover');
+}
+window.hideLoadingIndicator = function() {
+    jq('#loadingIndicator').css('display', 'none');
+    jq('#loadingIndicator').removeClass('hover');
+}
 window.clickOnParentSibling = function(element, nodeType) {
     if ( element.childNodes && element.childNodes.length!=0 ) {
         for(var i=0;i<element.childNodes.length;i++) {
@@ -54,7 +62,7 @@ angular.module('pgadminapp', ['ngRoute', 'hh.filters', 'hh.services', 'hh.direct
         $routeProvider.when('/settings',      {templateUrl: '/static/${pom.version}/partials/admin/settings.html'});
         $routeProvider.otherwise({redirectTo: '/landing'});
 	}]);
-angular.module('pgapp', ['ngRoute', 'hh.filters', 'hh.services', 'hh.directives', 'hh.controllers', 'LoadingModule', 'ui.bootstrap.modal']).
+angular.module('pgapp', ['ngRoute', 'hh.filters', 'hh.services', 'hh.directives', 'hh.controllers', 'ui.bootstrap.modal']).
     config(['$routeProvider', '$sceProvider', function($routeProvider, $sceProvider) {
         $routeProvider.when('/checkout',      {templateUrl: '/static/${pom.version}/partials/checkout.html'});
         $routeProvider.otherwise({redirectTo: '/checkout'});

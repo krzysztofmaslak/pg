@@ -51,7 +51,10 @@ class InvoiceService:
                             shipping += iv.shipping
                         else:
                             for c in range(iv.quantity-1):
-                                shipping += iv.shipping_additional
+                                if iv.shipping_additional is not None:
+                                    shipping += iv.shipping_additional
+                                else:
+                                    shipping += iv.shipping
                         invoice_items.append(An(title=item.title+' '+iv.title,
                                                 quantity=iv.quantity, net_price=iv.net,
                                                 net_value=iv.net*iv.quantity,
@@ -63,7 +66,10 @@ class InvoiceService:
                         shipping += item.shipping
                     else:
                         for c in range(item.quantity-1):
-                            shipping += item.shipping_additional
+                            if item.shipping_additional is not None:
+                                shipping += item.shipping_additional
+                            else:
+                                shipping += item.shipping
                     invoice_items.append(An(title=item.title, quantity=item.quantity, net_price=item.net,
                                             net_value=item.net*item.quantity,
                                             vat_percentage=item.tax, vat_value = tax_value, total=total_value))

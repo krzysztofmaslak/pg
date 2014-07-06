@@ -349,6 +349,8 @@ angular.module('hh.controllers', [])
         $scope.payment = {month:'', year:''};
         $scope.countries = [{code:'', label:'Country'}];
         $scope.offer = null;
+        $scope.quantityMissing = false;
+        $scope.paymentAccepted = false;
         $scope.url = $location.absUrl();
         $scope.url = $scope.url.substring($scope.url.lastIndexOf('/x/')+3);
         if ( $scope.url.indexOf('#')!=-1 ) {
@@ -490,7 +492,7 @@ angular.module('hh.controllers', [])
                                 }
                             }
                         }
-                    } else {
+                    } else if ($scope.payment.items[i].quantity > 0) {
                         shipping += $scope.payment.items[i].shipping;
                         if ($scope.payment.items[i].quantity > 1) {
                             for (var q = 1; q < $scope.payment.items[i].quantity; q++) {
@@ -513,10 +515,11 @@ angular.module('hh.controllers', [])
             item.quantity = item.quantity - 1;
         };
         $scope.increaseItemQuantity = function(item) {
+            $scope.quantityMissing = false;
             item.quantity = item.quantity + 1;
         };
         $scope.paypaylPayment = function(orderId) {
-            $('#orderId').val(orderId);
+            jq('#order_id').val(orderId);
             document.paymentForm.submit();
         };
         $scope.stripePayment = function(order_id) {
@@ -527,6 +530,9 @@ angular.module('hh.controllers', [])
 
             var stripeResponseHandler = function(status, response) {
                 if (response.error) {
+                    hideLoadingIndicator();
+                    jq('#ccPayment').attr('disabled', false);
+                    jq('#ccPaymentWait').html('');
                     // Show the errors on the form
                     $form.find('.payment-errors').text(response.error.message);
                     jq('#ccPayment').prop('disabled', false);
@@ -547,7 +553,12 @@ angular.module('hh.controllers', [])
                             contentType:"application/json; charset=utf-8",
                             dataType:"json",
                             success: function(response) {
-                                // @TODO successful stripe payment
+                                jq('#ccPayment').attr('disabled', false);
+                                jq('#ccPaymentWait').html('');
+                                $scope.paymentAccepted = true;
+                                $scope.$digest();
+                                jq("body,html").animate({scrollTop:50}, 'slow');
+                                hideLoadingIndicator();
                             },
                             error: function(response) {
                                 jq('#stripeChoosePayment').click(function(event){
@@ -582,11 +593,19 @@ angular.module('hh.controllers', [])
             }
         });
         $scope.$on('PaymentService:service-failure', function(event) {
-            // @TODO add handling
+            hideLoadingIndicator();
+            jq('#ccPayment').attr('disabled', false);
+            jq('#ccPaymentWait').html('');
         });
         $scope.pay = function(event, method) {
-            if ( ValidationService.validate($scope.checkoutForm) ) {
-                console.log('form valid');
+            var paymentFormValid = false;
+            if ( method==='cc' && ValidationService.validate($scope.checkoutPaymentForm)) {
+                paymentFormValid = true;
+            }
+            if ( ValidationService.validate($scope.checkoutDetailsForm) && (method!=='cc' || paymentFormValid) && $scope.total()>0 ) {
+                jq('#ccPayment').attr('disabled', true);
+                jq('#ccPaymentWait').html('<span class="wait">&nbsp;<img src="/static/${pom.version}/img/loading.gif" alt="" /></span>');
+                showLoadingIndicator();
                 PaymentService.makePayment({
                     offer_id: $scope.offer.id,
                     lang: window.language,
@@ -599,7 +618,9 @@ angular.module('hh.controllers', [])
                     country: window.client_country
                 });
             } else {
-                console.log('form invalid');
+                if ( $scope.total()<=0 ) {
+                    $scope.quantityMissing = true;
+                }
                 setTimeout(function(){
                     var top = 100000;
                     var first = null;
@@ -610,7 +631,9 @@ angular.module('hh.controllers', [])
                         }
                     });
                     jq("body,html").animate({scrollTop:top-30}, 'slow');
-                    first.focus();
+                    if ( first!=null ) {
+                        first.focus();
+                    }
                 }, 500);
             }
         }

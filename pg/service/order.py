@@ -61,14 +61,20 @@ class OrderService:
                             shipping = shipping + v.shipping
                         else:
                             for c in range(v.quantity-1):
-                                shipping = shipping + v.shipping_additional
+                                if v.shipping_additional is not None:
+                                    shipping = shipping + v.shipping_additional
+                                else:
+                                    shipping = shipping + v.shipping
             else:
                 total = total+(i.quantity*(i.net+i.tax))
                 if i.quantity==1:
                     shipping = shipping + i.shipping
                 else:
                     for c in range(i.quantity-1):
-                        shipping = shipping + i.shipping_additional
+                        if i.shipping_additional is not None:
+                            shipping = shipping + i.shipping_additional
+                        else:
+                            shipping = shipping + i.shipping
         return total + shipping
 
     def save(self, payment):
@@ -87,11 +93,13 @@ class OrderService:
         b.first_name = payment.billing.first_name
         b.last_name = payment.billing.last_name
         b.address1 = payment.billing.address1
-        b.address2 = payment.billing.address2
+        if hasattr(payment.billing, 'address2'):
+            b.address2 = payment.billing.address2
         b.country = payment.billing.country
         b.city = payment.billing.city
         b.postal_code = payment.billing.postal_code
-        b.county = payment.billing.county
+        if hasattr(payment.billing, 'county'):
+            b.county = payment.billing.county
         b.email = payment.billing.email
         b.same_address = payment.billing.same_address
         o.billing.append(b)
@@ -101,14 +109,19 @@ class OrderService:
             s.first_name = payment.shipping.first_name
             s.last_name = payment.shipping.last_name
             s.address1 = payment.shipping.address1
-            s.address2 = payment.shipping.address2
+            if hasattr(payment.shipping, 'address2'):
+                s.address2 = payment.shipping.address2
             s.country = payment.shipping.country
             s.city = payment.shipping.city
             s.postal_code = payment.shipping.postal_code
-            s.county = payment.shipping.county
-            s.email = payment.shipping.email
-            s.company = payment.shipping.company
-            s.phone_number = payment.shipping.phone_number
+            if hasattr(payment.shipping, 'county'):
+                s.county = payment.shipping.county
+            if hasattr(payment.shipping, 'email'):
+                s.email = payment.shipping.email
+            if hasattr(payment.shipping, 'company'):
+                s.company = payment.shipping.company
+            if hasattr(payment.shipping, 'phone_number'):
+                s.phone_number = payment.shipping.phone_number
             o.shipping.append(s)
         offer_service = self.ioc.new_offer_service()
         offer = offer_service.find_by_id(payment.offer_id)

@@ -37,7 +37,7 @@ angular.module('LoadingModule', ['ui.bootstrap.modal'])
         return {
             restrict: 'A',
             replace: true,
-            template: '<div modal width="250" height="140" show="isshown" options="options" id="Loading"><div class="modal-body">Loading</div></div>',
+            template: '<div modal width="250" height="140" show="isshown" options="options" id="Loading"><div class="modal-body">'+messages.loading+'</div></div>',
             controller: function ($scope, $element, $attrs, LoadingSrv) {
                 $scope.$watch(function () { return LoadingSrv.requestCount; }, function (newVal) {
                     $scope.isshown = LoadingSrv.isLoadingShown();
