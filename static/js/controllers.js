@@ -523,7 +523,7 @@ angular.module('hh.controllers', [])
             document.paymentForm.submit();
         };
         $scope.stripePayment = function(order_id) {
-            var $form = jq('#checkoutForm');
+            var $form = jq('#checkoutPaymentForm');
 
             // Disable the submit button to prevent repeated clicks
             jq('#ccPayment').prop('disabled', true);

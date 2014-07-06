@@ -100,7 +100,7 @@ def process_ip():
 def process_init():
     order_id = request.args.get('order_id')
     paypal_init.logger.info('['+request.remote_addr+'] Paypal init [order_id:'+order_id+']')
-    order = paypal_init.ioc.new_order_service(paypal_init.logger).find_by_id(int(order_id))
+    order = paypal_init.ioc.new_order_service().find_by_id(int(order_id))
     payment_reference = security.Security().encrypt(str(order.id)+"#"+order.order_number)
     i = 0
     shipping = 0.0

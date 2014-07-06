@@ -1,3 +1,5 @@
+from flask.ext.mail import Mail
+
 __author__ = 'xxx'
 
 from flask import Flask
@@ -26,10 +28,22 @@ class App:
     def create_app(self):
         self.app = Flask(__name__)
         self.configure_logging(self.app)
+        self.configure_mail(self.app)
         self.configure_session(self.app)
         self.configure_blueprints(self.app, DEFAULT_BLUEPRINTS)
         self.configure_extensions(self.app)
+        self.ioc.app = self.app
         return self.app
+
+    def configure_mail(self, app):
+        app.config.update(
+            MAIL_SERVER='localhost',
+            MAIL_PORT=25,
+            MAIL_USE_SSL=False,
+            MAIL_USERNAME = 'you@google.com',
+            MAIL_PASSWORD = 'GooglePasswordHere'
+            )
+        self.ioc.mail = Mail(app)
 
     def configure_blueprints(self, app, blueprints):
         for blueprint in blueprints:
@@ -52,6 +66,7 @@ class App:
             file_handler = TimedRotatingFileHandler("run", when='D')
             file_handler.setLevel(logging.WARNING)
             app.logger.addHandler(file_handler)
+        self.ioc.logger = app.logger
 
     def init_db(self):
         with self.app.app_context():

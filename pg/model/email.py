@@ -21,4 +21,5 @@ class Email(base.db.Model, base.JsonSerializable):
 
     def __init__(self):
         self.creation_date=datetime.datetime.now()
+        self.status = 0
 

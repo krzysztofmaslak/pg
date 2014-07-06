@@ -11,7 +11,7 @@ from flask import request, session
 stripe_rest = Blueprint('stripe_rest', __name__, url_prefix='/rest/stripe')
 
 def find_order_total(order):
-    total = stripe_rest.ioc.new_order_service(stripe_rest.logger).find_order_total(order)
+    total = stripe_rest.ioc.new_order_service().find_order_total(order)
     if order.offer.currency!=order.currency:
         stripe_rest.logger.info('['+request.remote_addr+'] doing currency exchange=[%s>%s]'+(order.offer.currency, order.currency))
         # TODO do currency conversion
@@ -23,7 +23,7 @@ def find_order_total(order):
 @stripe_rest.route('/process', methods=['POST'])
 def process():
     stripe_rest.logger.info('['+request.remote_addr+'] Process payment with stripe for order:'+str(request.json['order_id']))
-    order = stripe_rest.ioc.new_order_service(stripe_rest.logger).find_by_id(int(request.json['order_id']))
+    order = stripe_rest.ioc.new_order_service().find_by_id(int(request.json['order_id']))
     if order is not None:
         stripe_rest.logger.info('['+request.remote_addr+'] Order='+str(order.id))
         amount = find_order_total(order)
@@ -40,7 +40,7 @@ def process():
             stripe_rest.logger.info('['+request.remote_addr+'] Success - stripe response '+str(resp)+' order number: '+order.order_number)
             stripe_message = model.StripeMessage(resp.id, str(resp), int(request.json['order_id']))
             stripe_rest.ioc.new_stripe_service().save(stripe_message)
-            stripe_rest.ioc.new_payment_processor_service(stripe_rest.logger).process_paid_order(order)
+            stripe_rest.ioc.new_payment_processor_service().process_paid_order(order)
             return Response(status=200)
         except:
             traceback.print_exc(file=sys.stdout)

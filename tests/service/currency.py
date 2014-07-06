@@ -30,10 +30,10 @@ class CurrencyServiceTest(Base):
         currency_service = self.ioc.new_currency_service()
         currencies = currency_service.list()
         self.assertIsNotNone(currencies)
-        self.assertEquals(5, len(currencies))
+        self.assertEqual(5, len(currencies))
 
     def test_save_rate(self):
         rate = model.CurrencyRate('eur', 1.4323)
         saved_rate = self.ioc.new_currency_service().save_rate(rate);
         self.assertIsNotNone(saved_rate)
-        self.assertEquals(1.4323, saved_rate.rate)
+        self.assertEqual(1.4323, saved_rate.rate)

@@ -1,3 +1,4 @@
+from flask.ext.mail import Mail
 from flask.ext.script import Manager
 from werkzeug.security import generate_password_hash
 from apscheduler.scheduler import Scheduler
@@ -6,10 +7,11 @@ from factory import ServiceFactory
 from pg import app, model
 
 gateway = app.App(ioc=ServiceFactory())
-manager = Manager(gateway.create_app())
+app = gateway.create_app()
+manager = Manager(app)
 sched = Scheduler()
 
-@sched.cron_schedule(hour=2)
+@sched.interval_schedule(hours=2)
 def load_currencies():
     print('Processing currencies')
     currencies = gateway.ioc.new_currency_service().list()
@@ -19,6 +21,12 @@ def load_currencies():
             exchange = float(requests.get("http://quote.yahoo.com/d/quotes.csv?s=eur" + c.code + "=X&f=l1&e=.csv").text)
             rate = model.CurrencyRate(c.code, exchange)
             gateway.ioc.new_currency_service().save_rate(rate);
+
+@sched.interval_schedule(minutes=1)
+def process_emails():
+    app.logger.info('Process emails')
+    gateway.ioc.new_email_service().process_emails()
+
 sched.start()
 
 @manager.command
@@ -28,6 +36,7 @@ def init_db():
 @manager.command
 def add_root():
     a = model.Account()
+    a.lang = 'eng'
     a.properties.append(model.Property(a, 'sales.email', 'spreadline.limited@gmail.com'))
     a.properties.append(model.Property(a, 'order_confirmation', 'Order confirmation'))
     u = model.User('dublin.krzysztof.maslak@gmail.com', generate_password_hash('abcd'))

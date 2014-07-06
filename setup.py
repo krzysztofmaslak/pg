@@ -25,7 +25,7 @@ setup(
         'mock',
         # 'Flask-Babel',
         'Flask-Testing',
-        # 'Flask-Mail',
+        'Flask-Mail',
         # 'Flask-Cache',
         # 'Flask-Login',
         # 'Flask-OpenID',

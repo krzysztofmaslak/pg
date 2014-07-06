@@ -5,6 +5,8 @@ __author__ = 'xxx'
 
 
 class ServiceFactory:
+    logger = type("", (), dict(info=""))()
+
     def get_config(self):
         d = {
             'SQLALCHEMY_DATABASE_URI':'sqlite:////data/sqlite/run.db',
@@ -23,7 +25,7 @@ class ServiceFactory:
             self.load_production_vars(d)
         return d
 
-    def load_production_vars(d):
+    def load_production_vars(self, d):
         with open(os.eniron['PRODUCTION_SETTINGS']) as f:
             for line in f:
                 key, value = line.split('=')
@@ -35,8 +37,8 @@ class ServiceFactory:
     def new_inovice_service(self):
         return service.InvoiceService(self)
 
-    def new_order_service(self, logger):
-        return service.OrderService(self, logger)
+    def new_order_service(self):
+        return service.OrderService(self, self.logger)
 
     def new_user_service(self):
         return service.UserService(self)
@@ -60,13 +62,13 @@ class ServiceFactory:
         return service.PropertyService(self)
 
     def new_email_service(self):
-        return service.EmailService(self)
+        return service.EmailService(self, self.logger, self.mail)
 
     def new_country_service(self):
         return service.CountryService(self)
 
-    def new_payment_processor_service(self, logger):
-        return service.PaymentProcessorService(self, logger)
+    def new_payment_processor_service(self):
+        return service.PaymentProcessorService(self, self.logger)
 
     def new_paypal_service(self):
         return service.PaypalService(self)

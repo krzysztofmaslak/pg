@@ -1,0 +1,345 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+</head>
+<body>
+    <div>
+        <div style="width:100%;padding:0 0 38px 27px;">
+            <table width="660" cellspacing="0" cellpadding="0" border="0"
+                   style="margin:0pt 10px;padding:0pt;font-family:Arial,Tahoma;width:660px">
+                <tbody>
+                <tr>
+                    <td style="font-size:11px;">
+                        <div style="width:526px;margin:0;font-weight:normal;font-size:1.5em;color:#669999">
+                            <a target="_blank" href="https://www.e-littleangel.com">
+                                <img border="0" alt="Shopping at e-littleangel.com" src="https://www.e-littleangel.com/static/logo.png"/>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <h1 style="width:526px;margin:0;margin-bottom:10px;margin-top:10px;font-weight:normal;font-size:1.7em;color:#669999">Order confirmation - e-littleangel.com</h1>
+                    </td>
+                </tr>
+                <tr style="font-size:11px;margin:0;padding:0">
+                    <td align="left" style="margin:0;padding:0">
+                        <h2 style="margin:0 0 14px 0;padding:10px;background:#f2f2f2;font-size:12px;font-weight:bold">
+                            ORDER SUMMARY</h2>
+                        <table cellspacing="0" cellpadding="0" border="0"
+                               style="margin:0pt;padding:0pt;width:660px;border-bottom:1px dotted #000000">
+                            <tbody>
+                            <tr style="margin:0;padding:0">
+                                <th style="text-indent:10px;text-align:left;font-size:13px;border-bottom:2px solid #000;margin:0;font-weight:400;padding:0 0 8px 0">
+                                    Details
+                                </th>
+                                <th style="text-indent:10px;text-align:left;font-size:13px;border-bottom:2px solid #000;margin:0;font-weight:400;padding:0 0 8px 0">
+                                    Customer
+                                </th>
+                                <th style="text-indent:10px;text-align:left;font-size:13px;border-bottom:2px solid #000;margin:0;font-weight:400;padding:0 0 8px 0">
+                                    Delivery address
+                                </th>
+
+                            </tr>
+                            <tr style="margin:0;padding:0">
+                                <td style="margin:0;padding:10px;font-size:11px;vertical-align:top">
+
+                                    <table border="0" style="margin:0;padding:0">
+                                        <tbody>
+                                        <tr style="margin:0;padding:0">
+                                            <td style="margin:0;padding:3px 10px 3px 0;font-size:11px;vertical-align:top;font-weight:400;white-space:nowrap">
+                                                Order number:
+                                            </td>
+                                            <td style="margin:0;padding:3px 0;font-size:11px;vertical-align:top;font-weight:bold">
+                                                $invoice.referenceNumber
+                                            </td>
+                                        </tr>
+                                        <tr style="margin:0;padding:0">
+                                            <td style="margin:0;padding:3px 10px 3px 0;font-size:11px;vertical-align:top;font-weight:400;white-space:nowrap">
+                                                Date:
+                                            </td>
+                                            <td style="margin:0;padding:3px 0;font-size:11px;vertical-align:top;font-weight:bold">
+                                                $invoice.creationDate
+                                            </td>
+                                        </tr>
+                                        <tr style="margin:0;padding:0">
+                                            <td style="margin:0;padding:3px 10px 3px 0;font-size:11px;vertical-align:top;font-weight:400;white-space:nowrap">
+                                                Delivery method:
+                                            </td>
+                                            <td style="margin:0;padding:3px 0;font-size:11px;vertical-align:top;font-weight:bold">
+                                                $invoice.deliveryMethod
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td style="margin:0;padding:10px;font-size:11px;vertical-align:top">
+
+                                    <table border="0" style="margin:0;padding:0">
+                                        <tbody>
+                                        <tr style="margin:0;padding:0">
+                                            <td style="margin:0;padding:3px 10px 3px 0;font-size:11px;vertical-align:top;font-weight:400;white-space:nowrap">
+                                                Email:
+                                            </td>
+                                            <td style="margin:0;padding:3px 0;font-size:11px;vertical-align:top;font-weight:bold">
+                                                $user.username
+                                            </td>
+                                        </tr>
+                                        <tr style="margin:0;padding:0">
+                                            <td style="margin:0;padding:3px 10px 3px 0;font-size:11px;vertical-align:top;font-weight:400;white-space:nowrap">
+                                                First name:
+                                            </td>
+                                            <td style="margin:0;padding:3px 0;font-size:11px;vertical-align:top;font-weight:bold">
+                                                $user.firstName
+                                            </td>
+                                        </tr>
+                                        <tr style="margin:0;padding:0">
+                                            <td style="margin:0;padding:3px 10px 3px 0;font-size:11px;vertical-align:top;font-weight:400;white-space:nowrap">
+                                                Last name:
+                                            </td>
+                                            <td style="margin:0;padding:3px 0;font-size:11px;vertical-align:top;font-weight:bold">
+                                                $user.lastName
+                                            </td>
+                                        </tr>
+                                        <tr style="margin:0;padding:0">
+                                            <td style="margin:0;padding:3px 10px 3px 0;font-size:11px;vertical-align:top;font-weight:400;white-space:nowrap">
+                                                Address:
+                                            </td>
+                                            <td style="margin:0;padding:3px 0;font-size:11px;vertical-align:top;font-weight:bold">
+                                                $user.addressLine1
+                                                #if($user.addressLine2)
+                                                    $user.addressLine2
+                                                #end
+                                            </td>
+                                        </tr>
+                                        <tr style="margin:0;padding:0">
+                                            <td style="margin:0;padding:3px 10px 3px 0;font-size:11px;vertical-align:top;font-weight:400;white-space:nowrap">
+                                                Post code:
+                                            </td>
+                                            <td style="margin:0;padding:3px 0;font-size:11px;vertical-align:top;font-weight:bold">
+                                                $user.postcode
+                                            </td>
+                                        </tr>
+                                        <tr style="margin:0;padding:0">
+                                            <td style="margin:0;padding:3px 10px 3px 0;font-size:11px;vertical-align:top;font-weight:400;white-space:nowrap">
+                                                City:
+                                            </td>
+                                            <td style="margin:0;padding:3px 0;font-size:11px;vertical-align:top;font-weight:bold">
+                                                $user.townCity
+                                            </td>
+                                        </tr>
+                                        #if($user.phonenumber)
+                                        <tr style="margin:0;padding:0">
+                                            <td style="margin:0;padding:3px 10px 3px 0;font-size:11px;vertical-align:top;font-weight:400;white-space:nowrap">
+                                                Phone number:
+                                            </td>
+                                            <td style="margin:0;padding:3px 0;font-size:11px;vertical-align:top;font-weight:bold">
+                                                $user.phonenumber
+                                            </td>
+                                        </tr>
+                                        #end
+                                        <tr style="margin:0;padding:0">
+                                            <td style="margin:0;padding:3px 10px 3px 0;font-size:11px;vertical-align:top;font-weight:400;white-space:nowrap"></td>
+                                            <td style="margin:0;padding:3px 0;font-size:11px;vertical-align:top;font-weight:bold"></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td style="margin:0;padding:10px;font-size:11px;vertical-align:top">
+
+
+                                    <table border="0" style="margin:0;padding:0">
+                                        <tbody>
+                                        <tr style="margin:0;padding:0">
+                                            <td style="margin:0;padding:3px 10px 3px 0;font-size:11px;vertical-align:top;font-weight:400;white-space:nowrap">
+                                                Name:
+                                            </td>
+                                            <td style="margin:0;padding:3px 0;font-size:11px;vertical-align:top;font-weight:bold">
+                                                $order.firstName
+                                            </td>
+                                        </tr>
+                                        <tr style="margin:0;padding:0">
+                                            <td style="margin:0;padding:3px 10px 3px 0;font-size:11px;vertical-align:top;font-weight:400;white-space:nowrap">
+                                                Last name:
+                                            </td>
+                                            <td style="margin:0;padding:3px 0;font-size:11px;vertical-align:top;font-weight:bold">
+                                                $order.lastName
+                                            </td>
+                                        </tr>
+                                        <tr style="margin:0;padding:0">
+                                            <td style="margin:0;padding:3px 10px 3px 0;font-size:11px;vertical-align:top;font-weight:400;white-space:nowrap">
+                                                Address:
+                                            </td>
+                                            <td style="margin:0;padding:3px 0;font-size:11px;vertical-align:top;font-weight:bold">
+                                                $order.addressLine1
+                                                #if($order.addressLine2)
+                                                    $order.addressLine2
+                                                #end
+                                            </td>
+                                        </tr>
+                                        <tr style="margin:0;padding:0">
+                                            <td style="margin:0;padding:3px 10px 3px 0;font-size:11px;vertical-align:top;font-weight:400;white-space:nowrap">
+                                                Post code:
+                                            </td>
+                                            <td style="margin:0;padding:3px 0;font-size:11px;vertical-align:top;font-weight:bold">
+                                                $order.postCode
+                                            </td>
+                                        </tr>
+                                        <tr style="margin:0;padding:0">
+                                            <td style="margin:0;padding:3px 10px 3px 0;font-size:11px;vertical-align:top;font-weight:400;white-space:nowrap">
+                                                City:
+                                            </td>
+                                            <td style="margin:0;padding:3px 0;font-size:11px;vertical-align:top;font-weight:bold">
+                                                $order.city
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div style="line-height:18px;margin:0 0 25px 0;padding:0">
+
+                        </div>
+                    </td>
+                </tr>
+                <tr style="font-size:11px;margin:0;padding:0">
+                    <td align="left" style="margin:0;padding:0">
+                        <h2 style="margin:0 0 14px 0;padding:10px;background:#f2f2f2;font-size:12px;font-weight:bold">
+                            ORDERED PRODUCTS</h2>
+                        <table cellspacing="0" cellpadding="0" border="0"
+                               style="margin:0pt;padding:0pt;width:660px;border-bottom:2px solid #000000;border-collapse:collapse">
+                            <tbody>
+                            <tr style="margin:0;padding:0">
+                                <th style="text-align:left;font-size:13px;white-space:nowrap;border-bottom:2px solid #000;margin:0;font-weight:400;padding:0 10px 8px">
+                                    &nbsp;</th>
+                                <th style="text-align:left;font-size:13px;white-space:nowrap;border-bottom:2px solid #000;margin:0;font-weight:400;padding:0 10px 8px">
+                                    Item
+                                </th>
+                                <th style="text-align:left;font-size:13px;white-space:nowrap;border-bottom:2px solid #000;margin:0;font-weight:400;padding:0 10px 8px">
+                                    Code
+                                </th>
+                                <th style="text-align:left;font-size:13px;white-space:nowrap;border-bottom:2px solid #000;margin:0;font-weight:400;padding:0 10px 8px">
+
+                                </th>
+                                <th style="text-align:left;font-size:13px;white-space:nowrap;border-bottom:2px solid #000;margin:0;font-weight:400;padding:0 10px 8px">
+                                    Quantity
+                                </th>
+                                <th style="text-align:left;font-size:13px;white-space:nowrap;border-bottom:2px solid #000;margin:0;font-weight:400;padding:0 10px 8px">
+                                    Net price
+                                </th>
+                                <th style="text-align:left;font-size:13px;white-space:nowrap;border-bottom:2px solid #000;margin:0;font-weight:400;padding:0 10px 8px">
+                                    VAT
+                                </th>
+                                <th style="text-align:left;font-size:13px;white-space:nowrap;border-bottom:2px solid #000;margin:0;font-weight:400;padding:0 10px 8px">
+                                    Gross price
+                                </th>
+
+                            </tr>
+                            <tr>
+                                <td colspan="8"></td>
+                            </tr>
+                            #foreach( $item in $order.items )
+                            <tr style="margin:0;padding:0">
+                                <td style="margin:0;padding:10px;font-size:11px;vertical-align:top;border-bottom:1px dotted #000;text-align:left"></td>
+                                <td style="margin:0;padding:10px;font-size:11px;vertical-align:top;border-bottom:1px dotted #000;text-align:left">
+                                    $item.label
+                                </td>
+                                <td style="margin:0;padding:10px;font-size:11px;vertical-align:top;border-bottom:1px dotted #000;text-align:left">
+                                    #if($item.productTypeCode)
+                                        $item.productTypeCode
+                                    #end
+                                </td>
+                                <td style="margin:0;padding:10px;font-size:11px;vertical-align:top;border-bottom:1px dotted #000;text-align:left">
+                                    #if($item.attributes)
+                                        $item.attributes
+                                    #end
+                                </td>
+                                <td style="margin:0;padding:10px;font-size:11px;vertical-align:top;border-bottom:1px dotted #000;text-align:left">
+                                    $item.quantity
+                                </td>
+                                <td style="margin:0pt;padding:10px;font-size:11px;vertical-align:top;border-bottom:1px dotted #000000;text-align:left;width:75px;white-space:nowrap">
+                                    $orderCurrency $item.exchangedNetvalue
+                                </td>
+                                <td style="margin:0;padding:10px;font-size:11px;vertical-align:top;border-bottom:1px dotted #000;text-align:left;white-space:nowrap">
+                                    $orderCurrency $item.exchangedVatValue
+                                </td>
+                                <td style="margin:0pt;padding:10px;font-size:11px;vertical-align:top;border-bottom:1px dotted #000000;text-align:left;width:75px;white-space:nowrap">
+                                    $orderCurrency $item.exchangedTotalPrice
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="8"></td>
+                            </tr>
+                            #end
+                            </tbody>
+                        </table>
+                        <table cellspacing="0" cellpadding="0" border="0" style="margin:0pt;padding:0pt;width:660px">
+                            <tbody>
+                            <tr style="margin:0;padding:0">
+                                <td style="margin:0;padding:10px 0;font-size:11px;vertical-align:top">
+
+
+                                </td>
+                                <td width="280" bgcolor="#f7f7f7"
+                                    style="margin:0;padding:10px 0;font-size:11px;vertical-align:top">
+
+                                    <table border="0"
+                                           style="margin:0pt;padding:0pt;background:#f7f7f7 none repeat scroll 0% 0%;width:100%">
+                                        <tbody>
+                                        <tr style="margin:0;padding:0">
+                                            <td style="margin:0;padding:0 10px;font-size:13px;vertical-align:top">
+                                                Net amount:
+                                            </td>
+                                            <td style="margin:0;padding:1px 10px;font-size:12px;vertical-align:top;text-align:right;white-space:nowrap">
+                                                $orderCurrency $order.exchangedNetValue
+                                            </td>
+                                        </tr>
+                                        <tr style="margin:0;padding:0">
+                                            <td style="margin:0;padding:0 10px;font-size:13px;vertical-align:top">VAT:
+                                            </td>
+                                            <td style="margin:0;padding:1px 10px;font-size:12px;vertical-align:top;text-align:right;white-space:nowrap">
+                                                $orderCurrency $order.exchangedVatValue
+                                            </td>
+                                        </tr>
+                                        <tr style="margin:0;padding:0">
+                                            <td style="margin:0;padding:0 10px;font-size:13px;vertical-align:top">Total:
+                                            </td>
+                                            <td style="margin:0;padding:1px 10px;font-size:15px;vertical-align:top;text-align:right;font-weight:bold;color:#de1f26;white-space:nowrap">
+                                                $orderCurrency $order.exchangedTotalPrice
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        #if($isUser)
+                        <div style="margin:0;padding:20px 0;font-size:12px">
+
+                            <a target="_blank" title="Check order status"
+                               href="https://www.e-littleangel.com/authorized/dashboard.faces"
+                               style="margin:0;padding:0;font-weight:bold;color:#4065af;text-decoration:underline">Check order status</a>.
+
+                        </div>
+                        #end
+                    </td>
+                </tr>
+                <tr style="margin:0;padding:0">
+                    <td style="border-top:1px dotted #000;margin:0;padding:0">
+                        <div style="font-size:12px;margin:0;color:#58595b;margin-top:10px;">Have a nice day</div>
+            		<div style="font-size:12px;width:526px;color:#58595b;margin-top:4px;">e-LittleAngel Team</div><br/>
+            		<div style="font-size:12px;width:526px;color:#58595b;margin-top:4px;">
+				To contact us send an email: sales@e-littleangel.com</div><div style="font-size:12px;color:#58595b;margin-top:4px;">or visit: <a target="_blank" title="Contact details"
+                                                                            href="https://www.e-littleangel.com/index.faces#contact-us"
+                                                                            style="margin:0;padding:0;font-weight:bold;color:#4065af;text-decoration:underline;font-size:12px;">https://www.e-littleangel.com/index.faces#contact-us</a></div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <br><br></div>
+    </div>
+</body>
+</html>

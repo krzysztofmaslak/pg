@@ -68,6 +68,6 @@ class StripeTest(Base):
         mock_charge.assert_called_once_with(amount=510,
                 currency='eur',
                 card='cardToken',
-                description=self.ioc.new_order_service(mock.MagicMock()).find_by_id(order_id).order_number)
+                description=self.ioc.new_order_service().find_by_id(order_id).order_number)
         mock_save.assert_called_once_with(model.StripeMessage(base.An(id=123).id, str(base.An(id=123)), order_id))
-        mock_process_paid_order.assert_called_once_with(self.ioc.new_order_service(mock.MagicMock()).find_by_id(order_id))
+        mock_process_paid_order.assert_called_once_with(self.ioc.new_order_service().find_by_id(order_id))

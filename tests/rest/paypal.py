@@ -67,7 +67,7 @@ class PaypalTest(Base):
         r = self.client.get('/paypal/init/?order_id='+str(r.json['id']), environ_base=self.environ_base)
         self.assertEqual(200, r.status_code)
 
-        order = self.ioc.new_order_service(mock.MagicMock()).find_by_id(order_id)
+        order = self.ioc.new_order_service().find_by_id(order_id)
         payment_reference = security.Security().encrypt(str(order_id)+"#"+order.order_number)
         seller = self.ioc.get_config()['paypal.seller']
         paypal_url = self.ioc.get_config()['paypal.url']

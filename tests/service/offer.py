@@ -69,7 +69,7 @@ class OfferServiceTest(TestCase):
         # remove item 3
         offer_service.save_offer(a, base.An(items= items[0:2], id= o.id, title='My offer', currency='USD'))
         o = model.Offer.query.filter(model.Offer.id == o.id).first()
-        self.assertEquals(2, len(o.items.all()))
+        self.assertEqual(2, len(o.items.all()))
         # add variations to item 1
         o.items[0].variations = [model.OfferItemVariation(o.items[0], 'Blue'), model.OfferItemVariation(o.items[0], 'Red')]
         model.base.db.session.commit()
@@ -84,7 +84,7 @@ class OfferServiceTest(TestCase):
         items[0].variations = variations
         offer_service.save_offer(a, base.An(items= items, id= o.id, title='My offer', currency='USD'))
         o = model.Offer.query.filter(model.Offer.id == o.id).first()
-        self.assertEquals('Red2', o.items[0].variations[1].title)
+        self.assertEqual('Red2', o.items[0].variations[1].title)
 
     def test_save_with_variations(self):
         a = model.Account()
@@ -172,7 +172,7 @@ class OfferServiceTest(TestCase):
         offer_service = self.ioc.new_offer_service()
         c = offer_service.find_offers_count(a)
         self.assertIsNotNone(c)
-        self.assertEquals(2, c)
+        self.assertEqual(2, c)
 
     def test_find_by_page(self):
         a = model.Account()
@@ -187,16 +187,16 @@ class OfferServiceTest(TestCase):
         offer_service = self.ioc.new_offer_service()
         items = offer_service.find_by_page(a, 1)
         self.assertIsNotNone(items)
-        self.assertEquals(10, len(items))
+        self.assertEqual(10, len(items))
         items = offer_service.find_by_page(a, 2)
         self.assertIsNotNone(items)
-        self.assertEquals(10, len(items))
+        self.assertEqual(10, len(items))
         items = offer_service.find_by_page(a, 3)
         self.assertIsNotNone(items)
-        self.assertEquals(10, len(items))
+        self.assertEqual(10, len(items))
         items = offer_service.find_by_page(a, 4)
         self.assertIsNotNone(items)
-        self.assertEquals(3, len(items))
+        self.assertEqual(3, len(items))
 
     def test_find_by_id(self):
         a = model.Account()
@@ -224,4 +224,4 @@ class OfferServiceTest(TestCase):
         offer_service = self.ioc.new_offer_service()
         o2 = offer_service.find_by_hash('abc123')
         self.assertIsNotNone(o2)
-        self.assertEquals(o2.id, o.id)
+        self.assertEqual(o2.id, o.id)

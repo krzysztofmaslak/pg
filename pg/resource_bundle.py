@@ -7,6 +7,7 @@ class ResourceBundle:
     def get_all(self, lang):
         if lang=='eng':
             return {'other_products_you_might_like':'Other Products You Might Like',
+             'admin_confirmation_email_subject':'Order #{0} payment confirmation: {1}',
              'order_summary':'Order Summary',
              'subtotal':'SUBTOTAL',
              'loading': 'Loading',
