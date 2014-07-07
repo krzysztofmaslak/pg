@@ -342,6 +342,21 @@ angular.module('hh.controllers', [])
                 }
             });
     }])
+    .controller('WithdrawCtrl', ['$scope', '$routeParams', '$location', 'jaxrs', '$timeout', 'ValidationService',
+        function ($scope, $routeParams, $location, jaxrs, $timeout, ValidationService) {
+            $scope.messages = window.messages;
+            $scope.balance = window.balance;
+            jaxrs.query('withdraw/balance', null, function (response) {
+                $scope.balance = response.balance;
+            });
+            $scope.requestWithdrawal = function() {
+                if ( ValidationService.validate($scope.withdrawForm) ) {
+                    jaxrs.create('/rest/withdraw/request', {amount: $scope.amount, iban: $scope.iban, bic: $scope.bic}, function (response) {
+
+                    });
+                }
+            }
+    }])
     .controller('CheckoutCtrl', ['$scope', '$routeParams', '$location', 'jaxrs', '$timeout', 'ValidationService', 'PaymentService',
         function ($scope, $routeParams, $location, jaxrs, $timeout, ValidationService, PaymentService) {
         $scope.language = window.language;

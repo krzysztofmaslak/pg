@@ -6,8 +6,9 @@ from pg import model
 __author__ = 'krzysztof.maslak'
 
 class EmailHandler:
-    def __init__(self, mail, logger):
+    def __init__(self, mail, ioc, logger):
         self.mail = mail
+        self.ioc = ioc
         self.logger = logger
 
     def send(self, email):
@@ -22,7 +23,70 @@ class PurchaseConfirmationAdminEmailHandler(EmailHandler):
 
 class PurchaseConfirmationEmailHandler(EmailHandler):
     def handle(self, email):
-        email.html = render_template('emails/'+email.language+'/purchase-confirmation.html')
+        order = self.ioc.new_order_service().find_by_id(int(email.ref_id))
+        address = order.billing[0].address1
+        if order.billing[0].address2 is not None and len(order.billing[0].address2):
+            address += ' '+order.billing[0].address2
+        shipping = order.shipping.first()
+        if shipping is None:
+            shipping = order.billing[0]
+        shipment_first_name = shipping.first_name
+        shipment_last_name = shipping.last_name
+        shipment_address = shipping.address1
+        if shipping.address2 is not None and len(shipping.address2):
+            shipment_address += ' '+shipping.address2
+        shipment_city = shipping.city
+
+        i = 0
+        shipping = 0.0
+        basket_items = []
+        for item in order.items:
+            if item.variations is not None and item.variations.count()>0:
+                itotal = 0.0
+                for iv in item.variations:
+                    itotal = itotal+((iv.quantity*(iv.net+iv.tax)))
+                    if iv.quantity==1:
+                        shipping = shipping + iv.shipping
+                    else:
+                        for c in range(iv.quantity-1):
+                            if iv.shipping_additional is not None:
+                                shipping = shipping + iv.shipping_additional
+                            else:
+                                shipping = shipping + iv.shipping
+                    if order.offer.currency!=order.currency:
+                        basket_items.append({'index':(i+1), 'title':item.title+'('+iv.title+')', 'quantity':iv.quantity, 'value':self.ioc.new_currency_service().convert(order.currency, itotal)})
+                    else:
+                        basket_items.append({'index':(i+1), 'title':item.title+'('+iv.title+')', 'quantity':iv.quantity, 'value': itotal})
+                    i = i+1
+            else:
+                if order.offer.currency!=order.currency:
+                    basket_items.append({'index':(i+1), 'title':item.title, 'quantity':item.quantity,'value':self.ioc.new_currency_service().convert(order.currency, (item.quantity*(item.net+item.tax)))})
+                else:
+                    basket_items.append({'index':(i+1), 'title':item.title, 'quantity':item.quantity, 'value':(item.quantity*(item.net+item.tax))})
+                if item.quantity==1:
+                    shipping = shipping + item.shipping
+                else:
+                    for c in range(item.quantity-1):
+                        if item.shipping_additional is not None:
+                            shipping = shipping + item.shipping_additional
+                        else:
+                            shipping = shipping + item.shipping
+                i = i+1
+        email.html = render_template('emails/'+email.language+'/purchase-confirmation.html',
+                                     order_number = order.order_number,
+                                     creation_date = order.creation_date,
+                                     email = order.billing[0].email,
+                                     first_name = order.billing[0].first_name,
+                                     last_name = order.billing[0].last_name,
+                                     address = address,
+                                     post_code= order.billing[0].postal_code,
+                                     city= order.billing[0].city,
+                                     shipment_first_name = shipment_first_name,
+                                     shipment_last_name = shipment_last_name,
+                                     shipment_address = shipment_address,
+                                     shipment_city = shipment_city,
+                                     items= basket_items
+                                     )
         self.logger.debug('Purchase confirmation: %s'%email.html)
         self.send(email)
 
@@ -34,8 +98,8 @@ class EmailService:
         self.logger = logger
         self.mail = mail
         self.email_handlers = {
-            'PURCHASE_CONFIRMATION':PurchaseConfirmationEmailHandler(self.mail, self.logger),
-            'PURCHASE_CONFIRMATION_ADMIN':PurchaseConfirmationAdminEmailHandler(self.mail, self.logger)
+            'PURCHASE_CONFIRMATION':PurchaseConfirmationEmailHandler(self.mail, self.ioc, self.logger),
+            'PURCHASE_CONFIRMATION_ADMIN':PurchaseConfirmationAdminEmailHandler(self.mail, self.ioc, self.logger)
         }
 
     def set_mail(self, m):
@@ -57,6 +121,7 @@ class EmailService:
                             model.base.db.session.commit()
                         except Exception as err:
                             traceback.print_tb(err.__traceback__)
+                            traceback.print_exc()
                             self.logger.warn("Failed to process email EmailService.process_emails %s"%email.type)
                     else:
                         self.logger.warn("No email handler defined in EmailService.process_emails %s"%email.type)

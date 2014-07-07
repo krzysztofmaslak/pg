@@ -65,6 +65,12 @@
 .settingsTitle:after {
     content: "Settings:";
 }
+.accountBalance:after {
+    content: "Balance:";
+}
+.withdrawForm:after {
+    content: "Withdraw form:";
+}
 .issuedPromotionsTitle:after {
     content: "Promotions sent:";
 }

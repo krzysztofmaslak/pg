@@ -39,7 +39,6 @@ def new_offer():
 @base.authenticated
 def new_offer_item():
     user = offer_item.ioc.new_user_service().find_by_username(session['username'])
-    print(request.json)
     oi = offer_item.ioc.new_offer_service().new_offer_item(user.account, request.json['offer_id'])
     return jsonify({'id':oi.id})
 

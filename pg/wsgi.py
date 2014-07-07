@@ -5,7 +5,7 @@ import sys
 import errno
 from werkzeug.utils import secure_filename
 from wtforms import Form, TextField, PasswordField
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 from pg import resource_bundle
 
 __author__ = 'xxx'
@@ -14,6 +14,9 @@ __author__ = 'xxx'
 from flask import Blueprint, session, redirect, request, g, Response
 from flask import render_template
 from wand.image import Image
+from pg import model
+import locale
+import re
 wsgi_blueprint = Blueprint('wsgi', __name__)
 
 def login_required(f):
@@ -29,15 +32,97 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+LANGUAGE_CODES = ('en')
+
+# From django.utils.translation.trans_real.parse_accept_lang_header
+accept_language_re = re.compile(r'''
+    ([A-Za-z]{1,8}(?:-[A-Za-z]{1,8})*|\*) # "en", "en-au", "x-y-z", "*"
+    (?:\s*;\s*q=(0(?:\.\d{,3})?|1(?:.0{,3})?))? # Optional "q=1.00", "q=0.8"
+    (?:\s*,\s*|$) # Multiple accepts per header.
+    ''', re.VERBOSE)
+
+def parse_accept_lang_header(lang_string):
+    """
+    Parses the lang_string, which is the body of an HTTP Accept-Language
+    header, and returns a list of (lang, q-value), ordered by 'q' values.
+
+    Any format errors in lang_string results in an empty list being returned.
+    """
+    result = []
+    pieces = accept_language_re.split(lang_string)
+    if pieces[-1]:
+        return []
+    for i in range(0, len(pieces) - 1, 3):
+        first, lang, priority = pieces[i : i + 3]
+        if first:
+            return []
+        priority = priority and float(priority) or 1.0
+        result.append((lang, priority))
+    result.sort(key=lambda k: k[1], reverse=True)
+    return result
+
+# From django.utils.translation.trans_real.to_locale
+def to_locale(language, to_lower=False):
+    """
+    Turns a language name (en-us) into a locale name (en_US). If 'to_lower' is
+    True, the last component is lower-cased (en_us).
+    """
+    p = language.find('-')
+    if p >= 0:
+        if to_lower:
+            return language[:p].lower()+'_'+language[p+1:].lower()
+        else:
+            # Get correct locale for sr-latn
+            if len(language[p+1:]) > 2:
+                return language[:p].lower()+'_'+language[p+1].upper()+language[p+2:].lower()
+            return language[:p].lower()+'_'+language[p+1:].upper()
+    else:
+        return language.lower()
+
+def parse_http_accept_language(accept):
+    for accept_lang, unused in parse_accept_lang_header(accept):
+        if accept_lang == '*':
+            break
+
+        # We have a very restricted form for our language files (no encoding
+        # specifier, since they all must be UTF-8 and only one possible
+        # language each time. So we avoid the overhead of gettext.find() and
+        # work out the MO file manually.
+
+        # 'normalized' is the root name of the locale in POSIX format (which is
+        # the format used for the directories holding the MO files).
+        normalized = locale.locale_alias.get(to_locale(accept_lang, True))
+        if not normalized:
+            continue
+        # Remove the default encoding from locale_alias.
+        normalized = normalized.split('.')[0]
+
+        for lang_code in (accept_lang, accept_lang.split('-')[0]):
+            lang_code = lang_code.lower()
+            if lang_code in LANGUAGE_CODES:
+                return lang_code
+    return None
+
+def detect_language():
+    if request.args.get('lang') is not None:
+        return request.args.get('lang')
+    else:
+        lang = parse_http_accept_language(request.headers.get('Accept-Language', ''))
+        if lang is None:
+            return 'en'
+        else:
+            return lang
+
 @wsgi_blueprint.route('/x/<offer_code>', methods=['GET'])
 def show_offer(offer_code):
     messages = resource_bundle.ResourceBundle()
-    # todo calculate customer language
-    lang = 'eng'
+    lang = detect_language()
     wsgi_blueprint.logger.info('['+request.remote_addr+'] loading offer page by hash: %s'%offer_code)
+    offer = wsgi_blueprint.ioc.new_offer_service().find_by_hash(offer_code)
     return render_template('offer.html',
                            messages=messages.get_all(lang),
                            language = lang,
+                           title=offer.title,
                            countries = [c.as_json() for c in wsgi_blueprint.ioc.new_country_service().find_all()],
                            project_version=wsgi_blueprint.ioc.get_config()['PROJECT_VERSION'],
                            stripe_publishable=wsgi_blueprint.ioc.get_config()['stripe.publishable'])
@@ -94,6 +179,13 @@ class LoginForm(Form):
     username = TextField('Username')
     password = PasswordField('Password')
 
+class RegisterForm(Form):
+    username = TextField('Username')
+    password = PasswordField('Password')
+
+class ResetPassword(Form):
+    username = TextField('Username')
+
 @wsgi_blueprint.route('/login.html', methods=['GET', 'POST'])
 def login():
     form = LoginForm(request.form)
@@ -111,9 +203,53 @@ def login():
             wsgi_blueprint.logger.info('['+request.remote_addr+'] Authentication failed no user for username:'+form.username.data)
     return render_template('login.html', form=form, project_version=wsgi_blueprint.ioc.get_config()['PROJECT_VERSION'])
 
+@wsgi_blueprint.route('/register.html', methods=['GET', 'POST'])
+def register():
+    form = RegisterForm(request.form)
+    if request.method == 'POST' and form.validate():
+        wsgi_blueprint.logger.info('['+request.remote_addr+'] Processing registration request')
+        user = wsgi_blueprint.ioc.new_user_service().find_by_username(form.username.data)
+        if user is None:
+            a = model.Account()
+            a.properties.append(model.Property(a, 'sales.email', form.username.data))
+            a.lang = detect_language()
+            u = model.User(form.username.data, generate_password_hash(form.password.data))
+            a.users.append(u)
+            wsgi_blueprint.ioc.new_account_service().save(a)
+            return Response(status=200)
+        else:
+            wsgi_blueprint.logger.info('['+request.remote_addr+'] Registration failed, user already exist')
+            return Response(status=409)
+    return render_template('register.html', form=form, project_version=wsgi_blueprint.ioc.get_config()['PROJECT_VERSION'])
+
+@wsgi_blueprint.route('/reset_password.html', methods=['GET', 'POST'])
+def reset_password():
+    form = RegisterForm(request.form)
+    if request.method == 'POST' and form.validate():
+        wsgi_blueprint.logger.info('['+request.remote_addr+'] Processing reset password request')
+        user = wsgi_blueprint.ioc.new_user_service().find_by_username(form.username.data)
+        if user is not None:
+            ps = wsgi_blueprint.ioc.new_property_service()
+            reset_password_subject = resource_bundle.ResourceBundle().get_text(user.account.lang, 'reset_password')
+            reset_password_email = model.Email()
+            reset_password_email.type = 'RESET_PASSWORD'
+            reset_password_email.from_address = ps.find_value_by_code(user.account, 'sales.email')
+            reset_password_email.to_address = user.username
+            reset_password_email.subject = reset_password_subject
+            wsgi_blueprint.ioc.new_email_service().save(reset_password_email)
+            return Response(status=200)
+        else:
+            wsgi_blueprint.logger.info('['+request.remote_addr+'] Failed to request reset password, no such user')
+            return Response(status=204)
+    return render_template('reset_password.html', form=form, project_version=wsgi_blueprint.ioc.get_config()['PROJECT_VERSION'])
+
 @wsgi_blueprint.route('/admin/')
 @login_required
 def admin_landing():
+    messages = resource_bundle.ResourceBundle()
+    user = wsgi_blueprint.ioc.new_user_service().find_by_username(session['username'])
     return render_template('admin/landing.html',
+                           balance = user.account.balance,
+                           messages=messages.get_all(user.account.lang),
                            countries = [c.as_json() for c in wsgi_blueprint.ioc.new_country_service().find_all()],
                            project_version=wsgi_blueprint.ioc.get_config()['PROJECT_VERSION'])

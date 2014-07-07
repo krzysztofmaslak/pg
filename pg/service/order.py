@@ -27,9 +27,22 @@ class OrderService:
         else:
             raise TypeError("Expected Account type in OrderService.find_by_page %s"%type(account))
 
+    def get_order_total_reduced_by_fee(self, order):
+        order_total = order.total
+        variable_fee = order_total*4.0/100.0
+        fixed_fee = 0.40
+        total_fee = variable_fee+fixed_fee
+        order_net = order_total-total_fee
+        self.logger.info("Calculated fee for order %s [total=%s, fee=%s, net=%s]"%(order.order_number, order_total, total_fee, order_net))
+        return order_net
+
     def process_paid_order(self, o):
         if isinstance(o, model.Order)==False:
             raise TypeError("Expected Order type in OrderService.process_paid_order actual %s"%type(o))
+        o.total = self.find_order_total(o)
+        order_net = self.get_order_total_reduced_by_fee(o)
+        o.fee = o.total - order_net
+        o.offer.account.balance += order_net
         o.payment_status = 'Completed'
         offer = model.Offer.query.filter(model.Offer.id==o.offer_id).first()
         if offer is None:

@@ -39,7 +39,7 @@ class OrderServiceTest(Base):
 
         order_service = self.ioc.new_order_service()
         items = [base.An(id=o.id, quantity=3, variations=[])]
-        payment = base.An(offer_id=o.id, subscribe=True, payment_method='cc', currency='eur', country='fr', lang='eng', session_id='kdkdkdkd', items=items)
+        payment = base.An(offer_id=o.id, subscribe=True, payment_method='cc', currency='eur', country='fr', lang='en', session_id='kdkdkdkd', items=items)
         payment.billing = base.An(first_name='Mickey', last_name='Mouse', address1='Withworth', address2='Drumcondra', country='ie', city='Dublin', postal_code='10', county='Dublin', email='dublin.krzysztof.maslak@gmail.com', same_address=False)
         payment.shipping = base.An(first_name='Chuck', last_name='Norris', address1='South Central', address2='Rockbrook', country='ie', city='Dublin', postal_code='18', county='Dublin', email='krzysztof.maslak@123.ie', company='Spreadline', phone_number='0842342342')
         o = order_service.save(payment)
@@ -94,7 +94,7 @@ class OrderServiceTest(Base):
 
         order_service = self.ioc.new_order_service()
         items = [base.An(id=oi.id, quantity=3, variations=[])]
-        payment = base.An(offer_id=o.id, subscribe=True, payment_method='cc', currency='eur', country='fr', lang='eng', session_id='kdkdkdkd', items=items)
+        payment = base.An(offer_id=o.id, subscribe=True, payment_method='cc', currency='eur', country='fr', lang='en', session_id='kdkdkdkd', items=items)
         payment.billing = base.An(first_name='Mickey', last_name='Mouse', address1='Withworth', address2='Drumcondra', country='ie', city='Dublin', postal_code='10', county='Dublin', email='dublin.krzysztof.maslak@gmail.com', same_address=True)
         payment.shipping = base.An(first_name='Chuck', last_name='Norris', address1='South Central', address2='Rockbrook', country='ie', city='Dublin', postal_code='18', county='Dublin', email='krzysztof.maslak@123.ie', company='Spreadline', phone_number='0842342342')
         order_service.save(payment)
@@ -274,3 +274,25 @@ class OrderServiceTest(Base):
 
         order_service = self.ioc.new_order_service()
         self.assertEqual(33, order_service.find_paid_orders_count(a))
+
+    def test_get_order_total_reduced_by_fee(self):
+        order = model.Order()
+        oi1 = model.OrderItem(order, 'Strings', 1, 10.32, 0, 1.65)
+        oi1.shipping_additional = 1
+        order.items.append(oi1)
+        oi2 = model.OrderItem(order, 'Toy', 3, 32.73, 0, 1.65)
+        oi2.shipping_additional = 1
+        order.items.append(oi2)
+        oi = model.OrderItem(order, 'Toy', 0, 0, 0, 0)
+        oiv1 = model.OrderItemVariation(oi, "Big", 5, 11.21, 0, 1.65)
+        oiv1.shipping_additional = 1
+        oi.variations.append(oiv1)
+        oiv2 = model.OrderItemVariation(oi, "Small", 1, 13.79, 0, 1.65)
+        oiv2.shipping_additional = 1
+        oi.variations.append(oiv2)
+        order.items.append(oi)
+        total = self.ioc.new_order_service().find_order_total(order)
+        self.assertEqual(187.65, total)
+        order.total = total
+        order_net = self.ioc.new_order_service().get_order_total_reduced_by_fee(order)
+        self.assertEqual(179.74, round(order_net, 2))

@@ -5,12 +5,21 @@ class ResourceBundle:
         return self.get_all(lang)[code]
 
     def get_all(self, lang):
-        if lang=='eng':
+        if lang=='en':
             return {'other_products_you_might_like':'Other Products You Might Like',
              'admin_confirmation_email_subject':'Order #{0} payment confirmation: {1}',
              'order_summary':'Order Summary',
              'subtotal':'SUBTOTAL',
              'loading': 'Loading',
+             'login': 'Login',
+             'register': 'Register',
+             'your_balance_is':'Your balance is:',
+             'withdraw_amount':'Withdraw amount',
+             'request_withdrawal': 'Request withdrawal',
+             'iban': 'IBAN',
+             'bic': 'BIC',
+             'not_enough_funds':"You don't have enough funds",
+             'reset_password': 'Reset password',
              'tax':'Tax',
              'shipping':'Shipping',
              'total':'Total',

@@ -9,9 +9,11 @@ class Account(base.db.Model, base.JsonSerializable):
     creation_date = base.db.Column(base.db.DateTime)
     properties = base.db.relationship('Property', backref='account', lazy='dynamic')
     lang = base.db.Column(base.db.String(3))
+    balance = base.db.Column(base.db.Float)
 
     def __init__(self, creation_date=datetime.datetime.now()):
         self.creation_date = creation_date
+        self.balance = 0
 
     def __repr__(self):
         return '<Account %r>' % self.id

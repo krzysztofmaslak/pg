@@ -59,6 +59,7 @@ angular.module('pgadminapp', ['ngRoute', 'hh.filters', 'hh.services', 'hh.direct
         $routeProvider.when('/landing',      {templateUrl: '/static/${pom.version}/partials/admin/landing.html'});
         $routeProvider.when('/offers',      {templateUrl: '/static/${pom.version}/partials/admin/offer.html'});
         $routeProvider.when('/orders',      {templateUrl: '/static/${pom.version}/partials/admin/order.html'});
+        $routeProvider.when('/withdraw',      {templateUrl: '/static/${pom.version}/partials/admin/withdraw.html'});
         $routeProvider.when('/settings',      {templateUrl: '/static/${pom.version}/partials/admin/settings.html'});
         $routeProvider.otherwise({redirectTo: '/landing'});
 	}]);

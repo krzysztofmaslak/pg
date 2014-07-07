@@ -118,10 +118,11 @@ def process_init():
                             shipping = shipping + iv.shipping_additional
                         else:
                             shipping = shipping + iv.shipping
-            if order.offer.currency!=order.currency:
-                basket_items.append({'index':(i+1), 'title':item.title, 'value':paypal_init.ioc.new_currency_service().convert(order.currency, itotal)})
-            else:
-                basket_items.append({'index':(i+1), 'title':item.title, 'value': itotal})
+                if order.offer.currency!=order.currency:
+                    basket_items.append({'index':(i+1), 'title':item.title+'('+iv.title+')', 'value':paypal_init.ioc.new_currency_service().convert(order.currency, itotal)})
+                else:
+                    basket_items.append({'index':(i+1), 'title':item.title+'('+iv.title+')', 'value': itotal})
+                i = i+1
         else:
             if order.offer.currency!=order.currency:
                 basket_items.append({'index':(i+1), 'title':item.title, 'value':paypal_init.ioc.new_currency_service().convert(order.currency, (item.quantity*(item.net+item.tax)))})
@@ -135,7 +136,7 @@ def process_init():
                         shipping = shipping + item.shipping_additional
                     else:
                         shipping = shipping + item.shipping
-        i = i+1
+            i = i+1
     if order.offer.currency!=order.currency:
         basket_items.append({'index':(i+1), 'title':resource_bundle.ResourceBundle().get_text(order.lang, "shipping"), 'value':paypal_init.ioc.new_currency_service().convert(order.currency, shipping)})
     else:

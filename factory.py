@@ -72,3 +72,6 @@ class ServiceFactory:
 
     def new_paypal_service(self):
         return service.PaypalService(self)
+
+    def new_withdrawal_service(self):
+        return service.WithdrawService(self)

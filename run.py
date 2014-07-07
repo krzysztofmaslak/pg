@@ -36,7 +36,7 @@ def init_db():
 @manager.command
 def add_root():
     a = model.Account()
-    a.lang = 'eng'
+    a.lang = 'en'
     a.properties.append(model.Property(a, 'sales.email', 'spreadline.limited@gmail.com'))
     a.properties.append(model.Property(a, 'order_confirmation', 'Order confirmation'))
     u = model.User('dublin.krzysztof.maslak@gmail.com', generate_password_hash('abcd'))

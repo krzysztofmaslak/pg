@@ -16,6 +16,7 @@ class Order(base.db.Model, base.JsonSerializable):
     delivery_status = base.db.Column(base.db.String(20))
     order_number = base.db.Column(base.db.String(10))
     total = base.db.Column(base.db.Float)
+    fee = base.db.Column(base.db.Float)
     billing = base.db.relationship('Billing', backref='order', lazy='dynamic')
     shipping = base.db.relationship('Shipping', backref='order', lazy='dynamic')
     offer_id = base.db.Column(base.db.Integer, base.db.ForeignKey('offer.id'))
