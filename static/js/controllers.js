@@ -22,6 +22,11 @@ angular.module('hh.controllers', [])
                 $scope.$apply(fn);
             }
         };
+        $scope.formatDate = function (date) {
+            if ( date==undefined )return '';
+            if ( date.indexOf('T')!=-1 ) date = date.substring(0, date.indexOf('T'));
+            return date;
+        };
         $scope.formatPrice = function(price) {
             if ( (price+'').indexOf('.')!==-1 ) {
                 price = (price+'').substring(0, (price+'').indexOf('.'))+'.'+(price+'').substring((price+'').indexOf('.')+1, 4);
@@ -154,11 +159,6 @@ angular.module('hh.controllers', [])
             } else {
                 return 'btn-inverse';
             }
-        };
-        $scope.formatDate = function (date) {
-            if ( date==undefined )return '';
-            if ( date.indexOf('T')!=-1 ) date = date.substring(0, date.indexOf('T'));
-            return date;
         };
         $scope.previous = function() {
             $scope.current -= 1;
@@ -345,14 +345,18 @@ angular.module('hh.controllers', [])
     .controller('WithdrawCtrl', ['$scope', '$routeParams', '$location', 'jaxrs', '$timeout', 'ValidationService',
         function ($scope, $routeParams, $location, jaxrs, $timeout, ValidationService) {
             $scope.messages = window.messages;
+            $scope.withdrawals = [];
             $scope.balance = window.balance;
             jaxrs.query('withdraw/balance', null, function (response) {
                 $scope.balance = response.balance;
+                $scope.withdrawals = response.withdrawals;
             });
             $scope.requestWithdrawal = function() {
                 if ( ValidationService.validate($scope.withdrawForm) ) {
                     jaxrs.create('/rest/withdraw/request', {amount: $scope.amount, iban: $scope.iban, bic: $scope.bic}, function (response) {
-
+                        $scope.balance = response.balance;
+                        $scope.withdrawals = response.withdrawals;
+                        $scope.savedSuccessfully = true;
                     });
                 }
             }

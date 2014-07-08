@@ -1,27 +1,55 @@
 <div class="container" x-ng-controller="WithdrawCtrl">
-    <form name="withdrawForm" enctype="multipart/form-data" novalidate>
-        <div class="formSection accountBalance">
-            <div>
-                <label>
-                    <b>{{ messages.your_balance_is }} {{ balance }}</b>
-                </label>
-            </div>
-        </div>
+    <div class="alert alert-success" ng-show="savedSuccessfully">
+        {{ messages.request_taken_successfully }}
+    </div>
+    <div class="row-fluid">
+        <div class="span6">
+            <form name="withdrawForm" enctype="multipart/form-data" novalidate>
+                <div class="formSection accountBalance">
+                    <div>
+                        <label>
+                            <b>{{ messages.your_balance_is }} {{ balance }}</b>
+                        </label>
+                    </div>
+                </div>
 
-        <div class="formSection withdrawForm" ng-if="balance!=0">
-            <div>
-                <label><b>{{ messages.iban }}</b></label>
-                <input type="text" name="iban" id="iban" x-ng-model="iban" style="width:400px;" required="true"/>
-            </div>
-            <div>
-                <label><b>{{ messages.bic }}</b></label>
-                <input type="text" name="bic" id="bic" x-ng-model="bic" style="width:400px;" required="true"/>
-            </div>
-            <div>
-                <label><b>{{ messages.withdraw_amount }}</b></label>
-                <input type="text" name="amount" id="amount" x-ng-model="amount" style="width:400px;" required="true"/>
-            </div>
-            <button x-ng-click="requestWithdrawal()" class="btn btn-success">{{ messages.request_withdrawal }}</button>
+                <div class="formSection withdrawForm" ng-if="balance!=0">
+                    <div>
+                        <label><b>{{ messages.iban }}</b></label>
+                        <input type="text" name="iban" id="iban" x-ng-model="iban" style="width:400px;" required="true"/>
+                    </div>
+                    <div>
+                        <label><b>{{ messages.bic }}</b></label>
+                        <input type="text" name="bic" id="bic" x-ng-model="bic" style="width:400px;" required="true"/>
+                    </div>
+                    <div>
+                        <label><b>{{ messages.withdraw_amount }}</b></label>
+                        <input type="text" name="amount" id="amount" x-ng-model="amount" style="width:400px;" required="true"/>
+                    </div>
+                    <button x-ng-click="requestWithdrawal()" class="btn btn-success">{{ messages.request_withdrawal }}</button>
+                </div>
+            </form>
         </div>
-    </form>
+        <div class="span6" ng-if="withdrawals.length!=0">
+            <table class="table table-hover">
+                <tr>
+                    <th>
+                        {{ messages.withdrawal_date }}
+                    </th>
+                    <th>{{ messages.withdrawal_amount }}</th>
+                    <th>
+                        {{ messages.withdrawal_status }}
+                    </th>
+                </tr>
+                <tr ng-repeat="withdrawal in withdrawals">
+                    <td>{{formatDate(withdrawal.creation_date)}}</td>
+                    <td>{{formatDate(withdrawal.amount)}}</td>
+                    <td>
+                        <span ng-if="withdrawal.status==false">{{ messages.withdrawal_pending }}</span>
+                        <span ng-if="withdrawal.status==true">{{ messages.withdrawal_processed }}</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
 </div>

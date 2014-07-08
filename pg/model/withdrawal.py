@@ -9,6 +9,7 @@ class Withdrawal(base.db.Model, base.JsonSerializable):
     iban = base.db.Column(base.db.String(50))
     bic = base.db.Column(base.db.String(15))
     creation_date = base.db.Column(base.db.DateTime)
+    status = base.db.Column(base.db.Boolean)
     account_id = base.db.Column(base.db.Integer, base.db.ForeignKey('account.id'))
     account = base.db.relationship('Account',
         backref=base.db.backref('withdrawals', lazy='dynamic'))
@@ -18,6 +19,7 @@ class Withdrawal(base.db.Model, base.JsonSerializable):
         self.iban = iban
         self.bic = bic
         self.creation_date = creation_date
+        self.status = False
 
     def _as_json(self, exclude=(), extra=()):
         return self._as_json(exclude=['account', 'iban', 'bic'])

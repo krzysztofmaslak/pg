@@ -8,7 +8,7 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <title>Payment Gateway Admin</title>
+    <title>{{ admin_title }}</title>
 
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width" />
@@ -26,19 +26,20 @@
 </head>
 
 <body style="background-color:#EEE8AA">
-        <div class="navbar" style="position:relative;">
-            <div class="navbar-inner">
-                <a class="brand" href="#">Administrator:</a>
-                <ul class="nav">
-                    <li><a href="#/offers">Offers</a></li>
-                    <li><a href="#/orders">Orders</a></li>
-                    <li><a href="#/withdraw">Withdraw</a></li>
-                    <li><a href="#/settings">Settings</a></li>
-                </ul>
-            </div>
-            <a href="/admin/logout" style="position:absolute;top:11px;right:20px;">Logout</a>
-        </div>
         <div x-ng-app='pgadminapp'>
+            <div class="navbar" style="position:relative;">
+                <div class="navbar-inner">
+                    <a class="brand" href="#">{{ messages.admin_menu_administrator }}:</a>
+                    <ul class="nav">
+                        <li><a href="#/offers">{{ messages.admin_menu_offers }}</a></li>
+                        <li><a href="#/orders">{{ messages.admin_menu_orders }}</a></li>
+                        <li><a href="#/withdraw">{{ messages.admin_menu_withdraw }}</a></li>
+                        <li><a href="#/settings">{{ messages.admin_menu_settings }}</a></li>
+                    </ul>
+                </div>
+                <a href="/admin/logout" style="position:absolute;top:11px;right:20px;">{{ messages.admin_menu_logout }}</a>
+            </div>
+
             <div data-loading></div>
             <div x-ng-controller='PGAppCtrl'>
                 <div x-ng-view></div>
@@ -54,7 +55,7 @@
         </script>
 
         <script type="text/javascript">
-            window.messages = JSON.parse('{{ messages }}'.replaceAll('&#39;', '"').replace('&amp;#39;', "'"))
+            window.messages = JSON.parse('{{ messages }}'.replaceAll('&#39;', '"'));
         </script>
 </body>
 <!--[if lt IE 7]></html><![endif]-->

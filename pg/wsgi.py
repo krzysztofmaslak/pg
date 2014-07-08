@@ -243,13 +243,21 @@ def reset_password():
             return Response(status=204)
     return render_template('reset_password.html', form=form, project_version=wsgi_blueprint.ioc.get_config()['PROJECT_VERSION'])
 
+@wsgi_blueprint.route('/admin/logout')
+def logout():
+    # remove the username from the session if it's there
+    session.pop('username', None)
+    return redirect("/index.html")
+
 @wsgi_blueprint.route('/admin/')
 @login_required
 def admin_landing():
     messages = resource_bundle.ResourceBundle()
     user = wsgi_blueprint.ioc.new_user_service().find_by_username(session['username'])
+    admin_title = messages.get_text(user.account.lang, 'admin_title')
     return render_template('admin/landing.html',
                            balance = user.account.balance,
+                           admin_title = admin_title,
                            messages=messages.get_all(user.account.lang),
                            countries = [c.as_json() for c in wsgi_blueprint.ioc.new_country_service().find_all()],
                            project_version=wsgi_blueprint.ioc.get_config()['PROJECT_VERSION'])
