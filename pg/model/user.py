@@ -8,6 +8,7 @@ class User(base.db.Model, base.JsonSerializable):
     username = base.db.Column(base.db.String(50), unique=True)
     password = base.db.Column(base.db.String(50))
     creation_date = base.db.Column(base.db.DateTime)
+    active = base.db.Column(base.db.Boolean)
     account_id = base.db.Column(base.db.Integer, base.db.ForeignKey('account.id'))
     account = base.db.relationship('Account',
         backref=base.db.backref('users', lazy='dynamic'))
@@ -16,6 +17,7 @@ class User(base.db.Model, base.JsonSerializable):
         self.username = username
         self.password = password
         self.creation_date = creation_date
+        self.active = False
 
     def __repr__(self):
         return '<User %r>' % self.username

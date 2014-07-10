@@ -47,11 +47,11 @@
                 <button class="btn btn-inverse btn-small" style="margin-left:2px;" x-ng-click="next()" ng-show="current!=pages">{{ messages.offer_list_next }}</button>
             </div>
         </form>
-        <button x-ng-click="new()" class="btn btn-success">{{ offer_list_add_new_offer }}</button>
+        <button x-ng-click="new()" class="btn btn-success">{{ messages.offer_list_add_new_offer }}</button>
     </div>
 </div>
 <div class="span9">
-<button x-ng-click="new()" class="btn btn-success" ng-show="offers.length==0">{{ offer_list_add_new_offer }}</button>
+<button x-ng-click="new()" class="btn btn-success" ng-show="offers.length==0">{{ messages.offer_list_add_new_offer }}</button>
 <form name="offerForm" enctype="multipart/form-data" ng-show="offer!=null" novalidate>
 <div class="formSection detailsTitle">
     <div>
@@ -91,41 +91,41 @@
                             </table>
                         </div>
                         <div class="form-group" style="margin-top:6px;">
-                            <label>Multiple variations</label>
+                            <label>{{ messages.offer_form_multiple_variations }}</label>
                             <div  style="margin-top:6px;">
                                 <input type="hidden" name="multivariate" ng-model="item.multivariate" ng-required="true"/>
-                                <label for="simple{{$index}}" style="display:inline;margin-right:10px;">No</label>
+                                <label for="simple{{$index}}" style="display:inline;margin-right:10px;">{{ messages.offer_form_multiple_variations_no }}</label>
                                 <input type="radio" ng-click="multivariate=0" value="0" id="simple{{$index}}" name="multivariate{{$index}}" style="display:inline;margin-right:10px;margin-top:0px;"/>
-                                <label for="multivariate{{$index}}" style="display:inline;margin-right:10px;">Yes</label>
+                                <label for="multivariate{{$index}}" style="display:inline;margin-right:10px;">{{ messages.offer_form_multiple_variations_yes }}</label>
                                 <input type="radio" ng-click="multivariate=1" value="1" id="multivariate{{$index}}" name="multivariate{{$index}}" style="display:inline;margin-top:0px;"/>
-                                <p ng-show="itemForm.multivariate.$dirty && itemForm.multivariate.$error.required" style="color:red;margin-top:0px;">Has any variations ?</p>
+                                <p ng-show="itemForm.multivariate.$dirty && itemForm.multivariate.$error.required" style="color:red;margin-top:0px;">{{ messages.offer_form_multiple_variations_required }}</p>
                             </div>
                         </div>
                         <div style="clear:both;margin-bottom:10px;"></div>
                         <div ng-if="multivariate==0">
                             <table>
                                 <tr>
-                                    <td>Quantity</td>
-                                    <td>Net</td>
-                                    <td>Tax</td>
-                                    <td>Shipping</td>
-                                    <td>Shipping additional</td>
+                                    <td>{{ messages.offer_form_quantity }}</td>
+                                    <td>{{ messages.offer_form_net }}</td>
+                                    <td>{{ messages.offer_form_tax }}</td>
+                                    <td>{{ messages.offer_form_shipping }}</td>
+                                    <td>{{ messages.offer_form_shipping_additional }}</td>
                                 </tr>
                                 <tr>
                                     <td valign="top">
                                         <input type="text" name="squantity" nullifempty x-ng-model="item.quantity" style="width:130px" ng-required="true"/>
-                                        <p ng-show="itemForm.squantity.$dirty && itemForm.squantity.$error.required" style="color:red;margin-top:0px;">Quantity is required</p>
+                                        <p ng-show="itemForm.squantity.$dirty && itemForm.squantity.$error.required" style="color:red;margin-top:0px;">{{ messages.offer_form_quantity_required }}</p>
                                     </td>
                                     <td valign="top">
                                         <input type="text" name="snet" nullifempty x-ng-model="item.net" style="width:130px" ng-required="true"/>
-                                        <p ng-show="itemForm.snet.$dirty && itemForm.snet.$error.required" style="color:red;margin-top:0px;">Net is required</p>
+                                        <p ng-show="itemForm.snet.$dirty && itemForm.snet.$error.required" style="color:red;margin-top:0px;">{{ messages.offer_form_net_required }}</p>
                                     </td>
                                     <td valign="top">
                                         <input type="text" x-ng-model="item.tax" nullifempty style="width:130px" />
                                     </td>
                                     <td valign="top">
                                         <input type="text" x-ng-model="item.shipping" nullifempty name="sshipping" style="width:130px" ng-required="true"/>
-                                        <p ng-show="itemForm.sshipping.$dirty && itemForm.sshipping.$error.required" style="color:red;margin-top:0px;">Shipping is required</p>
+                                        <p ng-show="itemForm.sshipping.$dirty && itemForm.sshipping.$error.required" style="color:red;margin-top:0px;">{{ messages.offer_form_shipping_required }}</p>
                                     </td>
                                     <td valign="top">
                                         <input type="text" nullifempty x-ng-model="item.shippingAdditional" style="width:110px" />
@@ -136,34 +136,34 @@
                         <div ng-if="multivariate==1">
                             <table style="width:100%">
                                 <tr>
-                                    <td>Variation</td>
-                                    <td>Quantity</td>
-                                    <td>Net</td>
-                                    <td>Tax</td>
-                                    <td>Shipping</td>
-                                    <td>Shipping additional</td>
+                                    <td>{{ messages.offer_form_variation }}</td>
+                                    <td>{{ messages.offer_form_quantity }}</td>
+                                    <td>{{ messages.offer_form_net }}</td>
+                                    <td>{{ messages.offer_form_tax }}</td>
+                                    <td>{{ messages.offer_form_shipping }}</td>
+                                    <td>{{ messages.offer_form_shipping_additional }}</td>
                                     <td></td>
                                     <td></td>
                                 </tr>
                                 <tr ng-repeat="variation in item.variations" ng-form="variationForm">
                                     <td valign="top">
                                         <input type="text" name="mtitle" nullifempty x-ng-model="variation.title" style="width:250px" ng-required="true" placeholder="{{variation.placeholder}}"/>
-                                        <p ng-show="variationForm.mtitle.$dirty && variationForm.mtitle.$error.required" style="color:red;margin-top:0px;">Title is required</p>
+                                        <p ng-show="variationForm.mtitle.$dirty && variationForm.mtitle.$error.required" style="color:red;margin-top:0px;">{{ messages.offer_form_title_required }}</p>
                                     </td>
                                     <td valign="top">
                                         <input type="text" name="mquantity" nullifempty x-ng-model="variation.quantity" style="width:130px" ng-required="true"/>
-                                        <p ng-show="variationForm.mquantity.$dirty && variationForm.mquantity.$error.required" style="color:red;margin-top:0px;">Quantity is required</p>
+                                        <p ng-show="variationForm.mquantity.$dirty && variationForm.mquantity.$error.required" style="color:red;margin-top:0px;">{{ messages.offer_form_quantity_required }}</p>
                                     </td>
                                     <td valign="top">
                                         <input type="text" name="mnet" nullifempty x-ng-model="variation.net" style="width:130px"  ng-required="true"/>
-                                        <p ng-show="variationForm.mnet.$dirty && variationForm.mnet.$error.required" style="color:red;margin-top:0px;">Net is required</p>
+                                        <p ng-show="variationForm.mnet.$dirty && variationForm.mnet.$error.required" style="color:red;margin-top:0px;">{{ messages.offer_form_net_required }}</p>
                                     </td>
                                     <td valign="top">
                                         <input type="text" nullifempty x-ng-model="variation.tax" style="width:80px" />
                                     </td>
                                     <td valign="top">
                                         <input type="text" name="mshipping" nullifempty x-ng-model="variation.shipping" style="width:130px" ng-required="true"/>
-                                        <p ng-show="variationForm.mshipping.$dirty && variationForm.mshipping.$error.required" style="color:red;margin-top:0px;">Shipping is required</p>
+                                        <p ng-show="variationForm.mshipping.$dirty && variationForm.mshipping.$error.required" style="color:red;margin-top:0px;">{{ messages.offer_form_shipping_required }}</p>
                                     </td>
                                     <td valign="top">
                                         <input type="text" nullifempty x-ng-model="variation.shippingAdditional" style="width:110px" />
@@ -176,17 +176,17 @@
                                                  style="cursor:pointer;" onclick="clickOnParentSibling(this, 'input');event.preventDefault();return false;"/>
                                         </div>
                                     </td>
-                                    <td valign="top"><button ng-click="deleteVariation($index)" class="btn btn-danger" style="margin-bottom:10px;">Delete variation</button></td>
+                                    <td valign="top"><button ng-click="deleteVariation($index)" class="btn btn-danger" style="margin-bottom:10px;">{{ messages.offer_form_delete_variation }}</button></td>
                                 </tr>
                             </table>
-                            <button x-ng-click="addVariation()" class="btn btn-info" style="margin-bottom:20px">Add more variations</button>
+                            <button x-ng-click="addVariation()" class="btn btn-info" style="margin-bottom:20px">{{ messages.offer_form_add_more_variations }}</button>
                         </div>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <div>
-                            <label>Photos</label>
+                            <label>{{ messages.offer_form_photos }}</label>
                             <input id="imageupload" type="file" imageupload name="file" uploadTarget="offer_item" uploadTargetId="{{item.id}}" style="display: none;"/>
                             <div style="width:100px;">
                                 <img class='thumbnail' src="/static/${pom.version}/img/blank.png" imagecheck="/static/images/offer_item/{{item.id}}_thumb.png" style="width:100px;display:none;"/>
@@ -200,21 +200,21 @@
         </div>
 
         <div ng-show="offer.items.length>0">
-            <label>Amounts in</label>
+            <label>{{ messages.offer_form_currency }}</label>
             <select x-ng-model="offer.currency" name="currency" select-required="true">
-                <option value="">--Please select--</option>
+                <option value="">{{ messages.offer_form_please_select }}</option>
                 <option value="aud">AUD</option>
                 <option value="cad">CAD</option>
                 <option value="eur">EUR</option>
                 <option value="gbp">GBP</option>
                 <option value="usd">USD</option>
             </select>
-            <p ng-show="offerForm.currency.$dirty && offerForm.currency.$error.required" style="color:red;margin-top:0px;">Currency is required</p>
+            <p ng-show="offerForm.currency.$dirty && offerForm.currency.$error.required" style="color:red;margin-top:0px;">{{ messages.offer_form_currency_required }}</p>
         </div>
         <div class="clearfix"></div>
     </div>
-    <button x-ng-click="addItem()" class="btn btn-info">Add product</button>
-    <button x-ng-click="save()" class="btn btn-success" ng-show="offer!=null">Save offer</button>
+    <button x-ng-click="addItem()" class="btn btn-info">{{ messages.offer_form_add_product }}</button>
+    <button x-ng-click="save()" class="btn btn-success" ng-show="offer!=null">{{ messages.offer_form_save_offer }}</button>
     <div class="clearfix"></div>
 </div>
 <div>

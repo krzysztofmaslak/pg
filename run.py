@@ -38,7 +38,6 @@ def add_root():
     a = model.Account()
     a.lang = 'en'
     a.properties.append(model.Property(a, 'sales.email', 'spreadline.limited@gmail.com'))
-    a.properties.append(model.Property(a, 'order_confirmation', 'Order confirmation'))
     u = model.User('dublin.krzysztof.maslak@gmail.com', generate_password_hash('abcd'))
     a.users.append(u)
     gateway.ioc.new_account_service().save(a)

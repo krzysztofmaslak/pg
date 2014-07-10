@@ -30,7 +30,8 @@ class PaymentProcessorService:
         customer_email.from_address = ps.find_value_by_code(order.offer.account, 'sales.email')
         customer_email.to_address = order.billing.first().email
         customer_email.language = order.lang
-        customer_email.subject = ps.find_value_by_code(order.offer.account, 'order_confirmation')
+        messages = resource_bundle.ResourceBundle()
+        customer_email.subject = messages.get_text(order.offer.account.lang, 'order_confirmation')
         # customer_email.addon1 = invoice.file_name
         # customer_email.addon2 = invoice.id
         self.ioc.new_email_service().save(customer_email)

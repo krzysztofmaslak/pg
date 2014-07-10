@@ -12,17 +12,25 @@
 <body>
     <section class="main">
         <form class="form-2" id="loginForm" name="loginForm" method="post" action="">
-            <h1><span class="log-in">Register</span></h1>
-            <p class="float">
-                <label for="j_username"><i class="icon-user"></i>Username</label>
-                <input type="text" name="username" placeholder="Email" />
+            <h1><span class="log-in">{{ message_register }}</span></h1>
+            {% if error_message %}
+                <p style="color:#d44950;margin-top:6px;font-size:13px;">{{ error_message }}</p>
+            {% endif %}
+            {% if success_message %}
+                <p style="color:#468847;margin-top:6px;font-size:13px;">{{ success_message }}</p>
+            {% endif %}
+            <br/>
+            <p>
+                <label for="j_username"><i class="icon-user"></i>{{ message_username }}</label>
+                <input type="text" name="username" placeholder="{{ message_username_placeholder }}" />
             </p>
-            <p class="float">
-                <label for="j_password"><i class="icon-lock"></i>Password</label>
-                <input type="password" name="password" placeholder="Password" class="showpassword" />
+            <p>
+                <label for="j_password"><i class="icon-lock"></i>{{ message_password }}</label>
+                <input type="password" name="password" placeholder="{{ message_password_placeholder }}" class="showpassword" />
             </p>
+            <br/>
             <p class="clearfix">
-                <input type="submit" name="login" value="Log in" />
+                <input type="submit" name="register" value="{{ message_register_btn }}" style="float:right"/>
             </p>
         </form>
     </section>

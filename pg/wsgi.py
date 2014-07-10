@@ -6,6 +6,7 @@ import errno
 from werkzeug.utils import secure_filename
 from wtforms import Form, TextField, PasswordField
 from werkzeug.security import check_password_hash, generate_password_hash
+from wtforms.fields.html5 import EmailField
 from pg import resource_bundle
 
 __author__ = 'xxx'
@@ -180,7 +181,7 @@ class LoginForm(Form):
     password = PasswordField('Password')
 
 class RegisterForm(Form):
-    username = TextField('Username')
+    username = EmailField('Username')
     password = PasswordField('Password')
 
 class ResetPassword(Form):
@@ -189,23 +190,45 @@ class ResetPassword(Form):
 @wsgi_blueprint.route('/login.html', methods=['GET', 'POST'])
 def login():
     form = LoginForm(request.form)
+    error_message = None
+    messages = resource_bundle.ResourceBundle()
+    lang = detect_language()
     if request.method == 'POST' and form.validate():
         wsgi_blueprint.logger.info('['+request.remote_addr+'] Processing authentication request')
         user = wsgi_blueprint.ioc.new_user_service().find_by_username(form.username.data)
-        if user is not None:
+        if user is not None and user.active:
             if check_password_hash(user.password, form.password.data):
                 wsgi_blueprint.logger.info('['+request.remote_addr+'] Authentication successful')
                 session['username'] = form.username.data
                 return redirect('/admin/')
             else:
+                error_message = messages.get_text(lang, 'login_wrong_username_or_password')
                 wsgi_blueprint.logger.info('['+request.remote_addr+'] Authentication failed password mismatch')
         else:
+            if user is None:
+                error_message = messages.get_text(lang, 'login_wrong_username_or_password')
+            else:
+                error_message = messages.get_text(lang, 'login_user_inactive')
             wsgi_blueprint.logger.info('['+request.remote_addr+'] Authentication failed no user for username:'+form.username.data)
-    return render_template('login.html', form=form, project_version=wsgi_blueprint.ioc.get_config()['PROJECT_VERSION'])
+
+    return render_template('login.html', form=form,
+                           project_version=wsgi_blueprint.ioc.get_config()['PROJECT_VERSION'],
+                           message_login=messages.get_text(lang, 'login_title'),
+                           message_remin_me_my_password=messages.get_text(lang, 'login_remind_me_my_password'),
+                           message_username=messages.get_text(lang, 'login_username'),
+                           message_username_placeholder=messages.get_text(lang, 'login_username_placeholder'),
+                           message_password=messages.get_text(lang, 'login_password'),
+                           message_password_placeholder=messages.get_text(lang, 'login_password_placeholder'),
+                           message_login_btn=messages.get_text(lang, 'login_btn'),
+                           error_message=error_message)
 
 @wsgi_blueprint.route('/register.html', methods=['GET', 'POST'])
 def register():
     form = RegisterForm(request.form)
+    error_message = None
+    success_message = None
+    messages = resource_bundle.ResourceBundle()
+    lang = detect_language()
     if request.method == 'POST' and form.validate():
         wsgi_blueprint.logger.info('['+request.remote_addr+'] Processing registration request')
         user = wsgi_blueprint.ioc.new_user_service().find_by_username(form.username.data)
@@ -216,11 +239,21 @@ def register():
             u = model.User(form.username.data, generate_password_hash(form.password.data))
             a.users.append(u)
             wsgi_blueprint.ioc.new_account_service().save(a)
-            return Response(status=200)
+            success_message = messages.get_text(lang, 'register_success')
         else:
             wsgi_blueprint.logger.info('['+request.remote_addr+'] Registration failed, user already exist')
-            return Response(status=409)
-    return render_template('register.html', form=form, project_version=wsgi_blueprint.ioc.get_config()['PROJECT_VERSION'])
+            error_message = messages.get_text(lang, 'register_user_already_exist')
+    return render_template('register.html', form=form,
+                           project_version=wsgi_blueprint.ioc.get_config()['PROJECT_VERSION'],
+                           message_register=messages.get_text(lang, 'register_title'),
+                           message_username=messages.get_text(lang, 'register_username'),
+                           message_username_placeholder=messages.get_text(lang, 'register_username_placeholder'),
+                           message_password=messages.get_text(lang, 'register_password'),
+                           message_password_placeholder=messages.get_text(lang, 'register_password_placeholder'),
+                           message_register_btn=messages.get_text(lang, 'register_btn'),
+                           error_message=error_message,
+                           success_message=success_message
+    )
 
 @wsgi_blueprint.route('/reset_password.html', methods=['GET', 'POST'])
 def reset_password():
@@ -241,7 +274,15 @@ def reset_password():
         else:
             wsgi_blueprint.logger.info('['+request.remote_addr+'] Failed to request reset password, no such user')
             return Response(status=204)
-    return render_template('reset_password.html', form=form, project_version=wsgi_blueprint.ioc.get_config()['PROJECT_VERSION'])
+    messages = resource_bundle.ResourceBundle()
+    lang = detect_language()
+    return render_template('reset_password.html', form=form,
+                           project_version=wsgi_blueprint.ioc.get_config()['PROJECT_VERSION'],
+                           message_reset_password = messages.get_text(lang, 'reset_password_title'),
+                           message_username = messages.get_text(lang, 'reset_password_username'),
+                           message_username_placeholder = messages.get_text(lang, 'reset_password_placeholder'),
+                           message_reset_password_btn = messages.get_text(lang, 'reset_password_btn')
+    )
 
 @wsgi_blueprint.route('/admin/logout')
 def logout():
