@@ -29,6 +29,7 @@ class OfferTest(Base):
     def test_list(self):
         a = model.Account()
         u = model.User('admin', generate_password_hash('abcd'))
+        u.active = True
         a.users.append(u)
         o = model.Offer(a)
         o.status = 1

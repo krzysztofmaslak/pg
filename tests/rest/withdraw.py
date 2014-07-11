@@ -29,6 +29,7 @@ class WithdrawTest(Base):
     def test_balance(self):
         a = model.Account()
         u = model.User('admin', generate_password_hash('abcd'))
+        u.active = True
         a.users.append(u)
         a.balance = 14.30
         model.base.db.session.add(a)
@@ -47,6 +48,7 @@ class WithdrawTest(Base):
         a = model.Account()
         a.lang = 'en'
         u = model.User('admin', generate_password_hash('abcd'))
+        u.active = True
         a.users.append(u)
         a.balance = 14.30
         model.base.db.session.add(a)

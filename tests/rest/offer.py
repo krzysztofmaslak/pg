@@ -27,6 +27,7 @@ class OfferTest(Base):
     def test_list(self):
         a = model.account.Account()
         u = model.user.User('dublin.krzysztof.maslak@gmail.com', generate_password_hash('abcd'))
+        u.active = True
         a.users.append(u)
         o = model.Offer(a, status=1)
         a.offers.append(o)
@@ -47,6 +48,7 @@ class OfferTest(Base):
     def test_new_offer(self):
         a = model.account.Account()
         u = model.user.User('dublin.krzysztof.maslak@gmail.com', generate_password_hash('abcd'))
+        u.active = True
         a.users.append(u)
         model.base.db.session.add(a)
         model.base.db.session.commit()
@@ -64,6 +66,7 @@ class OfferTest(Base):
     def test_new_offer_item(self):
         a = model.account.Account()
         u = model.user.User('dublin.krzysztof.maslak@gmail.com', generate_password_hash('abcd'))
+        u.active = True
         a.users.append(u)
         o = model.Offer(a, status=1)
         a.offers.append(o)
@@ -82,6 +85,7 @@ class OfferTest(Base):
     def test_new_offer_item_variation(self):
         a = model.account.Account()
         u = model.user.User('dublin.krzysztof.maslak@gmail.com', generate_password_hash('abcd'))
+        u.active = True
         a.users.append(u)
         o = model.Offer(a, status=1)
         oi = model.OfferItem(o, 'Item1')
@@ -101,6 +105,7 @@ class OfferTest(Base):
     def test_delete(self):
         a = model.account.Account()
         u = model.user.User('dublin.krzysztof.maslak@gmail.com', generate_password_hash('abcd'))
+        u.active = True
         a.users.append(u)
         o = model.Offer(a, status=0)
         oi = model.OfferItem(o, 'Item1')
@@ -121,6 +126,7 @@ class OfferTest(Base):
     def test_get_by_hash(self):
         a = model.account.Account()
         u = model.user.User('admin', 'password')
+        u.active = True
         a.users.append(u)
         o = model.Offer(a)
         a.offers.append(o)

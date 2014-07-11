@@ -7,6 +7,7 @@ class ResourceBundle:
     def get_all(self, lang):
         if lang=='en':
             return {
+                'registration_email_subject':'Registration email',
                 'login_title':'Log in',
                 'login_username':'Email address',
                 'login_username_placeholder':'Email',
@@ -27,6 +28,7 @@ class ResourceBundle:
                 'reset_password_username':'Email address',
                 'reset_password_placeholder':'Email',
                 'reset_password_btn':'Reset password',
+                'reset_password_link_info':'We have sent you an email with reset password link that when clicked will allow you to define new password.',
                 'register_btn':'Register',
                 'offer_saved_successfully':'Offer saved successfuly',
                 'offer_list_title': 'Title',
