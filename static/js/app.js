@@ -70,7 +70,6 @@ angular.module('pgadminapp', ['ngRoute', 'hh.filters', 'hh.services', 'hh.direct
         $routeProvider.when('/offers',      {templateUrl: '/static/${pom.version}/partials/admin/offer.html'});
         $routeProvider.when('/orders',      {templateUrl: '/static/${pom.version}/partials/admin/order.html'});
         $routeProvider.when('/withdraw',      {templateUrl: '/static/${pom.version}/partials/admin/withdraw.html'});
-        $routeProvider.when('/settings',      {templateUrl: '/static/${pom.version}/partials/admin/settings.html'});
         $routeProvider.otherwise({redirectTo: '/landing'});
 	}]);
 angular.module('pgapp', ['ngRoute', 'hh.filters', 'hh.services', 'hh.directives', 'hh.controllers', 'ui.bootstrap.modal']).
@@ -101,5 +100,11 @@ angular.module('pgapp-new-password', ['ngRoute', 'hh.filters', 'hh.services', 'h
     config(['$routeProvider', '$sceProvider', function($routeProvider, $sceProvider) {
         $routeProvider.when('/new-password',      {templateUrl: '/static/${pom.version}/partials/new-password.html'});
         $routeProvider.otherwise({redirectTo: '/new-password'});
+        $sceProvider.enabled(false);
+    }]);
+angular.module('pgapp-logout', ['ngRoute', 'hh.filters', 'hh.services', 'hh.directives', 'hh.controllers', 'ui.bootstrap.modal']).
+    config(['$routeProvider', '$sceProvider', function($routeProvider, $sceProvider) {
+        $routeProvider.when('/logout',      {templateUrl: '/static/${pom.version}/partials/logout.html'});
+        $routeProvider.otherwise({redirectTo: '/logout'});
         $sceProvider.enabled(false);
     }]);

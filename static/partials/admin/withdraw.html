@@ -1,4 +1,4 @@
-<div class="container-fluid" x-ng-controller="WithdrawCtrl">
+<div class="container-fluid min-height300" x-ng-controller="WithdrawCtrl">
     <div class="alert alert-success" ng-show="savedSuccessfully">
         {{ messages.request_taken_successfully }}
     </div>
@@ -7,9 +7,7 @@
             <form name="withdrawForm" enctype="multipart/form-data" novalidate>
                 <div class="formSection accountBalance">
                     <div>
-                        <label>
-                            <b>{{ messages.your_balance_is }} {{ balance }}</b>
-                        </label>
+                        {{ messages.your_balance_is }} {{ balance }}
                     </div>
                 </div>
 

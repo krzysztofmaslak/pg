@@ -230,11 +230,32 @@ def new_password():
        page='new-password'
     )
 
+
+@wsgi_blueprint.route('/reset-password.html', methods=['GET'])
+def reset_password():
+    messages = resource_bundle.ResourceBundle()
+    lang = detect_language()
+    return render_template('main.html',
+       project_version=wsgi_blueprint.ioc.get_config()['PROJECT_VERSION'],
+       messages=messages.get_all(lang),
+       page='reset-password'
+    )
+
 @wsgi_blueprint.route('/admin/logout')
-def logout():
+def do_logout():
     # remove the username from the session if it's there
     session.pop('username', None)
-    return redirect("/index.html")
+    return redirect("/logout.html")
+
+@wsgi_blueprint.route('/logout.html')
+def logout():
+    messages = resource_bundle.ResourceBundle()
+    lang = detect_language()
+    return render_template('main.html',
+       project_version=wsgi_blueprint.ioc.get_config()['PROJECT_VERSION'],
+       messages=messages.get_all(lang),
+       page='logout'
+    )
 
 @wsgi_blueprint.route('/admin/')
 @login_required

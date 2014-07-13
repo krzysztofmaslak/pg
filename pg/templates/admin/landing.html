@@ -6,57 +6,74 @@
 <!--[if gt IE 9]><html class="no-js" ><![endif]-->
 <!--[if !IE]><html class="no-js" ><![endif]-->
 <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <title>{{ admin_title }}</title>
-
-    <meta name="description" content="" />
-    <meta name="viewport" content="width=device-width" />
     <link rel="stylesheet" href="/static/{{ project_version }}/css/normalize.css" />
-    <link rel="stylesheet" href="/static/{{ project_version }}/css/app.css"/>
     <link href="/static/{{ project_version }}/css/bootstrap.min.css" rel="stylesheet" media="screen" />
+    <link rel="stylesheet" href="/static/{{ project_version }}/css/main.css" />
+    <link rel="stylesheet" href="/static/{{ project_version }}/css/font-awesome.css" />
+    <title>Just Sale It</title>
     <script src="/static/{{ project_version }}/lib/jquery.js"></script>
     <script src="/static/{{ project_version }}/lib/jquery.ui.widget.js"></script>
     <script src="/static/{{ project_version }}/lib/jquery.iframe-transport.js"></script>
     <script src="/static/{{ project_version }}/lib/jquery.fileupload.js"></script>
+    <script src="/static/{{ project_version }}/lib/zeroclip/ZeroClipboard.js"></script>
     <script type="text/javascript">
         var jq = jQuery.noConflict();
     </script>
-
 </head>
 
-<body style="background-color:#EEE8AA">
-        <div x-ng-app='pgadminapp'>
-            <div class="navbar" style="position:relative;">
-                <div class="navbar-inner">
-                    <a class="brand" href="#">{{ messages.admin_menu_administrator }}:</a>
-                    <ul class="nav">
-                        <li><a href="#/offers">{{ messages.admin_menu_offers }}</a></li>
-                        <li><a href="#/orders">{{ messages.admin_menu_orders }}</a></li>
-                        <li><a href="#/withdraw">{{ messages.admin_menu_withdraw }}</a></li>
-{#                        <li><a href="#/settings">{{ messages.admin_menu_settings }}</a></li>#}
-                    </ul>
-                </div>
-                <a href="/admin/logout" style="position:absolute;top:11px;right:20px;">{{ messages.admin_menu_logout }}</a>
-            </div>
-
+<body>
+    <div style="opacity: 1;" id="bg" class="bg"></div>
+    <div class="outer admin">
+        <div class="inner" x-ng-app='pgadminapp'>
             <div data-loading></div>
-            <div x-ng-controller='PGAppCtrl'>
-                <div x-ng-view></div>
+            <div class="content" x-ng-controller='PGAppCtrl'>
+                <div class="main">
+                    <div style="" id="identity" class="identity">
+                        <div id="spinner" class="spinner" style="display: none;"></div>
+                        <img src="/static/{{ project_version }}/img/shopping-cart.png" class="logo" id="logo"/>
+                    </div>
+                    <div style="opacity: 1;" id="tagline" class="tagline">
+                        <p><span id="type">Just Sale It</span><span id="typed-cursor" style="visibility: hidden;">|</span></p>
+                    </div>
+                    <div>
+                        <table style="width:100%">
+                            <tr>
+                                <td valign="top" style="width:320px">
+                                    <div style="position:fixed;width:320px;margin-left:10px;margin-top:0px;">
+                                        <ul style="max-width: 300px;" class="nav nav-pills nav-stacked">
+                                          <li ng-class="{active: isActiveMenuItem('/offers')}"><a href="#/offers">{{ messages.admin_menu_offers }}</a></li>
+                                          <li ng-class="{active: isActiveMenuItem('/orders')}"><a href="#/orders">{{ messages.admin_menu_orders }}</a></li>
+                                          <li ng-class="{active: isActiveMenuItem('/withdraw')}"><a href="#/withdraw">{{ messages.admin_menu_withdraw }}</a></li>
+                                          <li><a href="/admin/logout">{{ messages.admin_menu_logout }}</a></li>
+                                        </ul>
+                                        <p style="opacity: 1;" id="footer" class="footer">&copy; 2014 Spreadline Ltd</p>
+                                    </div>
+                                </td>
+                                <td valign="top">
+                                    <div x-ng-view></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
-        <!--#include virtual="/static/{{ project_version }}/template/footer.html" -->
-        <script type="text/javascript">
-            window.countries = JSON.parse('{{ countries }}'.replaceAll('&#39;', '"'));
-        </script>
+    </div>
 
-        <script type="text/javascript">
-            window.balance = {{ balance }};
-        </script>
+    <!--#include virtual="/static/{{ project_version }}/template/footer.html" -->
 
-        <script type="text/javascript">
-            window.messages = JSON.parse('{{ messages }}'.replaceAll('&#39;', '"'));
-        </script>
+    <script type="text/javascript">
+        window.countries = JSON.parse('{{ countries }}'.replaceAll('&#39;', '"'));
+    </script>
+
+    <script type="text/javascript">
+        window.balance = {{ balance }};
+    </script>
+
+    <script type="text/javascript">
+        window.messages = JSON.parse('{{ messages }}'.replaceAll('&#39;', '"'));
+    </script>
+    <div id="loadingIndicator" class="loadingIndicator"></div>
 </body>
 <!--[if lt IE 7]></html><![endif]-->
 <!--[if IE 7]></html><![endif]-->

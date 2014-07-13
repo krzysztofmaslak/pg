@@ -10,7 +10,7 @@
     <link href="/static/{{ project_version }}/css/bootstrap.min.css" rel="stylesheet" media="screen" />
     <link rel="stylesheet" href="/static/{{ project_version }}/css/main.css" />
     <link rel="stylesheet" href="/static/{{ project_version }}/css/font-awesome.css" />
-    <title>Just Sell It</title>
+    <title>Just Sale It</title>
     <script src="/static/{{ project_version }}/lib/jquery.js"></script>
     <script type="text/javascript">
         var jq = jQuery.noConflict();
@@ -29,11 +29,17 @@
                         <img src="/static/{{ project_version }}/img/shopping-cart.png" class="logo" id="logo"/>
                     </div>
                     <div style="opacity: 1;" id="tagline" class="tagline">
-                        <p><span id="type">Just Sell It</span><span id="typed-cursor" style="visibility: hidden;">|</span></p>
+                        <p><span id="type">Just Sale It</span><span id="typed-cursor" style="visibility: hidden;">|</span></p>
                     </div>
 
                     <div x-ng-view></div>
-                    <p style="opacity: 1;" id="footer" class="footer">&copy; 2014 Spreadline Ltd</p>
+                    <p style="margin-top: 4px; opacity: 1;" id="footer" class="footer">
+                        {% if page=='register' %}
+                            {{ messages.already_a_member }}<a style="margin-left:6px;" href="/login.html">{{ messages.login }}</a>
+                        {% else %}
+                            &copy; 2014 Spreadline Ltd
+                        {% endif %}
+                    </p>
                 </div>
             </div>
         </div>

@@ -22,6 +22,9 @@ angular.module('hh.controllers', [])
                 $scope.$apply(fn);
             }
         };
+        $scope.isActiveMenuItem = function(path) {
+            return $location.path()===path;
+        }
         $scope.formatDate = function (date) {
             if ( date==undefined )return '';
             if ( date.indexOf('T')!=-1 ) date = date.substring(0, date.indexOf('T'));
@@ -320,6 +323,9 @@ angular.module('hh.controllers', [])
         jaxrs.query('offer/?page=1', null, function (response) {
             $scope.offers = response.offers;
             $scope.pages = Math.ceil(response.count/10);
+            if ( $scope.offers.length==0 ) {
+                $scope.new();
+            }
         });
         $scope.paginatorItemClass = function (page) {
             if ($scope.current == (page + 1)) {
@@ -347,6 +353,9 @@ angular.module('hh.controllers', [])
                 $scope.offers = response.offers;
             });
         };
+        $scope.enableClipboardCopy = function() {
+            new ZeroClipboard( document.getElementById("copyRetrieveLink") );
+        }
         $scope.save = function () {
             if ( ValidationService.validate($scope.offerForm) ) {
                 jaxrs.create('offer/', $scope.offer, function (response) {
@@ -357,6 +366,7 @@ angular.module('hh.controllers', [])
                         $scope.errors.length = 0;
                         $scope.offer = response;
                         $scope.dirty = false;
+                        $scope.enableClipboardCopy();
                         jaxrs.query('offer/?page='+$scope.current, null, function (response) {
                             $scope.offers = response.offers;
                             $scope.pages = Math.ceil(response.count/10);
@@ -400,6 +410,7 @@ angular.module('hh.controllers', [])
                     $scope.errors[$scope.errors.length] = {message: response.error};
                 } else {
                     $scope.offer = {id:response.id};
+                    $scope.addItem();
                 }
             });
         };
@@ -408,6 +419,7 @@ angular.module('hh.controllers', [])
         }
         $scope.edit = function(offer) {
             $scope.offer = offer;
+            $scope.enableClipboardCopy();
         };
     }])
     .controller('ItemCtrl', ['$scope', '$routeParams', '$location', 'jaxrs', '$timeout', 'ValidationService',

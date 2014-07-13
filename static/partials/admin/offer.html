@@ -1,207 +1,69 @@
-<div class="container-fluid" x-ng-controller="OfferCtrl">
-<div class="alert alert-error" ng-show="errors.length!=0">
-    <div ng-repeat="error in errors">
-        {{error.message}}
-    </div>
-</div>
-<div class="alert alert-success" ng-show="savedSuccessfully">
-    {{ messages.offer_saved_successfully }}
-</div>
-<div class="row-fluid">
-<div class="span3" ng-show="offers.length!=0">
-    <div class="formSection">
-        <form novalidate>
-            <!--<table style="margin-top:10px;margin-bottom:20px;" >-->
-                <!--<tr>-->
-                    <!--<td>-->
-                        <!--<input type="text" x-ng-model="query"  style="margin-bottom:0px;width:300px;" />-->
-                    <!--</td>-->
-                    <!--<td style="width:8px;"></td>-->
-                    <!--<td>-->
-                        <!--<button x-ng-click="search()" class="btn">Search</button>-->
-                    <!--</td>-->
-                <!--</tr>-->
-            <!--</table>-->
-            <table class="table table-hover">
-                <tr>
-                    <th>
-                        {{ messages.offer_list_title }}
-                    </th>
-                    <th>{{ messages.offer_list_creation_date }}</th>
-                    <th></th>
-                </tr>
-                <tr ng-repeat="offer in offers">
-                    <td>{{offer.title}}</td>
-                    <td>{{formatDate(offer.creation_date)}}</td>
-                    <td>
-                        <div style="white-space: nowrap;">
-                            <button ng-click="edit(offer)" class="btn btn-success">{{ messages.offer_list_edit }}</button>
-                            <button ng-click="delete(offer.id)" class="btn btn-danger">{{ messages.offer_list_delete }}</button>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-            <div class="my_block pag" ng-show="pages>1">
-                <button class="btn btn-inverse btn-small" ng-show="current!='1'" x-ng-click="previous()">{{ messages.offer_list_previous }}</button>
-                <button class="btn {{paginatorItemClass($index)}} btn-small" style="margin-left:2px;" ng-repeat="n in [] | range:pages" x-ng-click="go($index+1)">{{$index+1}}</button>
-                <button class="btn btn-inverse btn-small" style="margin-left:2px;" x-ng-click="next()" ng-show="current!=pages">{{ messages.offer_list_next }}</button>
+<div x-ng-controller="OfferCtrl">
+    <div class="row-fluid">
+        <div class="container-fluid" ng-show="offers.length!=0" style="margin-bottom:20px;">
+            <div class="formSection">
+                <form novalidate>
+                    <!--<table style="margin-top:10px;margin-bottom:20px;" >-->
+                        <!--<tr>-->
+                            <!--<td>-->
+                                <!--<input type="text" x-ng-model="query"  style="margin-bottom:0px;width:300px;" />-->
+                            <!--</td>-->
+                            <!--<td style="width:8px;"></td>-->
+                            <!--<td>-->
+                                <!--<button x-ng-click="search()" class="btn">Search</button>-->
+                            <!--</td>-->
+                        <!--</tr>-->
+                    <!--</table>-->
+                    <table class="table table-hover">
+                        <tr>
+                            <th>
+                                {{ messages.offer_list_title }}
+                            </th>
+                            <th>{{ messages.offer_list_creation_date }}</th>
+                            <th></th>
+                        </tr>
+                        <tr ng-repeat="offer in offers">
+                            <td>{{offer.title}}</td>
+                            <td>{{formatDate(offer.creation_date)}}</td>
+                            <td>
+                                <div style="white-space: nowrap;">
+                                    <button ng-click="edit(offer)" class="btn btn-success">{{ messages.offer_list_edit }}</button>
+                                    <button ng-click="delete(offer.id)" class="btn btn-danger">{{ messages.offer_list_delete }}</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="my_block pag" ng-show="pages>1">
+                        <button class="btn btn-inverse btn-small" ng-show="current!='1'" x-ng-click="previous()">{{ messages.offer_list_previous }}</button>
+                        <button class="btn {{paginatorItemClass($index)}} btn-small" style="margin-left:2px;" ng-repeat="n in [] | range:pages" x-ng-click="go($index+1)">{{$index+1}}</button>
+                        <button class="btn btn-inverse btn-small" style="margin-left:2px;" x-ng-click="next()" ng-show="current!=pages">{{ messages.offer_list_next }}</button>
+                    </div>
+                </form>
+                <button x-ng-click="new()" class="btn btn-success">{{ messages.offer_list_add_new_offer }}</button>
             </div>
-        </form>
-        <button x-ng-click="new()" class="btn btn-success">{{ messages.offer_list_add_new_offer }}</button>
-    </div>
-</div>
-<div class="span9">
-<button x-ng-click="new()" class="btn btn-success" ng-show="offers.length==0">{{ messages.offer_list_add_new_offer }}</button>
-<form name="offerForm" enctype="multipart/form-data" ng-show="offer!=null" novalidate>
-<div class="formSection detailsTitle">
-    <div>
-        <label><b>{{ messages.offer_form_title }}</b></label>
-        <input type="text" name="title" nullifempty id="title" x-ng-model="offer.title" style="width:400px;" ng-required="true"/>
-        <p ng-show="offerForm.title.$dirty && offerForm.title.$error.required" style="color:red;margin-top:0px;">{{ messages.offer_form_title_required }}</p>
-    </div>
-    <div ng-show="offer.hash && offer.hash.length>0">
-        <label><b>{{ messages.offer_form_creation_date }}</b></label>
-        <span ng-if="offer!=null">{{formatDate(offer.creation_date)}}</span>
-    </div>
-    <div ng-show="offer.hash && offer.hash.length>0">
-        <label><b>{{ messages.offer_form_direct_link }}</b></label>
-        <input type="text" readonly="true" id="retrieveLink" value="https://www.e-littleangel.com/x/{{offer.hash}}" style="width:400px;cursor:pointer;"/>
-    </div>
-    <div ng-show="offer.items.length>0">
-        <label><b>{{ messages.offer_form_products }}</b></label>
-        <div ng-repeat="item in offer.items" style="border-top:1px solid #DDDDDD;padding-top:10px;">
-            <table style="width:100%">
-                <tr>
-                    <td x-ng-controller="ItemCtrl" ng-form="itemForm">
-                        <div class="form-group">
-                            <table style="width:100%">
-                                <tr>
-                                    <td>
-                                        <h1 style="margin-right:10px;font-size:24px;">{{$index+1}}</h1>
-                                    </td>
-                                    <td>
-                                        <label>Product title</label>
-                                        <input type="text" name="productTitle" nullifempty x-ng-model="item.title" style="width:350px" ng-required="true"/>
-                                        <p ng-show="itemForm.productTitle.$dirty && itemForm.productTitle.$error.required" style="color:red;margin-top:0px;">Title is required</p>
-                                    </td>
-                                    <td valign="top" style="width:140px;">
-                                        <button ng-click="deleteItem($index)" class="btn btn-danger" style="margin-bottom:10px;">Delete product</button>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                        <div class="form-group" style="margin-top:6px;">
-                            <label>{{ messages.offer_form_multiple_variations }}</label>
-                            <div  style="margin-top:6px;">
-                                <input type="hidden" name="multivariate" ng-model="item.multivariate" ng-required="true"/>
-                                <label for="simple{{$index}}" style="display:inline;margin-right:10px;">{{ messages.offer_form_multiple_variations_no }}</label>
-                                <input type="radio" ng-click="multivariate=0" value="0" id="simple{{$index}}" name="multivariate{{$index}}" style="display:inline;margin-right:10px;margin-top:0px;"/>
-                                <label for="multivariate{{$index}}" style="display:inline;margin-right:10px;">{{ messages.offer_form_multiple_variations_yes }}</label>
-                                <input type="radio" ng-click="multivariate=1" value="1" id="multivariate{{$index}}" name="multivariate{{$index}}" style="display:inline;margin-top:0px;"/>
-                                <p ng-show="itemForm.multivariate.$dirty && itemForm.multivariate.$error.required" style="color:red;margin-top:0px;">{{ messages.offer_form_multiple_variations_required }}</p>
-                            </div>
-                        </div>
-                        <div style="clear:both;margin-bottom:10px;"></div>
-                        <div ng-if="multivariate==0">
-                            <table>
-                                <tr>
-                                    <td>{{ messages.offer_form_quantity }}</td>
-                                    <td>{{ messages.offer_form_net }}</td>
-                                    <td>{{ messages.offer_form_tax }}</td>
-                                    <td>{{ messages.offer_form_shipping }}</td>
-                                    <td>{{ messages.offer_form_shipping_additional }}</td>
-                                </tr>
-                                <tr>
-                                    <td valign="top">
-                                        <input type="text" name="squantity" nullifempty x-ng-model="item.quantity" style="width:130px" ng-required="true"/>
-                                        <p ng-show="itemForm.squantity.$dirty && itemForm.squantity.$error.required" style="color:red;margin-top:0px;">{{ messages.offer_form_quantity_required }}</p>
-                                    </td>
-                                    <td valign="top">
-                                        <input type="text" name="snet" nullifempty x-ng-model="item.net" style="width:130px" ng-required="true"/>
-                                        <p ng-show="itemForm.snet.$dirty && itemForm.snet.$error.required" style="color:red;margin-top:0px;">{{ messages.offer_form_net_required }}</p>
-                                    </td>
-                                    <td valign="top">
-                                        <input type="text" x-ng-model="item.tax" nullifempty style="width:130px" />
-                                    </td>
-                                    <td valign="top">
-                                        <input type="text" x-ng-model="item.shipping" nullifempty name="sshipping" style="width:130px" ng-required="true"/>
-                                        <p ng-show="itemForm.sshipping.$dirty && itemForm.sshipping.$error.required" style="color:red;margin-top:0px;">{{ messages.offer_form_shipping_required }}</p>
-                                    </td>
-                                    <td valign="top">
-                                        <input type="text" nullifempty x-ng-model="item.shippingAdditional" style="width:110px" />
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                        <div ng-if="multivariate==1">
-                            <table style="width:100%">
-                                <tr>
-                                    <td>{{ messages.offer_form_variation }}</td>
-                                    <td>{{ messages.offer_form_quantity }}</td>
-                                    <td>{{ messages.offer_form_net }}</td>
-                                    <td>{{ messages.offer_form_tax }}</td>
-                                    <td>{{ messages.offer_form_shipping }}</td>
-                                    <td>{{ messages.offer_form_shipping_additional }}</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr ng-repeat="variation in item.variations" ng-form="variationForm">
-                                    <td valign="top">
-                                        <input type="text" name="mtitle" nullifempty x-ng-model="variation.title" style="width:250px" ng-required="true" placeholder="{{variation.placeholder}}"/>
-                                        <p ng-show="variationForm.mtitle.$dirty && variationForm.mtitle.$error.required" style="color:red;margin-top:0px;">{{ messages.offer_form_title_required }}</p>
-                                    </td>
-                                    <td valign="top">
-                                        <input type="text" name="mquantity" nullifempty x-ng-model="variation.quantity" style="width:130px" ng-required="true"/>
-                                        <p ng-show="variationForm.mquantity.$dirty && variationForm.mquantity.$error.required" style="color:red;margin-top:0px;">{{ messages.offer_form_quantity_required }}</p>
-                                    </td>
-                                    <td valign="top">
-                                        <input type="text" name="mnet" nullifempty x-ng-model="variation.net" style="width:130px"  ng-required="true"/>
-                                        <p ng-show="variationForm.mnet.$dirty && variationForm.mnet.$error.required" style="color:red;margin-top:0px;">{{ messages.offer_form_net_required }}</p>
-                                    </td>
-                                    <td valign="top">
-                                        <input type="text" nullifempty x-ng-model="variation.tax" style="width:80px" />
-                                    </td>
-                                    <td valign="top">
-                                        <input type="text" name="mshipping" nullifempty x-ng-model="variation.shipping" style="width:130px" ng-required="true"/>
-                                        <p ng-show="variationForm.mshipping.$dirty && variationForm.mshipping.$error.required" style="color:red;margin-top:0px;">{{ messages.offer_form_shipping_required }}</p>
-                                    </td>
-                                    <td valign="top">
-                                        <input type="text" nullifempty x-ng-model="variation.shippingAdditional" style="width:110px" />
-                                    </td>
-                                    <td valign="top">
-                                        <input id="imageupload{{ $index }}" type="file" imageupload name="file" uploadTarget="offer_item_variation" uploadTargetId="{{variation.id}}" style="display: none;"/>
-                                        <div style="width:100px;">
-                                            <img class='thumbnail' src="/static/${pom.version}/img/blank.png" imagecheck="/static/images/offer_item_variation/{{variation.id}}_thumb.png" style="width:100px;display:none;"/>
-                                            <img src="/static/${pom.version}/img/chooseimageabove.png"
-                                                 style="cursor:pointer;" onclick="clickOnParentSibling(this, 'input');event.preventDefault();return false;"/>
-                                        </div>
-                                    </td>
-                                    <td valign="top"><button ng-click="deleteVariation($index)" class="btn btn-danger" style="margin-bottom:10px;">{{ messages.offer_form_delete_variation }}</button></td>
-                                </tr>
-                            </table>
-                            <button x-ng-click="addVariation()" class="btn btn-info" style="margin-bottom:20px">{{ messages.offer_form_add_more_variations }}</button>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div>
-                            <label>{{ messages.offer_form_photos }}</label>
-                            <input id="imageupload" type="file" imageupload name="file" uploadTarget="offer_item" uploadTargetId="{{item.id}}" style="display: none;"/>
-                            <div style="width:100px;">
-                                <img class='thumbnail' src="/static/${pom.version}/img/blank.png" imagecheck="/static/images/offer_item/{{item.id}}_thumb.png" style="width:100px;display:none;"/>
-                                <img src="/static/${pom.version}/img/chooseimageabove.png"
-                                     style="cursor:pointer;" onclick="clickOnParentSibling(this, 'input');event.preventDefault();return false;"/>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            </table>
         </div>
-
-        <div ng-show="offer.items.length>0">
+        <div class="container-fluid min-height300" ng-show="offer!=null">
+            <div class="alert alert-error" ng-show="errors.length!=0">
+                <div ng-repeat="error in errors">
+                    {{error.message}}
+                </div>
+            </div>
+            <div class="alert alert-success" ng-show="savedSuccessfully">
+                {{ messages.offer_saved_successfully }}
+            </div>
+    <form name="offerForm" enctype="multipart/form-data" novalidate>
+    <div class="formSection detailsTitle">
+        <div>
+            <label><b>{{ messages.offer_form_title }}</b></label>
+            <input type="text" name="title" nullifempty id="title"
+                   ng-class="{fieldError: offerForm.title.$dirty && offerForm.title.$invalid}"
+                   x-ng-model="offer.title" style="width:500px;" ng-required="true"/>
+        </div>
+        <div ng-show="offer.items.length>0" class="currencyWrap">
             <label>{{ messages.offer_form_currency }}</label>
-            <select x-ng-model="offer.currency" name="currency" select-required="true">
+            <select x-ng-model="offer.currency" name="currency"
+                    ng-class="{fieldError: offerForm.currency.$dirty && offerForm.currency.$invalid}"
+                    select-required="true" style="background-color:white;padding:6px;">
                 <option value="">{{ messages.offer_form_please_select }}</option>
                 <option value="aud">AUD</option>
                 <option value="cad">CAD</option>
@@ -209,17 +71,167 @@
                 <option value="gbp">GBP</option>
                 <option value="usd">USD</option>
             </select>
-            <p ng-show="offerForm.currency.$dirty && offerForm.currency.$error.required" style="color:red;margin-top:0px;">{{ messages.offer_form_currency_required }}</p>
+        </div>
+        <div ng-show="offer.hash && offer.hash.length>0">
+            <label><b>{{ messages.offer_form_creation_date }}</b></label>
+            <span ng-if="offer!=null">{{formatDate(offer.creation_date)}}</span>
+        </div>
+        <div ng-show="offer.hash && offer.hash.length>0">
+            <label><b>{{ messages.offer_form_direct_link }}</b></label>
+            <input type="text" readonly="true" id="retrieveLink" name="retrieveLink" value="https://www.justsale.it/x/{{offer.hash}}" style="float: left; width:400px;cursor:pointer;background-color:#dff0d8;border-color:#dff0d8"/>
+            <button id="copyRetrieveLink" data-clipboard-target="retrieveLink" ng-click="copyToClipboard()" class="btn btn-success" style="margin-left:4px">Copy to clipboard</button>
+        </div>
+        <div class="clearfix"></div>
+        <div ng-show="offer.items.length>0">
+            <label><b>{{ messages.offer_form_products }}</b></label>
+            <div ng-repeat="item in offer.items" style="border-top:1px solid #DDDDDD;padding-top:10px;">
+                <table style="width:100%">
+                    <tr>
+                        <td x-ng-controller="ItemCtrl" ng-form="itemForm">
+                            <div class="form-group">
+                                <table style="width:100%">
+                                    <tr>
+                                        <td>
+                                            <h1 style="margin-right:10px;font-size:24px;">{{$index+1}}</h1>
+                                        </td>
+                                        <td>
+                                            <label>Product title</label>
+                                            <input type="text" name="productTitle" nullifempty x-ng-model="item.title"
+                                                   ng-class="{fieldError: itemForm.productTitle.$dirty && itemForm.productTitle.$invalid}"
+                                                   style="width:500px" ng-required="true"/>
+                                        </td>
+                                        <td valign="top" style="width:140px;">
+                                            <button ng-click="deleteItem($index)" class="btn btn-danger" style="margin-bottom:10px;">Delete product</button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="form-group" style="margin-top:6px;">
+                                <label>{{ messages.offer_form_multiple_variations }}</label>
+                                <div  style="margin-top:6px;">
+                                    <input type="hidden" name="multivariate" ng-model="item.multivariate" ng-required="true"/>
+                                    <label for="simple{{$index}}" style="display:inline;margin-right:10px;">{{ messages.offer_form_multiple_variations_no }}</label>
+                                    <input type="radio" ng-click="multivariate=0" value="0" id="simple{{$index}}" name="multivariate{{$index}}" style="display:inline;margin-right:10px;margin-top:0px;"/>
+                                    <label for="multivariate{{$index}}" style="display:inline;margin-right:10px;">{{ messages.offer_form_multiple_variations_yes }}</label>
+                                    <input type="radio" ng-click="multivariate=1" value="1" id="multivariate{{$index}}" name="multivariate{{$index}}" style="display:inline;margin-top:0px;"/>
+                                </div>
+                            </div>
+                            <div style="clear:both;margin-bottom:10px;"></div>
+                            <div ng-if="multivariate==0">
+                                <table>
+                                    <tr>
+                                        <td>{{ messages.offer_form_quantity }}</td>
+                                        <td>{{ messages.offer_form_net }}</td>
+                                        <td>{{ messages.offer_form_tax }}</td>
+                                        <td>{{ messages.offer_form_shipping }}</td>
+                                        <td>{{ messages.offer_form_shipping_additional }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top">
+                                            <input type="text" name="squantity" nullifempty x-ng-model="item.quantity"
+                                                   ng-class="{fieldError: itemForm.squantity.$dirty && itemForm.squantity.$invalid}"
+                                                   style="width:130px" ng-required="true"/>
+                                        </td>
+                                        <td valign="top">
+                                            <input type="text" name="snet" nullifempty x-ng-model="item.net"
+                                                   ng-class="{fieldError: itemForm.snet.$dirty && itemForm.snet.$invalid}"
+                                                   style="width:130px" ng-required="true"/>
+                                        </td>
+                                        <td valign="top">
+                                            <input type="text" x-ng-model="item.tax" nullifempty style="width:130px" />
+                                        </td>
+                                        <td valign="top">
+                                            <input type="text" x-ng-model="item.shipping" nullifempty name="sshipping"
+                                                   ng-class="{fieldError: itemForm.sshipping.$dirty && itemForm.sshipping.$invalid}"
+                                                   style="width:130px" ng-required="true"/>
+                                        </td>
+                                        <td valign="top">
+                                            <input type="text" nullifempty x-ng-model="item.shippingAdditional" style="width:110px" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div ng-if="multivariate==1">
+                                <table>
+                                    <tr>
+                                        <td>{{ messages.offer_form_variation }}</td>
+                                        <td>{{ messages.offer_form_quantity }}</td>
+                                        <td>{{ messages.offer_form_net }}</td>
+                                        <td>{{ messages.offer_form_tax }}</td>
+                                        <td>{{ messages.offer_form_shipping }}</td>
+                                        <td>{{ messages.offer_form_shipping_additional }}</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr ng-repeat="variation in item.variations" ng-form="variationForm">
+                                        <td valign="top">
+                                            <input type="text" name="mtitle" nullifempty x-ng-model="variation.title"
+                                                   ng-class="{fieldError: variationForm.mtitle.$dirty && variationForm.mtitle.$invalid}"
+                                                   style="width:250px" ng-required="true" placeholder="{{variation.placeholder}}"/>
+                                        </td>
+                                        <td valign="top">
+                                            <input type="text" name="mquantity" nullifempty x-ng-model="variation.quantity"
+                                                   ng-class="{fieldError: variationForm.mquantity.$dirty && variationForm.mquantity.$invalid}"
+                                                   style="width:130px" ng-required="true"/>
+                                        </td>
+                                        <td valign="top">
+                                            <input type="text" name="mnet" nullifempty x-ng-model="variation.net"
+                                                   ng-class="{fieldError: variationForm.mnet.$dirty && variationForm.mnet.$invalid}"
+                                                   style="width:130px"  ng-required="true"/>
+                                        </td>
+                                        <td valign="top">
+                                            <input type="text" nullifempty x-ng-model="variation.tax" style="width:80px" />
+                                        </td>
+                                        <td valign="top">
+                                            <input type="text" name="mshipping" nullifempty x-ng-model="variation.shipping"
+                                                   ng-class="{fieldError: variationForm.mshipping.$dirty && variationForm.mshipping.$invalid}"
+                                                   style="width:130px" ng-required="true"/>
+                                        </td>
+                                        <td valign="top">
+                                            <input type="text" nullifempty x-ng-model="variation.shippingAdditional" style="width:110px" />
+                                        </td>
+                                        <td valign="top" style="width:140px;">
+                                            <input id="imageupload{{ $index }}" type="file" imageupload name="file" uploadTarget="offer_item_variation" uploadTargetId="{{variation.id}}" style="display: none;"/>
+                                            <div style="width:100px;">
+                                                <img class='thumbnail' src="/static/${pom.version}/img/blank.png" imagecheck="/static/images/offer_item_variation/{{variation.id}}_thumb.png" style="width:100px;display:none;"/>
+                                                <img src="/static/${pom.version}/img/chooseimageabove.png"
+                                                     style="cursor:pointer;" onclick="clickOnParentSibling(this, 'input');event.preventDefault();return false;"/>
+                                            </div>
+                                        </td>
+                                        <td valign="top"><button ng-click="deleteVariation($index)" class="btn btn-danger" style="margin-bottom:10px;">{{ messages.offer_form_delete_variation }}</button></td>
+                                    </tr>
+                                </table>
+                                <button x-ng-click="addVariation()" class="btn btn-info" style="margin-bottom:20px">{{ messages.offer_form_add_more_variations }}</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div>
+                                <label>{{ messages.offer_form_photos }}</label>
+                                <input id="imageupload" type="file" imageupload name="file" uploadTarget="offer_item" uploadTargetId="{{item.id}}" style="display: none;"/>
+                                <div style="width:100px;">
+                                    <img class='thumbnail' src="/static/${pom.version}/img/blank.png" imagecheck="/static/images/offer_item/{{item.id}}_thumb.png" style="width:100px;display:none;"/>
+                                    <img src="/static/${pom.version}/img/chooseimageabove.png"
+                                         style="cursor:pointer;" onclick="clickOnParentSibling(this, 'input');event.preventDefault();return false;"/>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="clearfix"></div>
+        </div>
+        <div class="actionNav">
+            <button x-ng-click="addItem()" class="btn btn-info">{{ messages.offer_form_add_product }}</button>
+            <button x-ng-click="save()" class="btn btn-success" ng-show="offer!=null">{{ messages.offer_form_save_offer }}</button>
         </div>
         <div class="clearfix"></div>
     </div>
-    <button x-ng-click="addItem()" class="btn btn-info">{{ messages.offer_form_add_product }}</button>
-    <button x-ng-click="save()" class="btn btn-success" ng-show="offer!=null">{{ messages.offer_form_save_offer }}</button>
-    <div class="clearfix"></div>
-</div>
-<div>
-</div>
-</form>
+    <div>
+    </div>
+    </form>
 </div>
 </div>
 </div>

@@ -34,6 +34,9 @@ body {
     max-width: 320px;
     padding: 40px 20px;
 }
+.admin .main {
+    max-width:100%;
+}
 .identity {
     clear: both;
     display: block;
@@ -57,6 +60,9 @@ form {
     margin-top: 60px;
     padding: 15px;
     color: #7e7975;
+}
+.admin form {
+    margin-top:0px;
 }
 form label {
     cursor: pointer;
@@ -116,4 +122,54 @@ input[type="password"].fieldError, input[type="text"].fieldError, input[type="em
     color: #B94A48;
     border-color: #E9322D;
     box-shadow: 0 0 6px #F8B9B7
+}
+
+*:before, *:after {
+    box-sizing: border-box;
+}
+.nav:after {
+    color: #959595;
+    content: "Administrator";
+    font-size: 12px;
+    font-weight: 700;
+    left: 15px;
+    letter-spacing: 1px;
+    position: absolute;
+    text-transform: uppercase;
+    top: 15px;
+}
+.nav {
+    background-color: #fff;
+    border-color: #ddd;
+    border-radius: 4px 4px 4px 4px;
+    border-width: 1px;
+    box-shadow: none;
+    margin-left: 0;
+    margin-right: 0;
+}
+.nav {
+    border-color: #e5e5e5 #eee #eee;
+    border-style: solid;
+    border-width: 1px 0;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05) inset;
+    margin: 0 -15px 15px;
+    padding: 45px 15px 15px;
+    position: relative;
+}
+.container-fluid {
+    background-color:#ffffff;
+    border-radius: 4px 4px 4px 4px;
+    padding:15px;
+}
+.min-height300{
+    min-height: 300px;
+}
+.currencyWrap {
+    margin-bottom:10px;
+}
+.clearfix {
+    clear:both;
+}
+.actionNav {
+    margin-top:10px;
 }
