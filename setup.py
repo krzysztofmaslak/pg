@@ -7,11 +7,11 @@ project = "run"
 setup(
     name=project,
     version='0.1',
-    url='https://github.com/imwilsonxu/fbone',
+    url='https://www.justsale.it',
     description='Standalone payment gateway',
     author='Krzysztof Maslak',
     author_email='dublin.krzysztof.maslak@gmail.com',
-    packages=["fbone"],
+    packages=["pg"],
     include_package_data=True,
     zip_safe=False,
     install_requires=[

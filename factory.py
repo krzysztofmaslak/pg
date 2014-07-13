@@ -9,7 +9,7 @@ class ServiceFactory:
 
     def get_config(self):
         d = {
-            'SQLALCHEMY_DATABASE_URI':'sqlite:////data/sqlite/run.db',
+            'SQLALCHEMY_DATABASE_URI':'sqlite:////opt/database/justsale.sqlite',
             'SESSION_SECRET_KEY':'ASJAFLSDFJOWEJIFOWEJF',
             'IS_DEBUG':True,
             'PROJECT_VERSION':0.1,
