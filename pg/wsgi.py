@@ -181,16 +181,6 @@ def upload_image(target, id):
         traceback.print_exc(file=sys.stdout)
         return Response(status=400)
 
-
-class NewPasswordForm(Form):
-    password = PasswordField('Password')
-    confirmPassword = PasswordField('ConfirmPassword')
-    h = TextField('h')
-    e = TextField('e')
-
-class ResetPassword(Form):
-    username = TextField('Username')
-
 @wsgi_blueprint.route('/login.html', methods=['GET'])
 def login():
     messages = resource_bundle.ResourceBundle()
@@ -230,83 +220,14 @@ def register():
     )
 
 
-@wsgi_blueprint.route('/new_password.html', methods=['GET', 'POST'])
+@wsgi_blueprint.route('/new-password.html', methods=['GET'])
 def new_password():
-    form = NewPasswordForm(request.form)
     messages = resource_bundle.ResourceBundle()
-    success_message = None
-    error_message = None
     lang = detect_language()
-    if request.method == 'POST' and form.validate():
-        wsgi_blueprint.logger.info('['+request.remote_addr+'] Processing new password request')
-        if form.password.data==form.confirmPassword.data:
-            reset_hash = form.h.data
-            email_hash = form.e.data
-            user = wsgi_blueprint.ioc.new_user_service().find_by_reset_hash(reset_hash)
-            if user is not None:
-                if hashlib.sha224(user.username.encode('utf-8')).hexdigest()==email_hash:
-                    user.password = generate_password_hash(form.password.data)
-                    user.active = True
-                    model.base.db.session.commit()
-                    wsgi_blueprint.logger.info('['+request.remote_addr+'] Authenticating after password reset')
-                    session['username'] = user.username
-                    return redirect('/admin/')
-                else:
-                    wsgi_blueprint.logger.info('['+request.remote_addr+'] Failed to process new password request, email hash invalid')
-            else:
-                wsgi_blueprint.logger.info('['+request.remote_addr+'] Failed to process new password request, no such user')
-        else:
-            wsgi_blueprint.logger.info('['+request.remote_addr+'] Failed to process new password request, password mismatch confirm password')
-            error_message = messages.get_text(lang, 'new_password_mismatch')
-    else:
-        reset_hash = request.args.get('h')
-        email_hash = request.args.get('e')
-
-    return render_template('new_password.html', form=form,
-                           project_version=wsgi_blueprint.ioc.get_config()['PROJECT_VERSION'],
-                           message_new_password = messages.get_text(lang, 'new_password_title'),
-                           message_password = messages.get_text(lang, 'new_password_password'),
-                           message_password_placeholder = messages.get_text(lang, 'new_password_placeholder'),
-                           message_confirm_password = messages.get_text(lang, 'new_password_confirm_password'),
-                           message_confirm_password_placeholder = messages.get_text(lang, 'new_password_confirm_password_placeholder'),
-                           message_new_password_btn=messages.get_text(lang, 'new_password_btn'),
-                           reset_hash=reset_hash,
-                           email_hash = email_hash,
-                           success_message=success_message,
-                           error_message = error_message
-    )
-
-@wsgi_blueprint.route('/reset_password.html', methods=['GET', 'POST'])
-def reset_password():
-    form = RegisterForm(request.form)
-    messages = resource_bundle.ResourceBundle()
-    success_message = None
-    lang = detect_language()
-    if request.method == 'POST' and form.validate():
-        wsgi_blueprint.logger.info('['+request.remote_addr+'] Processing reset password request')
-        user = wsgi_blueprint.ioc.new_user_service().find_by_username(form.username.data)
-        if user is not None:
-            user.reset_hash = str(uuid.uuid4())
-            model.base.db.session.commit()
-            ps = wsgi_blueprint.ioc.new_property_service()
-            reset_password_subject = resource_bundle.ResourceBundle().get_text(user.account.lang, 'reset_password')
-            reset_password_email = model.Email()
-            reset_password_email.ref_id = user.id
-            reset_password_email.type = 'RESET_PASSWORD'
-            reset_password_email.from_address = ps.find_value_by_code(user.account, 'sales.email')
-            reset_password_email.to_address = user.username
-            reset_password_email.subject = reset_password_subject
-            wsgi_blueprint.ioc.new_email_service().save(reset_password_email)
-            success_message = messages.get_text(lang, 'reset_password_link_info')
-        else:
-            wsgi_blueprint.logger.info('['+request.remote_addr+'] Failed to request reset password, no such user')
-    return render_template('reset_password.html', form=form,
-                           project_version=wsgi_blueprint.ioc.get_config()['PROJECT_VERSION'],
-                           message_reset_password = messages.get_text(lang, 'reset_password_title'),
-                           message_username = messages.get_text(lang, 'reset_password_username'),
-                           message_username_placeholder = messages.get_text(lang, 'reset_password_placeholder'),
-                           message_reset_password_btn = messages.get_text(lang, 'reset_password_btn'),
-                           success_message=success_message
+    return render_template('main.html',
+       project_version=wsgi_blueprint.ioc.get_config()['PROJECT_VERSION'],
+       messages=messages.get_all(lang),
+       page='new-password'
     )
 
 @wsgi_blueprint.route('/admin/logout')

@@ -9,3 +9,4 @@ from .wsgi import *
 from .login import *
 from .withdraw import *
 from .register import *
+from .password import *

@@ -101,7 +101,7 @@ angular.module('hh.services', [])
                 data,
                 {  timeout:600000 }
             )
-                .success(function(response) {
+                .success(function(response, status) {
                     callback(response, status);
                 })
                 .error(function(response, status) {

@@ -21,7 +21,6 @@ def register():
     messages = resource_bundle.ResourceBundle()
     if user is None:
         a = model.Account()
-        a.properties.append(model.Property(a, 'sales.email', username))
         a.lang = detect_language()
         u = model.User(username, generate_password_hash(request.json['password']))
         u.activation_hash = str(uuid.uuid4())

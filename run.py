@@ -37,8 +37,8 @@ def init_db():
 def add_root():
     a = model.Account()
     a.lang = 'en'
-    a.properties.append(model.Property(a, 'sales.email', 'spreadline.limited@gmail.com'))
     u = model.User('dublin.krzysztof.maslak@gmail.com', generate_password_hash('abcd'))
+    u.active = True
     a.users.append(u)
     gateway.ioc.new_account_service().save(a)
     # TODO create start currencies

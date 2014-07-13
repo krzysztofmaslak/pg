@@ -33,6 +33,16 @@ String.prototype.replaceAll = function( token, newToken, ignoreCase ) {
     }
     return str;
 };
+window.getParameter = function( name ){
+  name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+  var regexS = "[\\?&]"+name+"=([^&#]*)";
+  var regex = new RegExp( regexS );
+  var results = regex.exec( window.location.href );
+  if( results == null )
+    return null;
+  else
+    return results[1];
+}
 window.showLoadingIndicator = function() {
     jq('#loadingIndicator').css('display', 'block');
     jq('#loadingIndicator').addClass('hover');
@@ -79,5 +89,17 @@ angular.module('pgapp-login', ['ngRoute', 'hh.filters', 'hh.services', 'hh.direc
     config(['$routeProvider', '$sceProvider', function($routeProvider, $sceProvider) {
         $routeProvider.when('/login',      {templateUrl: '/static/${pom.version}/partials/login.html'});
         $routeProvider.otherwise({redirectTo: '/login'});
+        $sceProvider.enabled(false);
+    }]);
+angular.module('pgapp-reset-password', ['ngRoute', 'hh.filters', 'hh.services', 'hh.directives', 'hh.controllers', 'ui.bootstrap.modal']).
+    config(['$routeProvider', '$sceProvider', function($routeProvider, $sceProvider) {
+        $routeProvider.when('/reset-password',      {templateUrl: '/static/${pom.version}/partials/reset-password.html'});
+        $routeProvider.otherwise({redirectTo: '/reset-password'});
+        $sceProvider.enabled(false);
+    }]);
+angular.module('pgapp-new-password', ['ngRoute', 'hh.filters', 'hh.services', 'hh.directives', 'hh.controllers', 'ui.bootstrap.modal']).
+    config(['$routeProvider', '$sceProvider', function($routeProvider, $sceProvider) {
+        $routeProvider.when('/new-password',      {templateUrl: '/static/${pom.version}/partials/new-password.html'});
+        $routeProvider.otherwise({redirectTo: '/new-password'});
         $sceProvider.enabled(false);
     }]);

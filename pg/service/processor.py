@@ -27,7 +27,7 @@ class PaymentProcessorService:
         customer_email.type = "PURCHASE_CONFIRMATION"
         customer_email.ref_id = order.id
         ps = self.ioc.new_property_service()
-        customer_email.from_address = ps.find_value_by_code(order.offer.account, 'sales.email')
+        customer_email.from_address = self.ioc.get_config()['no_reply']
         customer_email.to_address = order.billing.first().email
         customer_email.language = order.lang
         messages = resource_bundle.ResourceBundle()

@@ -20,7 +20,8 @@ class ServiceFactory:
             'paypal.seller':'seller_1302451451_biz@gmail.com',
             'paypal.url':'https://www.sandbox.paypal.com/cgi-bin/webscr',
             'address.www':'https://www.justsale.it',
-            'registration_email':'sales@justsale.it'
+            'registration_email':'sales@justsale.it',
+            'no_reply':'no-reply@justsale.it',
         }
         if 'PRODUCTION_SETTINGS' in os.environ:
             self.load_production_vars(d)

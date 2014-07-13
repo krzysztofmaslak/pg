@@ -12,6 +12,7 @@ DEFAULT_BLUEPRINTS = [
     rest.payment,
     rest.login_blueprint,
     rest.order,
+    rest.password_blueprint,
     rest.register_rest,
     rest.withdraw,
     wsgi.wsgi_blueprint,

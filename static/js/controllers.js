@@ -199,6 +199,66 @@ angular.module('hh.controllers', [])
             }
         };
     }])
+    .controller('ResetPasswordCtrl', ['$scope', '$routeParams', '$location', 'jaxrs', 'ValidationService', function ($scope, $routeParams, $location, jaxrs, ValidationService) {
+         $scope.reset = {};
+         $scope.proceed = function () {
+            if ( ValidationService.validate($scope.resetPasswordForm) ) {
+                jaxrs.create('password/reset', $scope.reset, function (response, status) {
+                    if ( status==204 ) {
+                        $scope.error_message = response.error_message;
+                    } else {
+                        $scope.success_message = response.success_message;
+                    }
+                });
+            } else {
+                setTimeout(function(){
+                    var top = 100000;
+                    var first = null;
+                    jq(".fieldError").each(function(){
+                        if ( jq(this).is(':visible') && jq(this).offset().top<top ) {
+                            top = jq(this).offset().top;
+                            first = jq(this);
+                        }
+                    });
+                    jq("body,html").animate({scrollTop:top-30}, 'slow');
+                    if ( first!=null ) {
+                        first.focus();
+                    }
+                }, 500);
+            }
+        };
+    }])
+    .controller('NewPasswordCtrl', ['$scope', '$routeParams', '$location', 'jaxrs', 'ValidationService', function ($scope, $routeParams, $location, jaxrs, ValidationService) {
+         $scope.newpassword = {};
+         $scope.proceed = function () {
+            if ( ValidationService.validate($scope.newPasswordForm) ) {
+                $scope.newpassword.h = window.getParameter('h');
+                $scope.newpassword.e = window.getParameter('e');
+                jaxrs.create('password/new', $scope.newpassword, function (response, status) {
+                    if ( status==400 ) {
+                        $scope.error_message = response.error_message;
+                    } else if ( status==200 ){
+                        location.href='/admin/';
+                    }
+                });
+            } else {
+                setTimeout(function(){
+                    var top = 100000;
+                    var first = null;
+                    jq(".fieldError").each(function(){
+                        if ( jq(this).is(':visible') && jq(this).offset().top<top ) {
+                            top = jq(this).offset().top;
+                            first = jq(this);
+                        }
+                    });
+                    jq("body,html").animate({scrollTop:top-30}, 'slow');
+                    if ( first!=null ) {
+                        first.focus();
+                    }
+                }, 500);
+            }
+        };
+    }])
     .controller('SettingsCtrl', ['$scope', '$routeParams', '$location', 'jaxrs', function ($scope, $routeParams, $location, jaxrs) {
 
     }])
