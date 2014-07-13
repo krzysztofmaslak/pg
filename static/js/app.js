@@ -69,3 +69,15 @@ angular.module('pgapp', ['ngRoute', 'hh.filters', 'hh.services', 'hh.directives'
         $routeProvider.otherwise({redirectTo: '/checkout'});
         $sceProvider.enabled(false);
     }]);
+angular.module('pgapp-register', ['ngRoute', 'hh.filters', 'hh.services', 'hh.directives', 'hh.controllers', 'ui.bootstrap.modal']).
+    config(['$routeProvider', '$sceProvider', function($routeProvider, $sceProvider) {
+        $routeProvider.when('/register',      {templateUrl: '/static/${pom.version}/partials/register.html'});
+        $routeProvider.otherwise({redirectTo: '/register'});
+        $sceProvider.enabled(false);
+    }]);
+angular.module('pgapp-login', ['ngRoute', 'hh.filters', 'hh.services', 'hh.directives', 'hh.controllers', 'ui.bootstrap.modal']).
+    config(['$routeProvider', '$sceProvider', function($routeProvider, $sceProvider) {
+        $routeProvider.when('/login',      {templateUrl: '/static/${pom.version}/partials/login.html'});
+        $routeProvider.otherwise({redirectTo: '/login'});
+        $sceProvider.enabled(false);
+    }]);

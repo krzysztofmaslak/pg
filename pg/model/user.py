@@ -10,6 +10,7 @@ class User(base.db.Model, base.JsonSerializable):
     creation_date = base.db.Column(base.db.DateTime)
     active = base.db.Column(base.db.Boolean)
     reset_hash = base.db.Column(base.db.String(50))
+    activation_hash = base.db.Column(base.db.String(50))
     account_id = base.db.Column(base.db.Integer, base.db.ForeignKey('account.id'))
     account = base.db.relationship('Account',
         backref=base.db.backref('users', lazy='dynamic'))

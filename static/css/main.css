@@ -1,0 +1,119 @@
+body {
+    background-color: #383f50;
+    font-family: "aktiv-grotesk-std",'Helvetica Neue',Helvetica Neue,Arial,sans-serif;
+    font-weight: 200;
+    height: 100%;
+    margin: 0;
+    min-height: 100%;
+    padding: 0;
+    width: 100%;
+}
+.outer {
+    display: table;
+    height: 100%;
+    margin-top: 0;
+    min-height: 100%;
+    position: relative;
+    width: 100%;
+    z-index: 1;
+}
+.inner {
+    display: table-row;
+    height: 100%;
+    min-height: 100%;
+    width: 100%;
+}
+.content {
+    display: table-cell;
+    height: 100%;
+    min-height: 100%;
+    vertical-align: middle;
+}
+.main {
+    margin: 0 auto;
+    max-width: 320px;
+    padding: 40px 20px;
+}
+.identity {
+    clear: both;
+    display: block;
+    height: 52px;
+    margin: 0 auto;
+    position: relative;
+    width: 50px;
+}
+.tagline {
+    color: #fff;
+    font-size: 24px;
+    margin: 10px 0 20px;
+    text-align: center;
+}
+
+form {
+    background: none repeat scroll 0 0 #fff;
+    border-radius: 4px;
+    clear: both;
+    display: block;
+    margin-top: 60px;
+    padding: 15px;
+    color: #7e7975;
+}
+form label {
+    cursor: pointer;
+    display: block;
+    font-size: 11px;
+    font-weight: 400;
+    padding: 0 0 5px 2px;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+    text-transform: uppercase;
+}
+form input[type="text"], form input[type="password"] {
+    border: 3px solid #ebe6e2;
+    border-radius: 5px;
+    display: block;
+    /*font-family: 'Lato',Calibri,Arial,sans-serif;*/
+    font-size: 13px;
+    font-weight: 400;
+    margin-bottom: 5px;
+    padding: 5px;
+    transition: all 0.3s ease-out 0s;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    height: 36px;
+}
+form label i {
+    display: inline-block;
+    margin-right: 5px;
+    width: 10px;
+    opacity: 0.7;
+}
+.logo {
+    clear: both;
+    display: block;
+    height: 52px;
+    width: 50px;
+}
+.heading1 {
+    border-bottom: 1px solid #ebe6e2;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+    color: #bdb5aa;
+    font-size: 15px;
+    font-weight: bold;
+    padding-bottom: 8px;
+    text-shadow: 0 2px 0 rgba(255, 255, 255, 0.8);
+}
+.heading1s {
+    color: #6c6763;
+    padding-right: 2px;
+}
+.footer {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 13px;
+}
+input[type="password"].fieldError, input[type="text"].fieldError, input[type="email"].fieldError, select.fieldError {
+    color: #B94A48;
+    border-color: #E9322D;
+    box-shadow: 0 0 6px #F8B9B7
+}

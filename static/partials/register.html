@@ -1,0 +1,24 @@
+<form class="form-2" id="registerForm" name="registerForm" method="post" action="" x-ng-controller="RegisterCtrl" novalidate>
+    <h1 class="heading1"><span class="heading1s">{{ messages.register_title }}</span></h1>
+    <p style="color:#d44950;margin-top:6px;font-size:13px;" ng-if="error_message">{{ error_message }}</p>
+    <p style="color:#468847;margin-top:6px;font-size:13px;" ng-if="success_message">{{ success_message }}</p>
+    <p>
+        <label for="j_username"><i class="icon-user"></i>{{ messages.register_username }}</label>
+        <input type="text" name="username" ng-model="register.username"
+               ng-class="{fieldError: registerForm.username.$dirty && registerForm.username.$invalid}"
+               placeholder="{{ messages.register_username_placeholder }}" ng-required="true"/>
+    </p>
+
+    <p>
+        <label for="j_password"><i class="icon-lock"></i>{{ messages.register_password }}</label>
+        <input type="password" name="password" ng-model="register.password"
+               ng-class="{fieldError: registerForm.password.$dirty && registerForm.password.$invalid}"
+               placeholder="{{ messages.register_password_placeholder }}" ng-required="true"/>
+    </p>
+    <br/>
+
+    <p class="clearfix">
+        <input type="submit" name="register" value="{{ messages.register_btn }}" style="float:right"
+               class="btn btn-primary" ng-click="save()"/>
+    </p>
+</form>

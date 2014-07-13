@@ -102,14 +102,14 @@ angular.module('hh.services', [])
                 {  timeout:600000 }
             )
                 .success(function(response) {
-                    callback(response);
+                    callback(response, status);
                 })
                 .error(function(response, status) {
                     if ( status==403 ) {
                         location.reload();
                         return;
                     }
-                    callback(response);
+                    callback(response, status);
                 });
         },
         //Get a db object by id

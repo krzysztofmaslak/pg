@@ -1,6 +1,8 @@
+import hashlib
 import traceback
 from flask import render_template
 from flask.ext.mail import Message
+from werkzeug.security import generate_password_hash
 from pg import model
 
 __author__ = 'krzysztof.maslak'
@@ -16,7 +18,38 @@ class EmailHandler:
         msg.html = email.html
         self.mail.send(msg)
 
+class ResetPasswordEmailHandler(EmailHandler):
+    def handle(self, email):
+        user = self.ioc.new_user_service().find_by_id(int(email.ref_id))
+        msg = Message(email.subject, sender= email.from_address, recipients= [email.to_address])
+        msg.html = render_template('emails/'+email.language+'/reset-password.html',
+                                     username = user.username,
+                                     website_address = self.ioc.get_config()['address.www'],
+                                     reset_hash = user.reset_hash,
+                                     email_hash=hashlib.sha224(user.username.encode('utf-8')).hexdigest()
+                                     )
+        self.logger.debug('Reset password: %s'%email.html)
+        self.send(msg)
+
+class RegistrationEmailHandler(EmailHandler):
+    def handle(self, email):
+        user = self.ioc.new_user_service().find_by_id(int(email.ref_id))
+        msg = Message(email.subject, sender= email.from_address, recipients= [email.to_address])
+        msg.html = render_template('emails/'+email.language+'/registration.html',
+                                     username = user.username,
+                                     website_address = self.ioc.get_config()['address.www'],
+                                     activation_hash = user.activation_hash,
+                                     email_hash=hashlib.sha224(user.username.encode('utf-8')).hexdigest()
+                                     )
+        self.logger.debug('Registration email: %s'%email.html)
+        self.send(msg)
+
 class PurchaseConfirmationAdminEmailHandler(EmailHandler):
+    def handle(self, email):
+        email.html = '--'
+        self.send(email)
+
+class RegistrationAdminEmailHandler(EmailHandler):
     def handle(self, email):
         email.html = '--'
         self.send(email)
@@ -99,7 +132,11 @@ class EmailService:
         self.mail = mail
         self.email_handlers = {
             'PURCHASE_CONFIRMATION':PurchaseConfirmationEmailHandler(self.mail, self.ioc, self.logger),
-            'PURCHASE_CONFIRMATION_ADMIN':PurchaseConfirmationAdminEmailHandler(self.mail, self.ioc, self.logger)
+            'PURCHASE_CONFIRMATION_ADMIN':PurchaseConfirmationAdminEmailHandler(self.mail, self.ioc, self.logger),
+            'RESET_PASSWORD':ResetPasswordEmailHandler(self.mail, self.ioc, self.logger),
+            'REGISTRATION_ADMIN':RegistrationAdminEmailHandler(self.mail, self.ioc, self.logger),
+            'REGISTRATION':RegistrationEmailHandler(self.mail, self.ioc, self.logger)
+
         }
 
     def set_mail(self, m):

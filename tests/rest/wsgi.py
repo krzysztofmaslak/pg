@@ -1,11 +1,12 @@
-from werkzeug.security import generate_password_hash
+import hashlib
+from werkzeug.security import generate_password_hash, check_password_hash
+from pg.wsgi import get_sha_part
 
 __author__ = 'xxx'
 
 from flask.ext.testing import TestCase as Base
 from pg import model, app as application
-import mock
-import copy
+from flask import _request_ctx_stack
 from tests import base
 
 class WsgiTest(Base):
@@ -14,26 +15,33 @@ class WsgiTest(Base):
     def create_app(self):
         self.ioc = base.TestServiceFactory()
         self.application = application.App(self.ioc)
-        app = self.application.create_app()
-        app.testing = True
-        self.client = app.test_client()
-        return app
+        self.app = self.application.create_app()
+        self.app.testing = True
+        self.client = self.app.test_client()
+        return self.app
 
     def setUp(self):
+        WsgiTest.templates = []
         self.application.init_db()
+        self.client = self.app.test_client()
 
     def tearDown(self):
-        pass
-        # db.session.remove()
-        # db.drop_all()
+        self.client = None
 
-    def test_register(self):
+    def get_sha_part(self, hash):
+        return hash[len('pbkdf2:sha1:'):]
+
+    def test_activate(self):
         r = self.client.post('/register.html', data={'username':'admin', 'password':"abcd"}, environ_base=self.environ_base)
         user = model.User.query.filter(model.User.username=='admin').first()
         self.assertEqual(200, r.status_code)
         self.assertIsNotNone(user)
-        r = self.client.post('/register.html', data={'username':'admin', 'password':"abcd"}, environ_base=self.environ_base)
-        self.assertTrue(str(r.data).find('User already exist') != -1)
+        self.assertIsNotNone(user.activation_hash)
+        r = self.client.get('/login.html?h='+user.activation_hash+'&e='+hashlib.sha224(user.username.encode('utf-8')).hexdigest(), environ_base=self.environ_base)
+        self.assertEqual(302, r.status_code)
+        u = self.ioc.new_user_service().find_by_username('admin')
+        self.assertIsNotNone(u)
+        self.assertEqual(u.active, True)
 
     def test_reset_password(self):
         a = model.Account()
@@ -42,17 +50,44 @@ class WsgiTest(Base):
         u = model.User('dublin.krzysztof.maslak@gmail.com', 'password')
         u.active = True
         a.users.append(u)
-        o = model.Offer(a)
-        o.status = 1
-        o1 = model.OfferItem(o, "My offer item", 2)
-        o2 = model.OfferItem(o, "My offer item2")
-        blue = model.OfferItemVariation(o2, "Blue", 3)
-        red = model.OfferItemVariation(o2, "Red", 1)
-        o2.variations = [blue, red]
-        o.items.append(o1)
-        o.items.append(o2)
         model.base.db.session.add(a)
-        model.base.db.session.add(o)
+        model.base.db.session.commit()
+        r = self.client.post('/reset_password.html', data={'username':'dublin.krzysztof.maslak@gmail.com'}, environ_base=self.environ_base)
+        self.assertEqual(302, r.status_code)
+        u = self.ioc.new_user_service().find_by_username('dublin.krzysztof.maslak@gmail.com')
+        self.assertIsNotNone(u)
+        self.assertIsNotNone(u.reset_hash)
+
+    def test_new_password(self):
+        a = model.Account()
+        a.lang = 'en'
+        a.properties.append(model.Property(a, 'sales.email', 'spreadline.limited@gmail.com'))
+        u = model.User('dublin.krzysztof.maslak@gmail.com',generate_password_hash('password'))
+        u.active = True
+        a.users.append(u)
+        model.base.db.session.add(a)
+        model.base.db.session.commit()
+        r = self.client.post('/reset_password.html', data={'username':'dublin.krzysztof.maslak@gmail.com'}, environ_base=self.environ_base)
+        self.assertEqual(200, r.status_code)
+        u = self.ioc.new_user_service().find_by_username('dublin.krzysztof.maslak@gmail.com')
+        self.assertIsNotNone(u)
+        self.assertIsNotNone(u.reset_hash)
+        r = self.client.post('/new_password.html', data={'password':'abcde', 'confirmPassword':'abcde', 'h':u.reset_hash,
+                                                         'e':hashlib.sha224(u.username.encode('utf-8')).hexdigest()}, environ_base=self.environ_base)
+        self.assertEqual(302, r.status_code)
+        u = self.ioc.new_user_service().find_by_username('dublin.krzysztof.maslak@gmail.com')
+        self.assertIsNotNone(u)
+        self.assertFalse(check_password_hash(u.password, "password"))
+        self.assertTrue(check_password_hash(u.password, "abcde"))
+
+    def test_reset_password(self):
+        a = model.Account()
+        a.lang = 'en'
+        a.properties.append(model.Property(a, 'sales.email', 'spreadline.limited@gmail.com'))
+        u = model.User('dublin.krzysztof.maslak@gmail.com', 'password')
+        u.active = True
+        a.users.append(u)
+        model.base.db.session.add(a)
         model.base.db.session.commit()
         r = self.client.post('/reset_password.html', data={'username':'dublin.krzysztof.maslak@gmail.com'}, environ_base=self.environ_base)
         self.assertEqual(200, r.status_code)
@@ -60,5 +95,6 @@ class WsgiTest(Base):
         self.assertIsNotNone(emails)
         self.assertEqual(1, len(emails))
         self.assertEqual('RESET_PASSWORD', emails[0].type)
-        u = self.ioc.new_user_service().find_by_username(u.username)
+        u = self.ioc.new_user_service().find_by_username('dublin.krzysztof.maslak@gmail.com')
         self.assertIsNotNone(u.reset_hash)
+        model.base.db.session.commit()

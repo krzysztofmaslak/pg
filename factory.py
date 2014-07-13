@@ -19,8 +19,8 @@ class ServiceFactory:
             'paypal.authToken':'BkRqdeXwVMD7RMSw03xAwrwyyG9cs14DZH5XZud_oRZH9SPpfRH2k9_KhtO',
             'paypal.seller':'seller_1302451451_biz@gmail.com',
             'paypal.url':'https://www.sandbox.paypal.com/cgi-bin/webscr',
-            'address.www':'https://pg',
-            'registration_email':'sales@pg.com'
+            'address.www':'https://www.justsale.it',
+            'registration_email':'sales@justsale.it'
         }
         if 'PRODUCTION_SETTINGS' in os.environ:
             self.load_production_vars(d)
