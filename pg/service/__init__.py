@@ -14,3 +14,4 @@ from .currency import CurrencyService
 from .stripe import StripeService
 from .paypal import PaypalService
 from .withdraw import WithdrawService
+from .contact import ContactService

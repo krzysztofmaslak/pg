@@ -483,10 +483,27 @@ angular.module('hh.controllers', [])
             });
             $scope.requestWithdrawal = function() {
                 if ( ValidationService.validate($scope.withdrawForm) ) {
-                    jaxrs.create('/rest/withdraw/request', {amount: $scope.amount, iban: $scope.iban, bic: $scope.bic}, function (response) {
+                    jaxrs.create('withdraw/request', {amount: $scope.amount, iban: $scope.iban, bic: $scope.bic}, function (response) {
                         $scope.balance = response.balance;
                         $scope.withdrawals = response.withdrawals;
                         $scope.savedSuccessfully = true;
+                    });
+                }
+            }
+    }])
+
+    .controller('ContactCtrl', ['$scope', '$routeParams', '$location', 'jaxrs', '$timeout', 'ValidationService',
+        function ($scope, $routeParams, $location, jaxrs, $timeout, ValidationService) {
+            $scope.messages = window.messages;
+            $scope.contact = {};
+            $scope.send = function() {
+                if ( ValidationService.validate($scope.contactForm) ) {
+                    jaxrs.create('contact/', $scope.contact, function (response, status) {
+                        if ( status==400 ) {
+                            $scope.error_message = response.error_message;
+                        } else if(status==200) {
+                            $scope.success_message = response.success_message;
+                        }
                     });
                 }
             }

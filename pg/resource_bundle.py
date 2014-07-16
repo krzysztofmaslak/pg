@@ -7,8 +7,18 @@ class ResourceBundle:
     def get_all(self, lang):
         if lang=='en':
             return {
+                'contact_message_success':'Your message was accepted, we will respond shortly',
+                'contact_title':'Send us a message',
+                'contact_email':'Email address',
+                'contact_email_placeholder':'Email',
+                'contact_message':'Message',
+                'contact_btn':'Send',
+                'need_an_account':'Need an account ?',
+                'contact':'Contact',
+                'copy_to_clipboard':'Copy to clipboard',
+                'checkout_product_title':'Product title',
+                'checkout_delete_product':'Delete product',
                 'already_a_member':'Already a member ?',
-                'login':'Login',
                 'you_are_no_longer_logged_in':'You are no longer logged in.',
                 'new_password_title':'Reset password',
                 'new_password_password':'Password',

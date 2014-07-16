@@ -1,0 +1,24 @@
+<form class="form-2" id="contactForm" name="contactForm" method="post" action="" x-ng-controller="ContactCtrl" novalidate>
+    <h1 class="heading1"><span class="heading1s">{{ messages.contact_title }}</span></h1>
+    <p style="color:#d44950;margin-top:6px;font-size:13px;" ng-if="error_message">{{ error_message }}</p>
+    <p style="color:#468847;margin-top:6px;font-size:13px;" ng-if="success_message">{{ success_message }}</p>
+    <p>
+        <label for="j_username"><i class="icon-user"></i>{{ messages.contact_email }}</label>
+        <input type="email" name="email" ng-model="contact.email"
+               ng-class="{fieldError: contactForm.email.$dirty && contactForm.email.$invalid}"
+               placeholder="{{ messages.contact_email_placeholder }}" ng-required="true"/>
+    </p>
+
+    <p>
+        <label for="j_password">{{ messages.contact_message }}</label>
+        <textarea name="message" ng-model="contact.message"
+               ng-class="{fieldError: contactForm.message.$dirty && contactForm.message.$invalid}"
+               ng-required="true"/>
+    </p>
+    <br/>
+
+    <p class="clearfix">
+        <input type="submit" name="register" value="{{ messages.contact_btn }}" style="float:right"
+               class="btn btn-primary" ng-click="send()"/>
+    </p>
+</form>

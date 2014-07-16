@@ -70,7 +70,7 @@ angular.module('pgadminapp', ['ngRoute', 'hh.filters', 'hh.services', 'hh.direct
         $routeProvider.when('/offers',      {templateUrl: '/static/${pom.version}/partials/admin/offer.html'});
         $routeProvider.when('/orders',      {templateUrl: '/static/${pom.version}/partials/admin/order.html'});
         $routeProvider.when('/withdraw',      {templateUrl: '/static/${pom.version}/partials/admin/withdraw.html'});
-        $routeProvider.otherwise({redirectTo: '/landing'});
+        $routeProvider.otherwise({redirectTo: '/offers'});
 	}]);
 angular.module('pgapp', ['ngRoute', 'hh.filters', 'hh.services', 'hh.directives', 'hh.controllers', 'ui.bootstrap.modal']).
     config(['$routeProvider', '$sceProvider', function($routeProvider, $sceProvider) {
@@ -106,5 +106,11 @@ angular.module('pgapp-logout', ['ngRoute', 'hh.filters', 'hh.services', 'hh.dire
     config(['$routeProvider', '$sceProvider', function($routeProvider, $sceProvider) {
         $routeProvider.when('/logout',      {templateUrl: '/static/${pom.version}/partials/logout.html'});
         $routeProvider.otherwise({redirectTo: '/logout'});
+        $sceProvider.enabled(false);
+    }]);
+angular.module('pgapp-contact', ['ngRoute', 'hh.filters', 'hh.services', 'hh.directives', 'hh.controllers', 'ui.bootstrap.modal']).
+    config(['$routeProvider', '$sceProvider', function($routeProvider, $sceProvider) {
+        $routeProvider.when('/contact',      {templateUrl: '/static/${pom.version}/partials/contact.html'});
+        $routeProvider.otherwise({redirectTo: '/contact'});
         $sceProvider.enabled(false);
     }]);

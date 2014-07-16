@@ -241,6 +241,16 @@ def reset_password():
        page='reset-password'
     )
 
+@wsgi_blueprint.route('/contact.html', methods=['GET'])
+def contact_form():
+    messages = resource_bundle.ResourceBundle()
+    lang = detect_language()
+    return render_template('main.html',
+       project_version=wsgi_blueprint.ioc.get_config()['PROJECT_VERSION'],
+       messages=messages.get_all(lang),
+       page='contact'
+    )
+
 @wsgi_blueprint.route('/admin/logout')
 def do_logout():
     # remove the username from the session if it's there

@@ -18,7 +18,7 @@ class UserService:
         return model.User.query.filter(model.User.reset_hash==reset_hash).first()
 
     def find_by_id(self, id):
-        return model.User.get(id)
+        return model.User.query.get(id)
 
     def add_user(self, u):
         if isinstance(u, model.User)==False:

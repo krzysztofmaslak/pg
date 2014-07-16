@@ -28,13 +28,16 @@ class ServiceFactory:
         return d
 
     def load_production_vars(self, d):
-        with open(os.eniron['PRODUCTION_SETTINGS']) as f:
+        with open(os.environ['PRODUCTION_SETTINGS']) as f:
             for line in f:
                 key, value = line.split('=')
-                d[key] = value
+                d[key] = value.rstrip()
 
     def new_offer_service(self):
         return service.OfferService(self)
+
+    def new_contact_service(self):
+        return service.ContactService(self)
 
     def new_inovice_service(self):
         return service.InvoiceService(self)

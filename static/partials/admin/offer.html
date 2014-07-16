@@ -57,7 +57,7 @@
             <label><b>{{ messages.offer_form_title }}</b></label>
             <input type="text" name="title" nullifempty id="title"
                    ng-class="{fieldError: offerForm.title.$dirty && offerForm.title.$invalid}"
-                   x-ng-model="offer.title" style="width:500px;" ng-required="true"/>
+                   x-ng-model="offer.title" style="width:500px;" ng-required="true" maxlength="80" notags/>
         </div>
         <div ng-show="offer.items.length>0" class="currencyWrap">
             <label>{{ messages.offer_form_currency }}</label>
@@ -79,7 +79,7 @@
         <div ng-show="offer.hash && offer.hash.length>0">
             <label><b>{{ messages.offer_form_direct_link }}</b></label>
             <input type="text" readonly="true" id="retrieveLink" name="retrieveLink" value="https://www.justsale.it/x/{{offer.hash}}" style="float: left; width:400px;cursor:pointer;background-color:#dff0d8;border-color:#dff0d8"/>
-            <button id="copyRetrieveLink" data-clipboard-target="retrieveLink" ng-click="copyToClipboard()" class="btn btn-success" style="margin-left:4px">Copy to clipboard</button>
+            <button id="copyRetrieveLink" data-clipboard-target="retrieveLink" ng-click="copyToClipboard()" class="btn btn-success" style="margin-left:4px">{{ messages.copy_to_clipboard }}</button>
         </div>
         <div class="clearfix"></div>
         <div ng-show="offer.items.length>0">
@@ -95,13 +95,13 @@
                                             <h1 style="margin-right:10px;font-size:24px;">{{$index+1}}</h1>
                                         </td>
                                         <td>
-                                            <label>Product title</label>
+                                            <label>{{ messages.checkout_product_title }}</label>
                                             <input type="text" name="productTitle" nullifempty x-ng-model="item.title"
                                                    ng-class="{fieldError: itemForm.productTitle.$dirty && itemForm.productTitle.$invalid}"
-                                                   style="width:500px" ng-required="true"/>
+                                                   notags style="width:500px" ng-required="true"/>
                                         </td>
                                         <td valign="top" style="width:140px;">
-                                            <button ng-click="deleteItem($index)" class="btn btn-danger" style="margin-bottom:10px;">Delete product</button>
+                                            <button ng-click="deleteItem($index)" class="btn btn-danger" style="margin-bottom:10px;">{{ messages.checkout_delete_product }}</button>
                                         </td>
                                     </tr>
                                 </table>
@@ -129,24 +129,33 @@
                                     <tr>
                                         <td valign="top">
                                             <input type="text" name="squantity" nullifempty x-ng-model="item.quantity"
+                                                   ng-pattern="/^[0-9]*$/"
                                                    ng-class="{fieldError: itemForm.squantity.$dirty && itemForm.squantity.$invalid}"
-                                                   style="width:130px" ng-required="true"/>
+                                                   style="width:130px" ng-required="true" notags/>
                                         </td>
                                         <td valign="top">
                                             <input type="text" name="snet" nullifempty x-ng-model="item.net"
+                                                   money
                                                    ng-class="{fieldError: itemForm.snet.$dirty && itemForm.snet.$invalid}"
-                                                   style="width:130px" ng-required="true"/>
+                                                   style="width:130px" ng-required="true" notags/>
                                         </td>
                                         <td valign="top">
-                                            <input type="text" x-ng-model="item.tax" nullifempty style="width:130px" />
+                                            <input type="text" name="stax" x-ng-model="item.tax" nullifempty
+                                                   money
+                                                   ng-class="{fieldError: itemForm.stax.$dirty && itemForm.stax.$invalid}"
+                                                   style="width:130px" notags/>
                                         </td>
                                         <td valign="top">
                                             <input type="text" x-ng-model="item.shipping" nullifempty name="sshipping"
                                                    ng-class="{fieldError: itemForm.sshipping.$dirty && itemForm.sshipping.$invalid}"
-                                                   style="width:130px" ng-required="true"/>
+                                                   money
+                                                   style="width:130px" ng-required="true" notags/>
                                         </td>
                                         <td valign="top">
-                                            <input type="text" nullifempty x-ng-model="item.shippingAdditional" style="width:110px" />
+                                            <input type="text" nullifempty name="sshippingAdditional" x-ng-model="item.shippingAdditional" style="width:110px"
+                                                   ng-class="{fieldError: itemForm.sshippingAdditional.$dirty && itemForm.sshippingAdditional.$invalid}"
+                                                   money
+                                                   notags/>
                                         </td>
                                     </tr>
                                 </table>
@@ -167,28 +176,37 @@
                                         <td valign="top">
                                             <input type="text" name="mtitle" nullifempty x-ng-model="variation.title"
                                                    ng-class="{fieldError: variationForm.mtitle.$dirty && variationForm.mtitle.$invalid}"
-                                                   style="width:250px" ng-required="true" placeholder="{{variation.placeholder}}"/>
+                                                   style="width:250px" ng-required="true" placeholder="{{variation.placeholder}}" notags/>
                                         </td>
                                         <td valign="top">
                                             <input type="text" name="mquantity" nullifempty x-ng-model="variation.quantity"
                                                    ng-class="{fieldError: variationForm.mquantity.$dirty && variationForm.mquantity.$invalid}"
-                                                   style="width:130px" ng-required="true"/>
+                                                   ng-pattern="/^[0-9]*$/"
+                                                   style="width:130px" ng-required="true" notags/>
                                         </td>
                                         <td valign="top">
                                             <input type="text" name="mnet" nullifempty x-ng-model="variation.net"
                                                    ng-class="{fieldError: variationForm.mnet.$dirty && variationForm.mnet.$invalid}"
-                                                   style="width:130px"  ng-required="true"/>
+                                                   money
+                                                   style="width:130px"  ng-required="true" notags/>
                                         </td>
                                         <td valign="top">
-                                            <input type="text" nullifempty x-ng-model="variation.tax" style="width:80px" />
+                                            <input type="text" nullifempty name="mtax" x-ng-model="variation.tax"
+                                                   ng-class="{fieldError: variationForm.mtax.$dirty && variationForm.mtax.$invalid}"
+                                                   money
+                                                   style="width:80px" notags/>
                                         </td>
                                         <td valign="top">
                                             <input type="text" name="mshipping" nullifempty x-ng-model="variation.shipping"
                                                    ng-class="{fieldError: variationForm.mshipping.$dirty && variationForm.mshipping.$invalid}"
-                                                   style="width:130px" ng-required="true"/>
+                                                   money
+                                                   style="width:130px" ng-required="true" notags/>
                                         </td>
                                         <td valign="top">
-                                            <input type="text" nullifempty x-ng-model="variation.shippingAdditional" style="width:110px" />
+                                            <input type="text" nullifempty name="mshippingAdditional" x-ng-model="variation.shippingAdditional"
+                                                   ng-class="{fieldError: variationForm.mshippingAdditional.$dirty && variationForm.mshippingAdditional.$invalid}"
+                                                   money
+                                                   style="width:110px" notags/>
                                         </td>
                                         <td valign="top" style="width:140px;">
                                             <input id="imageupload{{ $index }}" type="file" imageupload name="file" uploadTarget="offer_item_variation" uploadTargetId="{{variation.id}}" style="display: none;"/>

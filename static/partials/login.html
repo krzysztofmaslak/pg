@@ -3,7 +3,7 @@
     <p style="color:#d44950;margin-top:6px;font-size:13px;" ng-if="error_message">{{ error_message }}</p>
     <p class="float">
         <label for="j_username"><i class="icon-user"></i>{{ messages.login_username }}</label>
-        <input type="text" name="username"
+        <input type="email" name="username"
                ng-model="login.username"
                ng-class="{fieldError: loginForm.username.$dirty && loginForm.username.$invalid}"
                placeholder="{{ messages.login_username_placeholder }}" ng-required="true"/>

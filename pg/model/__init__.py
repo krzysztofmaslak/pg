@@ -21,3 +21,4 @@ from .shipping import Shipping
 from .stripe_message import StripeMessage
 from .user import User
 from .withdrawal import Withdrawal
+from .contact import Contact

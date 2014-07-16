@@ -1,4 +1,5 @@
 import hashlib
+import json
 from werkzeug.security import generate_password_hash, check_password_hash
 from pg.wsgi import get_sha_part
 
@@ -32,7 +33,7 @@ class WsgiTest(Base):
         return hash[len('pbkdf2:sha1:'):]
 
     def test_activate(self):
-        r = self.client.post('/register.html', data={'username':'admin', 'password':"abcd"}, environ_base=self.environ_base)
+        r = self.client.post('/rest/register/', data=json.dumps({'username':'admin', 'password':"abcd"}), content_type='application/json', headers=[('Content-Type', 'application/json')], environ_base=self.environ_base)
         user = model.User.query.filter(model.User.username=='admin').first()
         self.assertEqual(200, r.status_code)
         self.assertIsNotNone(user)

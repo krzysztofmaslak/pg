@@ -38,8 +38,8 @@ class WithdrawTest(Base):
         r = self.client.get('/rest/withdraw/balance', environ_base=self.environ_base)
         self.assertEqual(401, r.status_code)
 
-        r = self.client.post('/login.html', data={'username':u.username, 'password':"abcd"}, environ_base=self.environ_base)
-        self.assertEqual(302, r.status_code)
+        r = self.client.post('/rest/login/', data=json.dumps({'username':u.username, 'password':"abcd"}), content_type='application/json', headers=[('Content-Type', 'application/json')], environ_base=self.environ_base)
+        self.assertEqual(200, r.status_code)
         r = self.client.get('/rest/withdraw/balance', environ_base=self.environ_base)
         self.assertEqual(200, r.status_code)
         self.assertEqual(14.30, r.json['balance'])
@@ -57,8 +57,8 @@ class WithdrawTest(Base):
         r = self.client.post('/rest/withdraw/request', data=json.dumps({'amount':7, 'iban':'12341412414', 'bic':'FFKJD'}), content_type='application/json', headers=[('Content-Type', 'application/json')], environ_base=self.environ_base)
         self.assertEqual(401, r.status_code)
 
-        r = self.client.post('/login.html', data={'username':u.username, 'password':"abcd"}, environ_base=self.environ_base)
-        self.assertEqual(302, r.status_code)
+        r = self.client.post('/rest/login/', data=json.dumps({'username':u.username, 'password':"abcd"}), content_type='application/json', headers=[('Content-Type', 'application/json')], environ_base=self.environ_base)
+        self.assertEqual(200, r.status_code)
         r = self.client.post('/rest/withdraw/request', data=json.dumps({'amount':14.31, 'iban':'12341412414', 'bic':'FFKJD'}), content_type='application/json', headers=[('Content-Type', 'application/json')], environ_base=self.environ_base)
         self.assertEqual(400, r.status_code)
         r = self.client.post('/rest/withdraw/request', data=json.dumps({'amount':14.30, 'iban':'12341412414', 'bic':'FFKJD'}), content_type='application/json', headers=[('Content-Type', 'application/json')], environ_base=self.environ_base)

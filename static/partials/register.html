@@ -4,7 +4,7 @@
     <p style="color:#468847;margin-top:6px;font-size:13px;" ng-if="success_message">{{ success_message }}</p>
     <p>
         <label for="j_username"><i class="icon-user"></i>{{ messages.register_username }}</label>
-        <input type="text" name="username" ng-model="register.username"
+        <input type="email" name="username" ng-model="register.username"
                ng-class="{fieldError: registerForm.username.$dirty && registerForm.username.$invalid}"
                placeholder="{{ messages.register_username_placeholder }}" ng-required="true"/>
     </p>

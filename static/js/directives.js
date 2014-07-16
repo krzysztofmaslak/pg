@@ -10,6 +10,60 @@ angular.module('hh.directives', [])
 /**
  * Directive which allows an AngularJS-aware 'onblur' handler to be attached to an input element
  */
+.directive('notags', [ function() {
+    return {
+        require : 'ngModel',
+        link : function(scope, elm, attr, ctrl) {
+            scope.$watch(attr.ngModel, function(newValue, oldValue) {
+                if ( newValue ) {
+                    if (newValue.match(/<(.|\n)*?>/g)) {
+                        ctrl.$setValidity('hasTags', false);
+                    } else {
+                        ctrl.$setValidity('hasTags', true);
+                    }
+                }
+          });
+       }
+    };
+ }]).directive("money",function ($filter, $locale) {
+    return {
+        restrict: 'A',
+        require: 'ngModel',
+        link: function (scope, el, attr, ctrl) {
+            // format on init
+            formatMoney();
+
+            function formatMoney() {
+                var value = ctrl.$modelValue;
+                try {
+                    if (value) {
+                        var validFloat = parseFloat(value);
+                        if (!isNaN(validFloat) && (value.split(".").length - 1)<2) {
+                            ctrl.$setValidity('notANumber', true);
+                            // remove all separaters first
+                            var groupsep = $locale.NUMBER_FORMATS.GROUP_SEP;
+                            var re = new RegExp(groupsep, 'g');
+                            value = String(value).replace(re, '');
+
+                            // render
+                            ctrl.$viewValue = value;
+                            ctrl.$render();
+                        } else {
+                            ctrl.$setValidity('notANumber', false);
+                        }
+                    }
+                } catch(e) {
+                    ctrl.$setValidity('notANumber', false);
+                }
+            };
+
+            // subscribe on changes
+            scope.$watch(attr.ngModel, function() {
+                formatMoney();
+            });
+        }
+    };
+})
  .directive('nullifempty', [ function() {
     return {
         require : 'ngModel',

@@ -65,8 +65,8 @@ class OfferTest(Base):
         r = self.client.get('/rest/order/?page=1', environ_base=self.environ_base)
         self.assertEqual(401, r.status_code)
 
-        r = self.client.post('/login.html', data={'username':u.username, 'password':"abcd"}, environ_base=self.environ_base)
-        self.assertEqual(302, r.status_code)
+        r = self.client.post('/rest/login/', data=json.dumps({'username':u.username, 'password':"abcd"}), content_type='application/json', headers=[('Content-Type', 'application/json')], environ_base=self.environ_base)
+        self.assertEqual(200, r.status_code)
         r = self.client.get('/rest/order/?page=1', environ_base=self.environ_base)
         self.assertEqual(200, r.status_code)
         self.assertEqual(1, len(r.json['orders']))

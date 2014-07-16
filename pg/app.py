@@ -6,6 +6,7 @@ from flask import Flask
 from pg import rest, wsgi, payments, model
 
 DEFAULT_BLUEPRINTS = [
+    rest.contact_blueprint,
     rest.offer,
     rest.offer_item,
     rest.offer_item_variation,
@@ -67,8 +68,8 @@ class App:
         if not app.debug:
             import logging
             from logging.handlers import TimedRotatingFileHandler
-            file_handler = TimedRotatingFileHandler("run", when='D')
-            file_handler.setLevel(logging.WARNING)
+            file_handler = TimedRotatingFileHandler("web.log", when='D')
+            file_handler.setLevel(logging.DEBUG)
             app.logger.addHandler(file_handler)
         self.ioc.logger = app.logger
 

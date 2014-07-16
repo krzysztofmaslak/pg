@@ -20,7 +20,7 @@
 <body>
     <div style="opacity: 1;" id="bg" class="bg"></div>
     <div class="outer">
-        <div class="inner" x-ng-app='pgapp-{{ page }}'>
+        <div class="inner inner-{{ page }}" x-ng-app='pgapp-{{ page }}'>
             <div data-loading></div>
             <div class="content" x-ng-controller='PGAppCtrl'>
                 <div class="main">
@@ -34,8 +34,12 @@
 
                     <div x-ng-view></div>
                     <p style="margin-top: 4px; opacity: 1;" id="footer" class="footer">
-                        {% if page=='register' %}
+                        {% if page=='register' or page=='reset-password' or page=='logout' %}
                             {{ messages.already_a_member }}<a style="margin-left:6px;" href="/login.html">{{ messages.login }}</a>
+                            <a href="/contact.html" style="float:right;">{{ messages.contact }}</a>
+                        {% elif page=='login' %}
+                            {{ messages.need_an_account }}<a style="margin-left:6px;" href="/login.html">{{ messages.register }}</a>
+                            <a href="/contact.html" style="float:right;">{{ messages.contact }}</a>
                         {% else %}
                             &copy; 2014 Spreadline Ltd
                         {% endif %}
