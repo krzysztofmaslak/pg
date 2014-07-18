@@ -15,7 +15,7 @@ angular.module('hh.directives', [])
         require : 'ngModel',
         link : function(scope, elm, attr, ctrl) {
             scope.$watch(attr.ngModel, function(newValue, oldValue) {
-                if ( newValue ) {
+                if ( newValue && newValue!==undefined && newValue.match ) {
                     if (newValue.match(/<(.|\n)*?>/g)) {
                         ctrl.$setValidity('hasTags', false);
                     } else {
@@ -25,7 +25,8 @@ angular.module('hh.directives', [])
           });
        }
     };
- }]).directive("money",function ($filter, $locale) {
+ }])
+.directive("money",function ($filter, $locale) {
     return {
         restrict: 'A',
         require: 'ngModel',
@@ -36,7 +37,8 @@ angular.module('hh.directives', [])
             function formatMoney() {
                 var value = ctrl.$modelValue;
                 try {
-                    if (value) {
+                    if (value && value!==undefined && value!==null ) {
+                        value = value+'';
                         var validFloat = parseFloat(value);
                         if (!isNaN(validFloat) && (value.split(".").length - 1)<2) {
                             ctrl.$setValidity('notANumber', true);

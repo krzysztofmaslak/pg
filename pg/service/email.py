@@ -14,45 +14,45 @@ class EmailHandler:
         self.logger = logger
 
     def send(self, email):
-        msg = Message(email.subject, sender= email.from_address, recipients= [email.to_address])
-        msg.html = email.html
-        self.mail.send(msg)
+        self.mail.send(email)
 
 class ResetPasswordEmailHandler(EmailHandler):
     def handle(self, email):
         user = self.ioc.new_user_service().find_by_id(int(email.ref_id))
         msg = Message(email.subject, sender= email.from_address, recipients= [email.to_address])
-        msg.html = render_template('emails/'+email.language+'/reset-password.html',
+        msg.html = render_template('emails/'+str(email.language)+'/reset-password.html',
                                      username = user.username,
                                      website_address = self.ioc.get_config()['address.www'],
                                      reset_hash = user.reset_hash,
                                      email_hash=hashlib.sha224(user.username.encode('utf-8')).hexdigest()
                                      )
-        self.logger.debug('Reset password: %s'%email.html)
+        self.logger.debug('Reset password: %s'%msg.html)
         self.send(msg)
 
 class RegistrationEmailHandler(EmailHandler):
     def handle(self, email):
         user = self.ioc.new_user_service().find_by_id(int(email.ref_id))
         msg = Message(email.subject, sender= email.from_address, recipients= [email.to_address])
-        msg.html = render_template('emails/'+email.language+'/registration.html',
+        msg.html = render_template('emails/'+str(email.language)+'/registration.html',
                                      username = user.username,
                                      website_address = self.ioc.get_config()['address.www'],
                                      activation_hash = user.activation_hash,
                                      email_hash=hashlib.sha224(user.username.encode('utf-8')).hexdigest()
                                      )
-        self.logger.debug('Registration email: %s'%email.html)
+        self.logger.debug('Registration email: %s'%msg.html)
         self.send(msg)
 
 class PurchaseConfirmationAdminEmailHandler(EmailHandler):
     def handle(self, email):
-        email.html = '--'
-        self.send(email)
+        msg = Message(email.subject, sender= email.from_address, recipients= [email.to_address])
+        msg.html = '--'
+        self.send(msg)
 
 class RegistrationAdminEmailHandler(EmailHandler):
     def handle(self, email):
-        email.html = '--'
-        self.send(email)
+        msg = Message(email.subject, sender= email.from_address, recipients= [email.to_address])
+        msg.html = '--'
+        self.send(msg)
 
 class PurchaseConfirmationEmailHandler(EmailHandler):
     def handle(self, email):
@@ -156,6 +156,7 @@ class EmailService:
                             db_email = model.Email.query.get(email.id)
                             db_email.status = 1
                             model.base.db.session.commit()
+                            self.logger.debug('Email processed [type=%s, id=%s]'%(email.type, email.id))
                         except Exception as err:
                             traceback.print_tb(err.__traceback__)
                             traceback.print_exc()

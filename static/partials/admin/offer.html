@@ -80,6 +80,7 @@
             <label><b>{{ messages.offer_form_direct_link }}</b></label>
             <input type="text" readonly="true" id="retrieveLink" name="retrieveLink" value="https://www.justsale.it/x/{{offer.hash}}" style="float: left; width:400px;cursor:pointer;background-color:#dff0d8;border-color:#dff0d8"/>
             <button id="copyRetrieveLink" data-clipboard-target="retrieveLink" ng-click="copyToClipboard()" class="btn btn-success" style="margin-left:4px">{{ messages.copy_to_clipboard }}</button>
+            <a href="https://www.justsale.it/x/{{offer.hash}}" id="previewLink" class="btn btn-success" style="margin-left:4px" target="_blank">{{ messages.offer_preview }}</a>
         </div>
         <div class="clearfix"></div>
         <div ng-show="offer.items.length>0">

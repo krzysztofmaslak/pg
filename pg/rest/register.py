@@ -32,6 +32,7 @@ def register():
         customer_email = model.Email()
         customer_email.type = "REGISTRATION"
         customer_email.from_address = registration_email
+        customer_email.ref_id = u.id
         customer_email.to_address = u.username
         customer_email.language = lang
         messages = resource_bundle.ResourceBundle()

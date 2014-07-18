@@ -9,7 +9,7 @@ from pg import app, model
 gateway = app.App(ioc=ServiceFactory())
 app = gateway.create_app()
 manager = Manager(app)
-sched = Scheduler()
+sched = Scheduler(coalesce=True)
 
 @sched.interval_schedule(hours=2)
 def load_currencies():
@@ -20,12 +20,19 @@ def load_currencies():
             print("Find currency rate "+c.code)
             exchange = float(requests.get("http://quote.yahoo.com/d/quotes.csv?s=eur" + c.code + "=X&f=l1&e=.csv").text)
             rate = model.CurrencyRate(c.code, exchange)
-            gateway.ioc.new_currency_service().save_rate(rate);
+            gateway.ioc.new_currency_service().save_rate(rate)
 
-@sched.interval_schedule(minutes=1)
+processing_emails = False
+
+@sched.interval_schedule(minutes=2)
 def process_emails():
+    global processing_emails
+    if processing_emails:
+        return
+    processing_emails = True
     app.logger.info('Process emails')
     gateway.ioc.new_email_service().process_emails()
+    processing_emails = False
 
 sched.start()
 

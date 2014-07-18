@@ -19,30 +19,29 @@ password_blueprint = Blueprint('password', __name__, url_prefix='/rest/password'
 def reset():
     password_blueprint.logger.info('['+request.remote_addr+'] Processing reset password request')
     user = password_blueprint.ioc.new_user_service().find_by_username(request.json['username'])
-    lang = detect_language()
     messages = resource_bundle.ResourceBundle()
     if user is not None:
         user.reset_hash = str(uuid.uuid4())
         model.base.db.session.commit()
         reset_password_subject = resource_bundle.ResourceBundle().get_text(user.account.lang, 'reset_password')
         reset_password_email = model.Email()
+        reset_password_email.language = user.account.lang
         reset_password_email.ref_id = user.id
         reset_password_email.type = 'RESET_PASSWORD'
         reset_password_email.from_address = password_blueprint.ioc.get_config()['no_reply']
         reset_password_email.to_address = user.username
         reset_password_email.subject = reset_password_subject
         password_blueprint.ioc.new_email_service().save(reset_password_email)
-        success_message = messages.get_text(lang, 'reset_password_link_info')
+        success_message = messages.get_text(user.account.lang, 'reset_password_link_info')
         return Response(json.dumps({"success_message": success_message}),  status=200, mimetype='application/json')
     else:
         password_blueprint.logger.info('['+request.remote_addr+'] Failed to request reset password, no such user')
-        error_message = messages.get_text(lang, 'reset_password_no_email')
+        error_message = messages.get_text(user.account.lang, 'reset_password_no_email')
         return Response(json.dumps({"error_message": error_message}), status=204, mimetype='application/json')
 
 @password_blueprint.route('/new', methods=['POST'])
 def new():
     messages = resource_bundle.ResourceBundle()
-    lang = detect_language()
     password_blueprint.logger.info('['+request.remote_addr+'] Processing new password request')
     password = request.json['password']
     if password==request.json['confirmPassword']:
@@ -63,5 +62,6 @@ def new():
             password_blueprint.logger.info('['+request.remote_addr+'] Failed to process new password request, no such user')
     else:
         password_blueprint.logger.info('['+request.remote_addr+'] Failed to process new password request, password mismatch confirm password')
+        lang = detect_language()
         error_message = messages.get_text(lang, 'new_password_mismatch')
         return Response(json.dumps({"error_message": error_message}), status=400, mimetype='application/json')

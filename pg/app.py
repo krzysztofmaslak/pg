@@ -42,11 +42,10 @@ class App:
 
     def configure_mail(self, app):
         app.config.update(
+            MAIL_DEBUG=True,
             MAIL_SERVER='localhost',
             MAIL_PORT=25,
-            MAIL_USE_SSL=False,
-            MAIL_USERNAME = 'you@google.com',
-            MAIL_PASSWORD = 'GooglePasswordHere'
+            MAIL_USE_SSL=False
             )
         self.ioc.mail = Mail(app)
 
@@ -65,8 +64,9 @@ class App:
 
     def configure_logging(self, app):
         app.debug = self.ioc.get_config()['IS_DEBUG']
-        if not app.debug:
+        if str(app.debug)==str(False):
             import logging
+            logging.basicConfig(level=logging.DEBUG, format='%(name)-14s > [%(levelname)s] [%(asctime)s] : %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
             from logging.handlers import TimedRotatingFileHandler
             file_handler = TimedRotatingFileHandler("web.log", when='D')
             file_handler.setLevel(logging.DEBUG)

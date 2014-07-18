@@ -51,6 +51,7 @@ class ResourceBundle:
                 'reset_password_link_info':'We have sent you an email with reset password link that when clicked will allow you to define new password.',
                 'reset_password_no_email':'We couldn&#39;t find account with this email address.',
                 'register_btn':'Register',
+                'offer_preview':'Preview',
                 'offer_saved_successfully':'Offer saved successfuly',
                 'offer_list_title': 'Title',
                 'offer_list_creation_date': 'Creation date',
