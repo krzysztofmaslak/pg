@@ -691,6 +691,7 @@ angular.module('hh.controllers', [])
             item.quantity = item.quantity + 1;
         };
         $scope.paypaylPayment = function(orderId) {
+            jq('body').css('display', 'none');
             jq('#order_id').val(orderId);
             document.paymentForm.submit();
         };
