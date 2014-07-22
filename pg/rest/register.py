@@ -45,8 +45,14 @@ def register():
         admin_email.to_address = registration_email
         admin_email.subject = "New customer: "+u.username
         register_rest.ioc.new_email_service().save(admin_email)
+
+        if register_rest.ioc.get_config()['SKIP_ACCOUNT_ACTIVATION']:
+            u.active = True
+            session['username'] = u.username
         model.base.db.session.commit()
-        return Response(json.dumps({"success_message": success_message}),  status=200, mimetype='application/json')
+        login_blueprint.logger.info('['+request.remote_addr+'] Registration successful')
+
+        return Response(json.dumps({"success_message": success_message, 'skip_activation':self.ioc.get_config()['SKIP_ACCOUNT_ACTIVATION']}),  status=200, mimetype='application/json')
     else:
         register_rest.logger.info('['+request.remote_addr+'] Registration failed, user already exist')
         error_message = messages.get_text(lang, 'register_user_already_exist')

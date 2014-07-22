@@ -34,14 +34,14 @@
 
                     <div x-ng-view></div>
                     <p style="margin-top: 4px; opacity: 1;" id="footer" class="footer">
-                        {% if page=='register' or page=='reset-password' or page=='logout' %}
+                        {% if page=='register' or page=='reset-password' or page=='logout' or page=='contact' %}
                             {{ messages.already_a_member }}<a style="margin-left:6px;" href="/login.html">{{ messages.login }}</a>
                             <a href="/contact.html" style="float:right;">{{ messages.contact }}</a>
                         {% elif page=='login' %}
-                            {{ messages.need_an_account }}<a style="margin-left:6px;" href="/login.html">{{ messages.register }}</a>
+                            {{ messages.need_an_account }}<a style="margin-left:6px;" href="/register.html">{{ messages.register }}</a>
                             <a href="/contact.html" style="float:right;">{{ messages.contact }}</a>
                         {% else %}
-                            &copy; 2014 Spreadline Ltd
+                            &copy; 2010 Spreadline Ltd
                         {% endif %}
                     </p>
                 </div>
@@ -52,7 +52,7 @@
     <!--#include virtual="/static/{{ project_version }}/template/footer.html" -->
 
     <script type="text/javascript">
-        window.messages = JSON.parse('{{ messages }}'.replaceAll('&#39;', '"').replace('&amp;#39;', "'"))
+        window.messages = JSON.parse('{{ messages }}'.replaceAll('&amp;#39;', "'").replaceAll('&#39;', '"'))
     </script>
     <div id="loadingIndicator" class="loadingIndicator"></div>
 </body>

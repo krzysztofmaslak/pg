@@ -5,16 +5,16 @@
         <label for="j_username"><i class="icon-user"></i>{{ messages.login_username }}</label>
         <input type="email" name="username"
                ng-model="login.username"
-               ng-class="{fieldError: loginForm.username.$dirty && loginForm.username.$invalid}"
-               placeholder="{{ messages.login_username_placeholder }}" ng-required="true"/>
+               ng-class="{fieldError: loginForm.username.$used && loginForm.username.$invalid}"
+               placeholder="{{ messages.login_username_placeholder }}" x-ng-model-onblur input-required="true"/>
     </p>
 
     <p class="float">
         <label for="j_password"><i class="icon-lock"></i>{{ messages.login_password }}</label>
         <input type="password" name="password"
                ng-model="login.password"
-               ng-class="{fieldError: loginForm.password.$dirty && loginForm.password.$invalid}"
-               placeholder="{{ messages.login_password_placeholder }}" ng-required="true"/>
+               ng-class="{fieldError: loginForm.password.$used && loginForm.password.$invalid}"
+               placeholder="{{ messages.login_password_placeholder }}" x-ng-model-onblur input-required="true"/>
     </p>
     <br/>
     <a href="/reset-password.html" style="font-size:13px;">{{ messages.login_remind_me_my_password }}</a>

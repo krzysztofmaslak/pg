@@ -32,7 +32,9 @@ angular.module('hh.controllers', [])
         };
         $scope.formatPrice = function(price) {
             if ( (price+'').indexOf('.')!==-1 ) {
-                price = (price+'').substring(0, (price+'').indexOf('.'))+'.'+(price+'').substring((price+'').indexOf('.')+1, 4);
+                var sufix = (price+'').substring((price+'').indexOf('.')+1);
+                sufix = sufix.substring(0, 2);
+                price = (price+'').substring(0, (price+'').indexOf('.'))+'.'+sufix;
             }
             if ( (price+'').indexOf('.')!=-1 && (price+'').indexOf('.')==(price+'').length-2 ) {
                 price+='0';
@@ -152,7 +154,11 @@ angular.module('hh.controllers', [])
                     if ( status==409 ) {
                         $scope.error_message = response.error_message;
                     } else {
-                        $scope.success_message = response.success_message;
+                        if ( response.skip_activation ) {
+                            location.href='/admin/';
+                        } else {
+                            $scope.success_message = response.success_message;
+                        }
                     }
                 });
             } else {
@@ -589,7 +595,7 @@ angular.module('hh.controllers', [])
                         }
                     }
                 }
-                // @TODO handle when there is no image at all
+                return '/static/${pom.version}/img/no_image.jpg';
             }
         };
         $scope.subtotalNet = function() {

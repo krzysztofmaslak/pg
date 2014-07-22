@@ -6,9 +6,10 @@ __author__ = 'xxx'
 
 class PaypalService:
 
-    def __init__(self, ioc):
+    def __init__(self, ioc, logger):
         super().__init__()
         self.ioc = ioc
+        self.logger = logger
 
     def save(self, stripe_message):
         if isinstance(stripe_message, model.StripeMessage)==False:
@@ -22,19 +23,19 @@ class PaypalService:
                         <head></head>
                         <body>
                         <div>
-                            <form id="paypalForm" action='"""+paypal_url+'/cgi-bin/webscr" method="post">'+"""
+                            <form id="paypalForm" action='"""+paypal_url+"/cgi-bin/webscr' method='post'>"+"""
                                 <input type="hidden" name="cmd" value="_cart"/>
                                 <input type="hidden" name="custom" value='"""+payment_reference+"""'/>
                                 <input type="hidden" name="upload" value="1"/>
                                 <input type="hidden" name="business" value='"""+seller+"""'/>
-                                <input type="hidden" name="currency_code" id="currency_code" value='"""+order.currency+"""'/>
+                                <input type="hidden" name="currency_code" id="currency_code" value='"""+order.currency.upper()+"""'/>
                                 """
          for item in basket_items:
             html += """<input type="hidden" name="item_name_"""+str(item['index'])+'" value="'+item['title']+'"/>'
-            html += '<input type="hidden" name="amount_"'+str(item['index'])+'" value="'+ str(item['value'])+'"/>'
+            html += '<input type="hidden" name="amount_'+str(item['index'])+'" value="'+ str(item['value'])+'"/>'
          html += """
                     <input type="hidden" name="item_number" value="BB-PROD1"/>
-                    <input type="hidden" name="notify_url" value='"""+ipn_host+"""/pg/paypal/ipn'/>"""
+                    <input type="hidden" name="notify_url" value='"""+ipn_host+"""/paypal/ipn/'/>"""
          b = order.billing.first()
          html += """<input type="hidden" name="country_code" value='"""+b.country+"""'/>
             <input type="hidden" name="address1" value='"""+b.address1+"""'/>
@@ -54,4 +55,5 @@ class PaypalService:
         </div>
         </body>
         </html>"""
+         self.logger.debug('Paypal html %s'%(html))
          return html

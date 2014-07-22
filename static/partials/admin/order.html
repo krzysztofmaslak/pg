@@ -25,11 +25,13 @@
                     <table class="table table-hover">
                         <tr>
                             <th>{{ messages.order_list_date }}</th>
+                            <th>{{ messages.order_list_fee }}</th>
                             <th>{{ messages.order_list_total }}</th>
                             <th></th>
                         </tr>
                         <tr ng-repeat="order in orders">
                             <td>{{formatDate(order.creation_date)}}</td>
+                            <td>{{formatPrice(order.fee)}}</td>
                             <td>{{formatPrice(order.total)}}</td>
                             <td>
                                 <div style="white-space: nowrap;">

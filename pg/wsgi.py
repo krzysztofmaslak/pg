@@ -213,6 +213,7 @@ def login():
 def register():
     messages = resource_bundle.ResourceBundle()
     lang = detect_language()
+    wsgi_blueprint.logger.info('['+request.remote_addr+'] Detected customer language %s'%(lang))
     return render_template('main.html',
        project_version=wsgi_blueprint.ioc.get_config()['PROJECT_VERSION'],
        messages=messages.get_all(lang),

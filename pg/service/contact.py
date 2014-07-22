@@ -12,6 +12,9 @@ class ContactService:
     def list(self):
         return model.Currency.query.all()
 
+    def find_by_id(self, id):
+        return mode.Contact.query.get(id)
+
     def save_conctact(self, contact):
         if isinstance(contact, model.Contact):
             model.base.db.session.add(contact)

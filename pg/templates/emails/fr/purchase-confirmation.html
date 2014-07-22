@@ -1,0 +1,229 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+</head>
+<body>
+    <div>
+        <div style="width:100%;padding:0 0 38px 27px;">
+            <table width="660" cellspacing="0" cellpadding="0" border="0"
+                   style="margin:0pt 10px;padding:0pt;font-family:Arial,Tahoma;width:660px">
+                <tbody>
+                <tr>
+                    <td style="font-size:11px;">
+                        <div style="width:526px;margin:0;font-weight:normal;font-size:1.5em;color:#669999">
+                            <img src="https://www.justsale.it/static/logo.jpg"/>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <h1 style="width:526px;margin:0;margin-bottom:10px;margin-top:10px;font-weight:normal;font-size:1.7em;color:#669999">Confirmation de commande</h1>
+                    </td>
+                </tr>
+                <tr style="font-size:11px;margin:0;padding:0">
+                    <td align="left" style="margin:0;padding:0">
+                        <h2 style="margin:0 0 14px 0;padding:10px;background:#f2f2f2;font-size:12px;font-weight:bold">
+                            Résumé de la commande</h2>
+                        <table cellspacing="0" cellpadding="0" border="0"
+                               style="margin:0pt;padding:0pt;width:660px;border-bottom:1px dotted #000000">
+                            <tbody>
+                            <tr style="margin:0;padding:0">
+                                <th style="text-indent:10px;text-align:left;font-size:13px;border-bottom:2px solid #000;margin:0;font-weight:400;padding:0 0 8px 0">
+                                    Détails
+                                </th>
+                                <th style="text-indent:10px;text-align:left;font-size:13px;border-bottom:2px solid #000;margin:0;font-weight:400;padding:0 0 8px 0">
+                                    Client
+                                </th>
+                                <th style="text-indent:10px;text-align:left;font-size:13px;border-bottom:2px solid #000;margin:0;font-weight:400;padding:0 0 8px 0">
+                                    Adresse de livraison
+                                </th>
+
+                            </tr>
+                            <tr style="margin:0;padding:0">
+                                <td style="margin:0;padding:10px;font-size:11px;vertical-align:top">
+
+                                    <table border="0" style="margin:0;padding:0">
+                                        <tbody>
+                                        <tr style="margin:0;padding:0">
+                                            <td style="margin:0;padding:3px 10px 3px 0;font-size:11px;vertical-align:top;font-weight:400;white-space:nowrap">
+                                                Numéro de commande:
+                                            </td>
+                                            <td style="margin:0;padding:3px 0;font-size:11px;vertical-align:top;font-weight:bold">
+                                                {{ order_number }}
+                                            </td>
+                                        </tr>
+                                        <tr style="margin:0;padding:0">
+                                            <td style="margin:0;padding:3px 10px 3px 0;font-size:11px;vertical-align:top;font-weight:400;white-space:nowrap">
+                                                Date:
+                                            </td>
+                                            <td style="margin:0;padding:3px 0;font-size:11px;vertical-align:top;font-weight:bold">
+                                                {{ creation_date.strftime('%Y-%m-%d') }}
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td style="margin:0;padding:10px;font-size:11px;vertical-align:top">
+
+                                    <table border="0" style="margin:0;padding:0">
+                                        <tbody>
+                                        <tr style="margin:0;padding:0">
+                                            <td style="margin:0;padding:3px 10px 3px 0;font-size:11px;vertical-align:top;font-weight:400;white-space:nowrap">
+                                                Email:
+                                            </td>
+                                            <td style="margin:0;padding:3px 0;font-size:11px;vertical-align:top;font-weight:bold">
+                                                {{ email }}
+                                            </td>
+                                        </tr>
+                                        <tr style="margin:0;padding:0">
+                                            <td style="margin:0;padding:3px 10px 3px 0;font-size:11px;vertical-align:top;font-weight:400;white-space:nowrap">
+                                                Prénom:
+                                            </td>
+                                            <td style="margin:0;padding:3px 0;font-size:11px;vertical-align:top;font-weight:bold">
+                                                {{ first_name }}
+                                            </td>
+                                        </tr>
+                                        <tr style="margin:0;padding:0">
+                                            <td style="margin:0;padding:3px 10px 3px 0;font-size:11px;vertical-align:top;font-weight:400;white-space:nowrap">
+                                                Nom de famille:
+                                            </td>
+                                            <td style="margin:0;padding:3px 0;font-size:11px;vertical-align:top;font-weight:bold">
+                                                {{ last_name }}
+                                            </td>
+                                        </tr>
+                                        <tr style="margin:0;padding:0">
+                                            <td style="margin:0;padding:3px 10px 3px 0;font-size:11px;vertical-align:top;font-weight:400;white-space:nowrap">
+                                                Adresse:
+                                            </td>
+                                            <td style="margin:0;padding:3px 0;font-size:11px;vertical-align:top;font-weight:bold">
+                                                {{ address }}
+                                            </td>
+                                        </tr>
+                                        <tr style="margin:0;padding:0">
+                                            <td style="margin:0;padding:3px 10px 3px 0;font-size:11px;vertical-align:top;font-weight:400;white-space:nowrap">
+                                                Code postal:
+                                            </td>
+                                            <td style="margin:0;padding:3px 0;font-size:11px;vertical-align:top;font-weight:bold">
+                                                {{ post_code }}
+                                            </td>
+                                        </tr>
+                                        <tr style="margin:0;padding:0">
+                                            <td style="margin:0;padding:3px 10px 3px 0;font-size:11px;vertical-align:top;font-weight:400;white-space:nowrap">
+                                                Ville:
+                                            </td>
+                                            <td style="margin:0;padding:3px 0;font-size:11px;vertical-align:top;font-weight:bold">
+                                                {{ city }}
+                                            </td>
+                                        </tr>
+                                        <tr style="margin:0;padding:0">
+                                            <td style="margin:0;padding:3px 10px 3px 0;font-size:11px;vertical-align:top;font-weight:400;white-space:nowrap"></td>
+                                            <td style="margin:0;padding:3px 0;font-size:11px;vertical-align:top;font-weight:bold"></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td style="margin:0;padding:10px;font-size:11px;vertical-align:top">
+
+
+                                    <table border="0" style="margin:0;padding:0">
+                                        <tbody>
+                                        <tr style="margin:0;padding:0">
+                                            <td style="margin:0;padding:3px 10px 3px 0;font-size:11px;vertical-align:top;font-weight:400;white-space:nowrap">
+                                                Prénom:
+                                            </td>
+                                            <td style="margin:0;padding:3px 0;font-size:11px;vertical-align:top;font-weight:bold">
+                                                {{ shipment_first_name }}
+                                            </td>
+                                        </tr>
+                                        <tr style="margin:0;padding:0">
+                                            <td style="margin:0;padding:3px 10px 3px 0;font-size:11px;vertical-align:top;font-weight:400;white-space:nowrap">
+                                                Nom de famille:
+                                            </td>
+                                            <td style="margin:0;padding:3px 0;font-size:11px;vertical-align:top;font-weight:bold">
+                                                {{ shipment_last_name }}
+                                            </td>
+                                        </tr>
+                                        <tr style="margin:0;padding:0">
+                                            <td style="margin:0;padding:3px 10px 3px 0;font-size:11px;vertical-align:top;font-weight:400;white-space:nowrap">
+                                                Adresse:
+                                            </td>
+                                            <td style="margin:0;padding:3px 0;font-size:11px;vertical-align:top;font-weight:bold">
+                                                {{ shipment_address }}
+                                            </td>
+                                        </tr>
+                                        <tr style="margin:0;padding:0">
+                                            <td style="margin:0;padding:3px 10px 3px 0;font-size:11px;vertical-align:top;font-weight:400;white-space:nowrap">
+                                                Ville:
+                                            </td>
+                                            <td style="margin:0;padding:3px 0;font-size:11px;vertical-align:top;font-weight:bold">
+                                                {{ shipment_city }}
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div style="line-height:18px;margin:0 0 25px 0;padding:0">
+
+                        </div>
+                    </td>
+                </tr>
+                <tr style="font-size:11px;margin:0;padding:0">
+                    <td align="left" style="margin:0;padding:0">
+                        <h2 style="margin:0 0 14px 0;padding:10px;background:#f2f2f2;font-size:12px;font-weight:bold">
+                            PRODUITS COMMANDÉS</h2>
+                        <table cellspacing="0" cellpadding="0" border="0"
+                               style="margin:0pt;padding:0pt;width:660px;border-bottom:2px solid #000000;border-collapse:collapse">
+                            <tbody>
+                            <tr style="margin:0;padding:0">
+                                <th style="text-align:left;font-size:13px;white-space:nowrap;border-bottom:2px solid #000;margin:0;font-weight:400;padding:0 10px 8px">
+                                    &nbsp;</th>
+                                <th style="text-align:left;font-size:13px;white-space:nowrap;border-bottom:2px solid #000;margin:0;font-weight:400;padding:0 10px 8px">
+                                    Article
+                                </th>
+                                <th style="text-align:left;font-size:13px;white-space:nowrap;border-bottom:2px solid #000;margin:0;font-weight:400;padding:0 10px 8px">
+                                    Quantité
+                                </th>
+                                <th style="text-align:left;font-size:13px;white-space:nowrap;border-bottom:2px solid #000;margin:0;font-weight:400;padding:0 10px 8px">
+                                    Total
+                                </th>
+
+                            </tr>
+                            <tr>
+                                <td colspan="8"></td>
+                            </tr>
+                            {% for item in items %}
+                            <tr style="margin:0;padding:0">
+                                <td style="margin:0;padding:10px;font-size:11px;vertical-align:top;border-bottom:1px dotted #000;text-align:left"></td>
+                                <td style="margin:0;padding:10px;font-size:11px;vertical-align:top;border-bottom:1px dotted #000;text-align:left">
+                                    {{ item.title }}
+                                </td>
+                                <td style="margin:0;padding:10px;font-size:11px;vertical-align:top;border-bottom:1px dotted #000;text-align:left">
+                                    {{ item.quantity }}
+                                </td>
+                                <td style="margin:0pt;padding:10px;font-size:11px;vertical-align:top;border-bottom:1px dotted #000000;text-align:left;width:75px;white-space:nowrap">
+                                    {{ item.value }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="8"></td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr style="margin:0;padding:0">
+                    <td style="border-top:1px dotted #000;margin:0;padding:0">
+                        <div style="font-size:12px;margin:0;color:#58595b;margin-top:10px;">Bonne journée</div>
+                        <div style="width:526px;color:#58595b">L'équipe Just Sale It</div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <br><br></div>
+    </div>
+</body>
+</html>

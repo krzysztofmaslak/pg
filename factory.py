@@ -19,10 +19,13 @@ class ServiceFactory:
             'stripe.secret':'sk_test_b482pdSri7rYt2pzyzqtbISd',
             'paypal.authToken':'BkRqdeXwVMD7RMSw03xAwrwyyG9cs14DZH5XZud_oRZH9SPpfRH2k9_KhtO',
             'paypal.seller':'seller_1302451451_biz@gmail.com',
-            'paypal.url':'https://www.sandbox.paypal.com/cgi-bin/webscr',
+            'paypal.url':'https://www.sandbox.paypal.com',
             'address.www':'https://www.justsale.it',
             'registration_email':'sales@justsale.it',
+            'contact_email':'contact@justsale.it',
             'no_reply':'no-reply@justsale.it',
+            'SKIP_ACCOUNT_ACTIVATION':True,
+            'ENVIRONMENT':'DEV'
         }
         if 'PRODUCTION_SETTINGS' in os.environ:
             self.load_production_vars(d)
@@ -77,7 +80,7 @@ class ServiceFactory:
         return service.PaymentProcessorService(self, self.logger)
 
     def new_paypal_service(self):
-        return service.PaypalService(self)
+        return service.PaypalService(self, self.logger)
 
     def new_withdrawal_service(self):
         return service.WithdrawService(self)

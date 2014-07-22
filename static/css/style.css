@@ -182,6 +182,7 @@ ul.unstyled, ol.unstyled {
     border-color: -moz-use-text-color #D8D8D8 #D8D8D8;
     border-image: none;
     border-right: 1px solid #D8D8D8;
+    border-color: #D8D8D8;
     border-style: none solid solid;
     border-width: medium 1px 1px;
     padding: 5%;

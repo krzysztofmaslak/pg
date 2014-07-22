@@ -76,6 +76,7 @@ angular.module('hh.services', [])
                     } else {
                         if(k!=undefined && form[k].$invalid){
                             form[k].$dirty = true;
+                            form[k].$used = true;
                             valid = false;
                         }
                     }
@@ -87,6 +88,7 @@ angular.module('hh.services', [])
                     form[k].$invalid = false;
                     form[k].$valid = true;
                     form[k].$dirty = false;
+                    form[k].$used = false;
                     if ( form[k].$error!=null && form[k].$error!=undefined)form[k].$error.required = false;
                 }
             }

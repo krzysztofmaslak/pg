@@ -69,20 +69,22 @@ class OrderService:
         for i in order.items:
             if i.variations is not None and i.variations.count()!=0:
                 for v in i.variations:
-                        total = total+(v.quantity*(v.net+v.tax))
-                        if v.quantity==1:
-                            shipping = shipping + v.shipping
-                        else:
-                            for c in range(v.quantity-1):
-                                if v.shipping_additional is not None:
-                                    shipping = shipping + v.shipping_additional
-                                else:
-                                    shipping = shipping + v.shipping
+                    total = total+(v.quantity*(v.net+v.tax))
+                    if v.quantity==1:
+                        shipping = shipping + v.shipping
+                    else:
+                        shipping = shipping + v.shipping
+                        for c in range(v.quantity-1):
+                            if v.shipping_additional is not None:
+                                shipping = shipping + v.shipping_additional
+                            else:
+                                shipping = shipping + v.shipping
             else:
                 total = total+(i.quantity*(i.net+i.tax))
                 if i.quantity==1:
                     shipping = shipping + i.shipping
                 else:
+                    shipping = shipping + i.shipping
                     for c in range(i.quantity-1):
                         if i.shipping_additional is not None:
                             shipping = shipping + i.shipping_additional
@@ -149,15 +151,19 @@ class OrderService:
                 item = self.find_item_by_id(offer.items, item_dto.id)
                 if item is not None and item.status==1:
                     variations = []
-                    oi = model.OrderItem(o, item.title, item_dto.quantity, item.net, item.tax, item.shipping, item.shipping_additional)
+                    oi = model.OrderItem(o, item.title, item_dto.quantity, item.net, item.tax, item.shipping)
+                    if hasattr(item, 'shipping_additional'):
+                        oi.shipping_additional = item.shipping_additional
                     oi.multivariate = item.multivariate
                     for item_var_dto in item_dto.variations:
                         item_variation = self.find_item_by_id(item.variations, item_var_dto.id)
-                        if item_variation is not None and item_variation.status==1:
-                            if item_var_dto.quantity>item_variation.quantity:
+                        if item_variation is not None and item_variation.status==1 and item_variation.id==item_dto.selection:
+                            if item_dto.quantity>item_variation.quantity:
                                 raise quantity_not_available.QuantityNotAvailable("Trying to buy more products then are available")
                             else:
-                                oiv = model.OrderItemVariation(oi, item_variation.title, item_variation.quantity, item_variation.net, item_variation.tax, item_variation.shipping, item_variation.shipping_additional)
+                                oiv = model.OrderItemVariation(oi, item_variation.title, item_dto.quantity, item_variation.net, item_variation.tax, item_variation.shipping)
+                                if hasattr(item_variation, 'shipping_additional'):
+                                    oiv.shipping_additional = item_variation.shipping_additional
                                 variations.append(oiv)
                     oi.variations = variations
                     o.items.append(oi)

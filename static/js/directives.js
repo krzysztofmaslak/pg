@@ -26,6 +26,37 @@ angular.module('hh.directives', [])
        }
     };
  }])
+.directive("inputRequired",function () {
+    function isEmpty(value) {
+        return typeof value == 'undefined' || value === '' || value === null || value !== value;
+    }
+
+    return {
+        require: '?ngModel',
+        link: function (scope, elm, attr, ctrl) {
+            if (!ctrl)
+                return;
+            var attr_required = true;
+            var validator = function (value) {
+                if (attr_required && (isEmpty(value) || value === false)) {
+                    ctrl.$setValidity('required', false);
+                    return;
+                } else {
+                    ctrl.$setValidity('required', true);
+                    return value;
+                }
+            };
+
+            ctrl.$formatters.push(validator);
+            ctrl.$parsers.unshift(validator);
+
+            attr.$observe('inputRequired', function (value) {
+                attr_required = value === 'true';
+                validator(ctrl.$viewValue);
+            });
+        }
+    };
+})
 .directive("money",function ($filter, $locale) {
     return {
         restrict: 'A',
@@ -63,6 +94,74 @@ angular.module('hh.directives', [])
             scope.$watch(attr.ngModel, function() {
                 formatMoney();
             });
+        }
+    };
+})
+.directive('ngModelOnblur', [ '$timeout', function ($timeout) {
+    return {
+        restrict: 'A',
+        priority: 1,
+        require: 'ngModel',
+        link: function (scope, elem, attr, ngModelCtrl) {
+            if (attr.type === 'radio' || attr.type === 'checkbox')
+                return;
+            function isEmpty(value) {
+                return typeof value == 'undefined' || value === '' || value === null || value !== value;
+            }
+
+            elem.unbind('input').unbind('keydown').unbind('change');
+            elem.bind('blur', function () {
+                scope.$apply(function() {
+                    var value = elem.val();
+                    if (!(isEmpty(ngModelCtrl.$viewValue) && isEmpty(value))) {
+                        ngModelCtrl.$used = true;
+                        value = value.trim();
+                    }
+                    ngModelCtrl.$setViewValue(value);
+                });
+            });
+        }
+    };
+}]).directive('selectOnblur',function () {
+    return {
+        restrict: 'A',
+        require: 'ngModel',
+        link: function (scope, elem, attr, ngModelCtrl) {
+            //apply only to select lists
+            if (elem.length < 1 || (elem[0].nodeName && elem[0].nodeName.toUpperCase() !== 'SELECT')) {
+                return;
+            }
+            function isEmpty(value) {
+                return typeof value == 'undefined' || value === '' || value === null || value !== value;
+            }
+
+            var listToUse = [];
+            scope.$watch(attr.selectOnblur, function (newVal, oldVal) {
+                listToUse = newVal;
+            });
+
+            elem.unbind('change');
+            // Android browser doesnt have 'blur' event: it uses mouseleave and mouseenter instead of blur and focus respectively
+            var isAndroid = (navigator.userAgent.match(/Android/i) ? true : false);
+            var updateEvent = function(event) {
+                scope.$apply(function () {
+                    //get the real value from the listToUse based on elem.val() index
+                    var index = parseInt(elem.val(), 10);
+                    var value = null;
+                    if (index >= 0 && index < listToUse.length) {
+                        value = listToUse[index].code;
+                    }
+                    if (!(isEmpty(ngModelCtrl.$viewValue) && isEmpty(value))) {
+                        ngModelCtrl.$used = true;
+                        if ( 'blur'==event ) {
+                            ngModelCtrl.$modified = true;
+                        }
+                    }
+                    ngModelCtrl.$setViewValue(value);
+                });
+            };
+            elem.bind((isAndroid ? 'mouseleave' : 'blur'), function(){updateEvent('blur')});
+            elem.bind('change', function(){updateEvent('change')});
         }
     };
 })

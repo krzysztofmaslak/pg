@@ -41,7 +41,7 @@
                                     <div>
                                         <div class="media">
                                             <div class="media-wrapper" style="width:104px;margin:4px;float:left;">
-                                                <img class="media-object" src="{{ defaultImage(item) }}" style="width:100px"/>
+                                                <img class="media-object" ng-src="{{ defaultImage(item) }}" style="width:100px"/>
                                             </div>
                                             <div class="media-body">
                                                 <div class="cart-item-title">
@@ -144,15 +144,17 @@
                                                                    ng-readonly="paymentAccepted"
                                                                    placeholder="{{ messages['first_name'] }}" name="firstname" ng-model="billing.first_name"
                                                                    class="span6"
-                                                                   ng-class="{fieldError: checkoutDetailsForm.firstname.$dirty && checkoutDetailsForm.firstname.$invalid}"
-                                                                   required="true">
+                                                                   x-ng-model-onblur
+                                                                   ng-class="{fieldError: checkoutDetailsForm.firstname.$used && checkoutDetailsForm.firstname.$invalid}"
+                                                                   input-required="true">
                                                             <input type="text" autocomplete="off"
                                                                    nullifempty
                                                                    ng-readonly="paymentAccepted"
                                                                    placeholder="{{ messages['last_name'] }}" name="lastname" ng-model="billing.last_name"
                                                                    class="span6"
-                                                                   ng-class="{fieldError: checkoutDetailsForm.lastname.$dirty && checkoutDetailsForm.lastname.$invalid}"
-                                                                   required="true">
+                                                                   x-ng-model-onblur
+                                                                   ng-class="{fieldError: checkoutDetailsForm.lastname.$used && checkoutDetailsForm.lastname.$invalid}"
+                                                                   input-required="true">
                                                         </div>
     
                                                         <div class="controls">
@@ -161,8 +163,9 @@
                                                                    ng-readonly="paymentAccepted"
                                                                    placeholder="{{ messages['address_1'] }}" ng-maxlength="150" maxlength="150"
                                                                    class="span12"
-                                                                   ng-class="{fieldError: checkoutDetailsForm.address1.$dirty && checkoutDetailsForm.address1.$invalid}"
-                                                                   required="true">
+                                                                   x-ng-model-onblur
+                                                                   ng-class="{fieldError: checkoutDetailsForm.address1.$used && checkoutDetailsForm.address1.$invalid}"
+                                                                   input-required="true">
                                                         </div>
     
                                                         <div class="controls">
@@ -182,25 +185,28 @@
                                                             <input type="text" autocomplete="off" placeholder="{{ messages['city'] }}" ng-model="billing.city"
                                                                    name="city"
                                                                    ng-readonly="paymentAccepted"
+                                                                   x-ng-model-onblur
                                                                    nullifempty class="span6"
-                                                                   ng-class="{fieldError: checkoutDetailsForm.city.$dirty && checkoutDetailsForm.city.$invalid}"
-                                                                   required="true">
+                                                                   ng-class="{fieldError: checkoutDetailsForm.city.$used && checkoutDetailsForm.city.$invalid}"
+                                                                   input-required="true"/>
                                                         </div>
     
                                                         <div class="controls controls-row">
                                                             <input type="text" autocomplete="true" name="postal" ng-model="billing.postal_code"
                                                                    nullifempty placeholder="{{ messages['post_code'] }}" class="span6"
                                                                    ng-readonly="paymentAccepted"
-                                                                   ng-class="{fieldError: checkoutDetailsForm.postal.$dirty && checkoutDetailsForm.postal.$invalid}"
-                                                                   required="true">
+                                                                   x-ng-model-onblur
+                                                                   ng-class="{fieldError: checkoutDetailsForm.postal.$used && checkoutDetailsForm.postal.$invalid}"
+                                                                   input-required="true"/>
     
                                                             <input type="text" placeholder="{{ messages['county'] }}" name="county"
                                                                    nullifempty
                                                                    ng-readonly="paymentAccepted"
-                                                                   ng-class="{fieldError: checkoutDetailsForm.county.$dirty && checkoutDetailsForm.county.$invalid}"
+                                                                   ng-class="{fieldError: checkoutDetailsForm.county.$used && checkoutDetailsForm.county.$invalid}"
                                                                    ng-show="billing.country!=='' && billing.country!=='fr' && billing.country!=='de'"
                                                                    ng-model="billing.county" class="span6"
-                                                                   ng-required="billing.country!=='' && billing.country!=='fr' && billing.country!=='de'">
+                                                                   x-ng-model-onblur
+                                                                   input-required="billing.country!=='' && billing.country!=='fr' && billing.country!=='de'">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -208,8 +214,9 @@
                                                     <input type="email" autocomplete="off" placeholder="{{ messages['email'] }}" name="email"
                                                            nullifempty ng-model="billing.email" class="span12 email-input"
                                                            ng-readonly="paymentAccepted"
-                                                           ng-class="{fieldError: checkoutDetailsForm.email.$dirty && checkoutDetailsForm.email.$invalid}"
-                                                           required="required">
+                                                           ng-class="{fieldError: checkoutDetailsForm.email.$used && checkoutDetailsForm.email.$invalid}"
+                                                           x-ng-model-onblur
+                                                           input-required="true"/>
                                                 </div>
     
                                                 <div class="row">
@@ -243,22 +250,25 @@
                                                                    ng-model="shipping.first_name"
                                                                    nullifempty class="span6"
                                                                    ng-readonly="paymentAccepted"
-                                                                   ng-class="{fieldError: checkoutDetailsForm.sfirstname.$dirty && checkoutDetailsForm.sfirstname.$invalid}"
-                                                                   ng-required="!billing.same_address" name="sfirstname">
+                                                                   x-ng-model-onblur
+                                                                   ng-class="{fieldError: checkoutDetailsForm.sfirstname.$used && checkoutDetailsForm.sfirstname.$invalid}"
+                                                                   input-required="!billing.same_address" name="sfirstname">
                                                             <input type="text" autocomplete="off" placeholder="{{ messages['last_name'] }}"
                                                                    ng-model="shipping.last_name"
                                                                    nullifempty class="span6"
                                                                    ng-readonly="paymentAccepted"
-                                                                   ng-class="{fieldError: checkoutDetailsForm.slastname.$dirty && checkoutDetailsForm.slastname.$invalid}"
-                                                                   ng-required="!billing.same_address" name="slastname">
+                                                                   x-ng-model-onblur
+                                                                   ng-class="{fieldError: checkoutDetailsForm.slastname.$used && checkoutDetailsForm.slastname.$invalid}"
+                                                                   input-required="!billing.same_address" name="slastname">
                                                         </div>
                                                         <div class="controls controls-row">
                                                             <input type="text" autocomplete="off" ng-model="shipping.address1" name="saddress1"
                                                                    placeholder="{{ messages['address_1'] }}" ng-maxlength="150" maxlength="150"
                                                                    nullifempty class="span12"
+                                                                   x-ng-model-onblur
                                                                    ng-readonly="paymentAccepted"
-                                                                   ng-class="{fieldError: checkoutDetailsForm.saddress1.$dirty && checkoutDetailsForm.saddress1.$invalid}"
-                                                                   ng-required="!billing.same_address">
+                                                                   ng-class="{fieldError: checkoutDetailsForm.saddress1.$used && checkoutDetailsForm.saddress1.$invalid}"
+                                                                   input-required="!billing.same_address">
                                                         </div>
     
                                                         <div class="controls">
@@ -275,24 +285,25 @@
                                                                     x-ng-options="obj.code as obj.label for obj in countries">
                                                             </select>
                                                             <input type="text" nullifempty autocomplete="off" placeholder="{{ messages['city'] }}"
-                                                                   ng-readonly="paymentAccepted"
-                                                                   ng-class="{fieldError: checkoutDetailsForm.scity.$dirty && checkoutDetailsForm.scity.$invalid}"
-                                                                   ng-model="shipping.city" name="scity" class="span6" ng-required="!billing.same_address"/>
+                                                                   ng-readonly="paymentAccepted" x-ng-model-onblur
+                                                                   ng-class="{fieldError: checkoutDetailsForm.scity.$used && checkoutDetailsForm.scity.$invalid}"
+                                                                   ng-model="shipping.city" name="scity" class="span6" input-required="!billing.same_address"/>
                                                         </div>
     
                                                         <div class="controls controls-row">
                                                             <input type="text" nullifempty autocomplete="off" name="spostal" ng-model="shipping.postal_code"
-                                                                   ng-class="{fieldError: checkoutDetailsForm.spostal.$dirty && checkoutDetailsForm.spostal.$invalid}"
+                                                                   ng-class="{fieldError: checkoutDetailsForm.spostal.$used && checkoutDetailsForm.spostal.$invalid}"
                                                                    placeholder="{{ messages['post_code'] }}"
-                                                                   ng-readonly="paymentAccepted"
-                                                                   class="span6" ng-required="!billing.same_address"/>
+                                                                   ng-readonly="paymentAccepted" x-ng-model-onblur
+                                                                   class="span6" input-required="!billing.same_address"/>
     
                                                             <input type="text" nullifempty placeholder="{{ messages['county'] }}" name="scounty"
                                                                    ng-show="shipping.country!=='' && shipping.country!=='fr' && shipping.country!=='de'"
                                                                    ng-model="shipping.county" class="span6"
                                                                    ng-readonly="paymentAccepted"
-                                                                   ng-class="{fieldError: checkoutDetailsForm.scounty.$dirty && checkoutDetailsForm.scounty.$invalid}"
-                                                                   ng-required="shipping.country!=='' && shipping.country!=='fr' && shipping.country!=='de'">
+                                                                   x-ng-model-onblur
+                                                                   ng-class="{fieldError: checkoutDetailsForm.scounty.$used && checkoutDetailsForm.scounty.$invalid}"
+                                                                   input-required="shipping.country!=='' && shipping.country!=='fr' && shipping.country!=='de'">
                                                         </div>
                                                         <div class="controls controls-row">
                                                             <div>
@@ -360,15 +371,15 @@
                                                                     <div class="form-row" style="float:left;width:60%;height:60px;">
                                                                         <label><span>{{ messages['card_number'] }}</span></label>
                                                                         <input type="text" size="20" data-stripe="number" name="number"
-                                                                               ng-class="{fieldError: checkoutPaymentForm.number.$dirty && checkoutPaymentForm.number.$invalid}"
-                                                                               autocomplete="off"
-                                                                               ng-model="payment.number" ng-required="true" placeholder="•••• •••• •••• ••••">
+                                                                               ng-class="{fieldError: checkoutPaymentForm.number.$used && checkoutPaymentForm.number.$invalid}"
+                                                                               autocomplete="off" x-ng-model-onblur
+                                                                               ng-model="payment.number" input-required="true" placeholder="•••• •••• •••• ••••">
                                                                     </div>
     
                                                                     <div class="form-row" style="float:left;height:60px;">
                                                                         <label><span>{{ messages['expires'] }}</span></label>
                                                                         <select data-stripe="exp-month" style="width:60px;" name="month"
-                                                                                ng-class="{fieldError: checkoutPaymentForm.month.$dirty && checkoutPaymentForm.month.$invalid}"
+                                                                                ng-class="{fieldError: checkoutPaymentForm.month.$used && checkoutPaymentForm.month.$invalid}"
                                                                                 x-select-required="true" ng-model="payment.month">
                                                                             <option value="">MM</option>
                                                                             <option value="01">01</option>
@@ -386,7 +397,7 @@
                                                                         </select>
                                                                         <span> / </span>
                                                                         <select data-stripe="exp-year" x-select-required="true"
-                                                                                ng-class="{fieldError: checkoutPaymentForm.year.$dirty && checkoutPaymentForm.year.$invalid}"
+                                                                                ng-class="{fieldError: checkoutPaymentForm.year.$used && checkoutPaymentForm.year.$invalid}"
                                                                                 name="year" style="width:70px;" ng-model="payment.year">
                                                                             <option value="">YYYY</option>
                                                                             <option ng-repeat="opt in expiryyears"
@@ -396,10 +407,10 @@
                                                                     <div class="clearfix" style="height:1px;"></div>
                                                                     <div class="form-row" style="float:left;width:60%;height:60px;">
                                                                         <label><span>{{ messages['name_on_card'] }}</span></label>
-                                                                        <input type="text" size="40" data-stripe="name" ng-required="true"
+                                                                        <input type="text" size="40" data-stripe="name" input-required="true"
                                                                                name="name"
                                                                                autocomplete="off"
-                                                                               ng-class="{fieldError: checkoutPaymentForm.name.$dirty && checkoutPaymentForm.name.$invalid}"
+                                                                               ng-class="{fieldError: checkoutPaymentForm.name.$used && checkoutPaymentForm.name.$invalid}"
                                                                                ng-model="payment.name"/>
                                                                     </div>
                                                                     <div class="form-row" style="float:left;height:60px;">
@@ -407,7 +418,7 @@
                                                                         <input type="text" size="4" data-stripe="cvc"
                                                                                autocomplete="off"
                                                                                name="cvc"
-                                                                               ng-class="{fieldError: checkoutPaymentForm.cvc.$dirty && checkoutPaymentForm.cvc.$invalid}"
+                                                                               ng-class="{fieldError: checkoutPaymentForm.cvc.$used && checkoutPaymentForm.cvc.$invalid}"
                                                                                placeholder="CVC" style="width:132px;" ng-model="payment.cvc"/>
                                                                     </div>
                                                                 </div>
@@ -432,13 +443,13 @@
                                                     </tr>
                                                     <tr>
                                                         <td colspan="2">
-                                                            <br>
+                                                            <br/>
                                                             <a href="#" id="alternativePayment"
                                                                ng-click="pay($event, 'pcc'); $event.stopImmediatePropagation();">
                                                                 {{ messages['alternative'] }}
-                                                                <img src="/static/${pom.version}/img/cards/visa.png" style="width:32px;">
-                                                                <img src="/static/${pom.version}/img/cards/american-express.png" style="width:32px;">
-                                                                <img src="/static/${pom.version}/img/cards/mastercard.png" style="width:32px;">
+                                                                <img src="/static/${pom.version}/img/cards/visa.png" style="width:32px;" />
+                                                                <img src="/static/${pom.version}/img/cards/american-express.png" style="width:32px;" />
+                                                                <img src="/static/${pom.version}/img/cards/mastercard.png" style="width:32px;" />
                                                                 {{ messages['payment_with_paypal'] }}</a><span id="alternativePaymentWait"></span>
     
                                                             <div style="font-size:10px;margin-top:6px;">( {{ messages['after_clicking'] }} <span

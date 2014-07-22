@@ -48,6 +48,13 @@ class PurchaseConfirmationAdminEmailHandler(EmailHandler):
         msg.html = '--'
         self.send(msg)
 
+class ContactAdminEmailHandler(EmailHandler):
+    def handle(self, email):
+        msg = Message(email.subject, sender= email.from_address, recipients= [email.to_address])
+        contact = self.ioc.new_contact_service().find_by_id(int(email.ref_id))
+        msg.html = contact.message
+        self.send(msg)
+
 class RegistrationAdminEmailHandler(EmailHandler):
     def handle(self, email):
         msg = Message(email.subject, sender= email.from_address, recipients= [email.to_address])
@@ -135,8 +142,8 @@ class EmailService:
             'PURCHASE_CONFIRMATION_ADMIN':PurchaseConfirmationAdminEmailHandler(self.mail, self.ioc, self.logger),
             'RESET_PASSWORD':ResetPasswordEmailHandler(self.mail, self.ioc, self.logger),
             'REGISTRATION_ADMIN':RegistrationAdminEmailHandler(self.mail, self.ioc, self.logger),
-            'REGISTRATION':RegistrationEmailHandler(self.mail, self.ioc, self.logger)
-
+            'REGISTRATION':RegistrationEmailHandler(self.mail, self.ioc, self.logger),
+            'ADMIN_CONTACT_EMAIL':ContactAdminEmailHandler(self.mail, self.ioc, self.logger)
         }
 
     def set_mail(self, m):

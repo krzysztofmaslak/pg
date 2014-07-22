@@ -5,15 +5,16 @@
     <p>
         <label for="j_username"><i class="icon-user"></i>{{ messages.contact_email }}</label>
         <input type="email" name="email" ng-model="contact.email"
-               ng-class="{fieldError: contactForm.email.$dirty && contactForm.email.$invalid}"
-               placeholder="{{ messages.contact_email_placeholder }}" ng-required="true"/>
+               ng-class="{fieldError: contactForm.email.$used && contactForm.email.$invalid}"
+               x-ng-model-onblur input-required="true"
+               placeholder="{{ messages.contact_email_placeholder }}" />
     </p>
 
     <p>
         <label for="j_password">{{ messages.contact_message }}</label>
         <textarea name="message" ng-model="contact.message"
-               ng-class="{fieldError: contactForm.message.$dirty && contactForm.message.$invalid}"
-               ng-required="true"/>
+               ng-class="{fieldError: contactForm.message.$used && contactForm.message.$invalid}"
+               x-ng-model-onblur input-required="true"/>
     </p>
     <br/>
 

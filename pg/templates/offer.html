@@ -27,7 +27,7 @@
     <!--#include virtual="/static/{{ project_version }}/template/footer.html" -->
 
     <script type="text/javascript">
-        window.messages = JSON.parse('{{ messages }}'.replaceAll('&#39;', '"').replace('&amp;#39;', "'"))
+        window.messages = JSON.parse('{{ messages }}'.replaceAll('&#39;', '"').replaceAll('&amp;#39;', "'"))
     </script>
     <script type="text/javascript">
         window.language = '{{ language }}';

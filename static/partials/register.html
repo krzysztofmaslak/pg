@@ -5,15 +5,15 @@
     <p>
         <label for="j_username"><i class="icon-user"></i>{{ messages.register_username }}</label>
         <input type="email" name="username" ng-model="register.username"
-               ng-class="{fieldError: registerForm.username.$dirty && registerForm.username.$invalid}"
-               placeholder="{{ messages.register_username_placeholder }}" ng-required="true"/>
+               ng-class="{fieldError: registerForm.username.$used && registerForm.username.$invalid}"
+               placeholder="{{ messages.register_username_placeholder }}" x-ng-model-onblur input-required="true"/>
     </p>
 
     <p>
         <label for="j_password"><i class="icon-lock"></i>{{ messages.register_password }}</label>
         <input type="password" name="password" ng-model="register.password"
-               ng-class="{fieldError: registerForm.password.$dirty && registerForm.password.$invalid}"
-               placeholder="{{ messages.register_password_placeholder }}" ng-required="true"/>
+               ng-class="{fieldError: registerForm.password.$used && registerForm.password.$invalid}"
+               placeholder="{{ messages.register_password_placeholder }}" x-ng-model-onblur input-required="true"/>
     </p>
     <br/>
 
