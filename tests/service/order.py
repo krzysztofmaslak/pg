@@ -29,7 +29,7 @@ class OrderServiceTest(Base):
         u = model.User('admin', 'password')
         a.users.append(u)
         o = model.Offer(a)
-        oi = model.OfferItem(o, "My offer item", 4, 3.99, 2.30, 1.65, 1)
+        oi = model.OfferItem(o, "My offer item", '', 4, 3.99, 2.30, 1.65, 1)
         oi.shipping_additional = 1.2
         o.items.append(oi)
         o.status = 1
@@ -86,7 +86,7 @@ class OrderServiceTest(Base):
         a.users.append(u)
         o = model.Offer(a)
         o.status = 1
-        oi = model.OfferItem(o, "My offer item", 2, 3.20, 1.54, 1.65, 1)
+        oi = model.OfferItem(o, "My offer item", '', 2, 3.20, 1.54, 1.65, 1)
         o.items.append(oi)
         model.base.db.session.add(u)
         model.base.db.session.add(o)
@@ -109,13 +109,13 @@ class OrderServiceTest(Base):
 
     def test_find_order_total(self):
         order = model.Order()
-        oi1 = model.OrderItem(order, 'Strings', 1, 10.32, 0, 1.65)
+        oi1 = model.OrderItem(order, 'Strings', '', 1, 10.32, 0, 1.65)
         oi1.shipping_additional = 1
         order.items.append(oi1)
-        oi2 = model.OrderItem(order, 'Toy', 3, 32.73, 0, 1.65)
+        oi2 = model.OrderItem(order, 'Toy', '', 3, 32.73, 0, 1.65)
         oi2.shipping_additional = 1
         order.items.append(oi2)
-        oi = model.OrderItem(order, 'Toy', 0, 0, 0, 0)
+        oi = model.OrderItem(order, 'Toy', '', 0, 0, 0, 0)
         oiv1 = model.OrderItemVariation(oi, "Big", 5, 11.21, 0, 1.65)
         oiv1.shipping_additional = 1
         oi.variations.append(oiv1)
@@ -132,7 +132,7 @@ class OrderServiceTest(Base):
         a.users.append(u)
         o = model.Offer(a)
         o.status = 1
-        o1 = model.OfferItem(o, "My offer item", 2)
+        o1 = model.OfferItem(o, "My offer item", '', 2)
         o2 = model.OfferItem(o, "My offer item2")
         blue = model.OfferItemVariation(o2, "Blue", 3)
         red = model.OfferItemVariation(o2, "Red", 1)
@@ -145,11 +145,11 @@ class OrderServiceTest(Base):
 
         order = model.Order()
         order.offer_id = o.id
-        or1 = model.OrderItem(order, 'Strings', 1, 10.32, 0, 1.65)
+        or1 = model.OrderItem(order, 'Strings', '', 1, 10.32, 0, 1.65)
         or1.shipping_additional = 1
         or1.offer_item_id = o1.id
         order.items.append(or1)
-        oi = model.OrderItem(order, 'Toy', 0, 0, 0, 0)
+        oi = model.OrderItem(order, 'Toy', '', 0, 0, 0, 0)
         oi.offer_item_id = o2.id
         orv1 = model.OrderItemVariation(oi, "Big", 1, 11.21, 0, 1.65)
         orv1.shipping_additional = 1
@@ -177,7 +177,7 @@ class OrderServiceTest(Base):
         a.users.append(u)
         o = model.Offer(a)
         o.status = 1
-        o1 = model.OfferItem(o, "My offer item", 2)
+        o1 = model.OfferItem(o, "My offer item", '', 2)
         o2 = model.OfferItem(o, "My offer item2")
         blue = model.OfferItemVariation(o2, "Blue", 3)
         red = model.OfferItemVariation(o2, "Red", 1)
@@ -193,11 +193,11 @@ class OrderServiceTest(Base):
             order.account_id = a.id
             order.payment_status = 'Completed'
             order.offer_id = o.id
-            or1 = model.OrderItem(order, 'Strings', 1, 10.32, 0, 1.65)
+            or1 = model.OrderItem(order, 'Strings', '', 1, 10.32, 0, 1.65)
             or1.shipping_additional = 1
             or1.offer_item_id = o1.id
             order.items.append(or1)
-            oi = model.OrderItem(order, 'Toy', 0, 0, 0, 0)
+            oi = model.OrderItem(order, 'Toy', '', 0, 0, 0, 0)
             oi.offer_item_id = o2.id
             orv1 = model.OrderItemVariation(oi, "Big", 1, 11.21, 0, 1.65)
             orv1.shipping_additional = 1
@@ -227,7 +227,7 @@ class OrderServiceTest(Base):
         a.users.append(u)
         o = model.Offer(a)
         o.status = 1
-        o1 = model.OfferItem(o, "My offer item", 2)
+        o1 = model.OfferItem(o, "My offer item", '', 2)
         o2 = model.OfferItem(o, "My offer item2")
         blue = model.OfferItemVariation(o2, "Blue", 3)
         red = model.OfferItemVariation(o2, "Red", 1)
@@ -241,7 +241,7 @@ class OrderServiceTest(Base):
         order = model.Order()
         order.account_id = a.id
         order.offer_id = o.id
-        or1 = model.OrderItem(order, 'Strings', 1, 10.32, 0, 1.65)
+        or1 = model.OrderItem(order, 'Strings', '', 1, 10.32, 0, 1.65)
         or1.shipping_additional = 1
         or1.offer_item_id = o1.id
         order.items.append(or1)
@@ -258,11 +258,11 @@ class OrderServiceTest(Base):
             order.account_id = a.id
             order.payment_status = 'Completed'
             order.offer_id = o.id
-            or1 = model.OrderItem(order, 'Strings', 1, 10.32, 0, 1.65)
+            or1 = model.OrderItem(order, 'Strings', '', 1, 10.32, 0, 1.65)
             or1.shipping_additional = 1
             or1.offer_item_id = o1.id
             order.items.append(or1)
-            oi = model.OrderItem(order, 'Toy', 0, 0, 0, 0)
+            oi = model.OrderItem(order, 'Toy', '', 0, 0, 0, 0)
             oi.offer_item_id = o2.id
             orv1 = model.OrderItemVariation(oi, "Big", 1, 11.21, 0, 1.65)
             orv1.shipping_additional = 1
@@ -277,13 +277,13 @@ class OrderServiceTest(Base):
 
     def test_get_order_total_reduced_by_fee(self):
         order = model.Order()
-        oi1 = model.OrderItem(order, 'Strings', 1, 10.32, 0, 1.65)
+        oi1 = model.OrderItem(order, 'Strings', '', 1, 10.32, 0, 1.65)
         oi1.shipping_additional = 1
         order.items.append(oi1)
-        oi2 = model.OrderItem(order, 'Toy', 3, 32.73, 0, 1.65)
+        oi2 = model.OrderItem(order, 'Toy', '', 3, 32.73, 0, 1.65)
         oi2.shipping_additional = 1
         order.items.append(oi2)
-        oi = model.OrderItem(order, 'Toy', 0, 0, 0, 0)
+        oi = model.OrderItem(order, 'Toy', '', 0, 0, 0, 0)
         oiv1 = model.OrderItemVariation(oi, "Big", 5, 11.21, 0, 1.65)
         oiv1.shipping_additional = 1
         oi.variations.append(oiv1)

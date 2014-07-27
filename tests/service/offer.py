@@ -55,21 +55,21 @@ class OfferServiceTest(TestCase):
         items = []
         item_id = 0
         for item in o.items:
-            if item.title == 'Item2':
-                item.title = 'MyItem2'
+            if item.title_en == 'Item2':
+                item.title_en = 'MyItem2'
                 item.condition='used'
                 item_id = item.id
             items.append(item)
         # modify item 2
         offer_service = self.ioc.new_offer_service()
-        offer_service.save_offer(a, base.An(items= items, id= o.id, title='My offer', currency='USD'))
+        offer_service.save_offer(a, base.An(items= items, id= o.id, title_en='My offer', currency='USD'))
         o = model.Offer.query.filter(model.Offer.id == o.id).first()
         for item in o.items:
             if item.id == item_id:
-                self.assertEqual(item.title, 'MyItem2')
+                self.assertEqual(item.title_en, 'MyItem2')
                 self.assertEqual(item.condition, 'used')
         # remove item 3
-        offer_service.save_offer(a, base.An(items= items[0:2], id= o.id, title='My offer', currency='USD'))
+        offer_service.save_offer(a, base.An(items= items[0:2], id= o.id, title_en='My offer', currency='USD'))
         o = model.Offer.query.filter(model.Offer.id == o.id).first()
         self.assertEqual(2, len(o.items.all()))
         # add variations to item 1
@@ -84,7 +84,7 @@ class OfferServiceTest(TestCase):
         for item in o.items:
             items.append(item)
         items[0].variations = variations
-        offer_service.save_offer(a, base.An(items= items, id= o.id, title='My offer', currency='USD'))
+        offer_service.save_offer(a, base.An(items= items, id= o.id, title_en='My offer', currency='USD'))
         o = model.Offer.query.filter(model.Offer.id == o.id).first()
         self.assertEqual('Red2', o.items[0].variations[1].title)
 
@@ -104,8 +104,8 @@ class OfferServiceTest(TestCase):
         items = []
         item_id = 0
         for item in o.items:
-            if item.title == 'Item1':
-                item.title = 'MyItem2'
+            if item.title_en == 'Item1':
+                item.title_en = 'MyItem2'
                 item_id = item.id
                 oiv.quantity = 1
                 oiv.net = 3.99
@@ -114,11 +114,11 @@ class OfferServiceTest(TestCase):
             items.append(item)
         # modify item 2
         offer_service = self.ioc.new_offer_service()
-        offer_service.save_offer(a, base.An(items= items, id= o.id, title='My offer', currency='USD'))
+        offer_service.save_offer(a, base.An(items= items, id= o.id, title_en='My offer', currency='USD'))
         o = model.Offer.query.filter(model.Offer.id == o.id).first()
         for item in o.items:
             if item.id == item_id:
-                self.assertEqual(item.title, 'MyItem2')
+                self.assertEqual(item.title_en, 'MyItem2')
                 self.assertEqual(item.variations[0].net, 3.99)
 
     def test_new_offer_item_variation(self):

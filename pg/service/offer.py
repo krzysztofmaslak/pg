@@ -63,7 +63,10 @@ class OfferService:
         if o.status==0:
             o.hash = self.generate_hash()
         o.status = 1
-        o.title = sanitizer.html_to_text(offer_dto.title)
+        if hasattr(offer_dto, 'title_en'):
+            o.title_en = sanitizer.html_to_text(offer_dto.title_en)
+        if hasattr(offer_dto, 'title_fr'):
+            o.title_fr = sanitizer.html_to_text(offer_dto.title_fr)
         o.currency = offer_dto.currency
         if o.items is not None and len(o.items.all())>0:
             for item in o.items:
@@ -74,7 +77,10 @@ class OfferService:
             for item in o.items:
                 offer_item_dto = self.find_item_by_id(item.id, offer_dto.items)
                 if offer_item_dto is not None:
-                    item.title = sanitizer.html_to_text(offer_item_dto.title)
+                    if hasattr(offer_item_dto, 'title_en'):
+                        item.title_en = sanitizer.html_to_text(offer_item_dto.title_en)
+                    if hasattr(offer_item_dto, 'title_fr'):
+                        item.title_fr = sanitizer.html_to_text(offer_item_dto.title_fr)
                     if hasattr(offer_item_dto, 'condition'):
                         item.condition = offer_item_dto.condition
                     item.status = 1

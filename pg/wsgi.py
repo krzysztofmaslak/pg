@@ -264,6 +264,7 @@ def admin_landing():
     return render_template('admin/landing.html',
                            balance = user.account.balance,
                            admin_title = admin_title,
+                           admin_lang = user.account.lang,
                            messages=messages.get_all(user.account.lang),
                            countries = [c.as_json() for c in wsgi_blueprint.ioc.new_country_service().find_all()],
                            project_version=wsgi_blueprint.ioc.get_config()['PROJECT_VERSION'])
@@ -276,10 +277,21 @@ def fallback(path):
         lang = detect_language()
         wsgi_blueprint.logger.info('['+get_customer_ip()+'] loading offer page by hash: %s'%path)
         wsgi_blueprint.ioc.new_event_service().persist(model.Event(get_customer_ip(), offer.account, path))
+        offer_title = ''
+        if lang=='fr':
+            if offer.title_fr is not None:
+                offer_title = offer.title_fr
+            else:
+                offer_title = offer.title_en
+        else:
+            if offer.title_en is not None:
+                offer_title = offer.title_en
+            else:
+                offer_title = offer.title_fr
         return render_template('offer.html',
                messages=messages.get_all(lang),
                language = lang,
-               title=offer.title,
+               title=offer_title,
                countries = [c.as_json() for c in wsgi_blueprint.ioc.new_country_service().find_all()],
                project_version=wsgi_blueprint.ioc.get_config()['PROJECT_VERSION'],
                stripe_publishable=wsgi_blueprint.ioc.get_config()['stripe.publishable'])

@@ -41,7 +41,7 @@ class PaypalTest(Base):
         o = model.Offer(a)
         o.currency = 'eur'
         o.status = 1
-        o1 = model.OfferItem(o, "My offer item", 2, 3.45, 0, 1.65, 1)
+        o1 = model.OfferItem(o, "My offer item", '', 2, 3.45, 0, 1.65, 1)
         o2 = model.OfferItem(o, "My offer item2")
         o2.status = 1
         blue = model.OfferItemVariation(o2, "Blue", 3)
@@ -76,6 +76,17 @@ class PaypalTest(Base):
         shipping = 0.0
         basket_items = []
         for item in order.items:
+            item_title = ''
+            if order.lang=='fr':
+                if item.title_fr is not None:
+                    item_title = item.title_fr
+                else:
+                    item_title = item.title_en
+            else:
+                if item.title_en is not None:
+                    item_title = item.title_en
+                else:
+                    item_title = item.title_fr
             if item.variations is not None and item.variations.count()>0:
                 itotal = 0.0
                 for iv in item.variations:
@@ -86,14 +97,14 @@ class PaypalTest(Base):
                         for c in range(iv.quantity-1):
                             shipping = shipping + iv.shipping_additional
                 if order.offer.currency!=order.currency:
-                    basket_items.append({'index':(i+1), 'title':item.title, 'value':self.ioc.new_currency_service().convert(order.currency, itotal)})
+                    basket_items.append({'index':(i+1), 'title':item_title, 'value':self.ioc.new_currency_service().convert(order.currency, itotal)})
                 else:
-                    basket_items.append({'index':(i+1), 'title':item.title, 'value': itotal})
+                    basket_items.append({'index':(i+1), 'title':item_title, 'value': itotal})
             else:
                 if order.offer.currency!=order.currency:
-                    basket_items.append({'index':(i+1), 'title':item.title, 'value':self.ioc.new_currency_service().convert(order.currency, (item.quantity*(item.net+item.tax)))})
+                    basket_items.append({'index':(i+1), 'title':item_title, 'value':self.ioc.new_currency_service().convert(order.currency, (item.quantity*(item.net+item.tax)))})
                 else:
-                    basket_items.append({'index':(i+1), 'title':item.title, 'value':(item.quantity*(item.net+item.tax))})
+                    basket_items.append({'index':(i+1), 'title':item_title, 'value':(item.quantity*(item.net+item.tax))})
                 if item.quantity==1:
                     shipping = shipping + item.shipping
                 else:

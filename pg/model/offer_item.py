@@ -4,7 +4,8 @@ __author__ = 'krzysztof.maslak'
 
 class OfferItem(base.db.Model, base.JsonSerializable):
     id = base.db.Column(base.db.Integer, primary_key=True)
-    title = base.db.Column(base.db.String(80))
+    title_en = base.db.Column(base.db.String(80))
+    title_fr = base.db.Column(base.db.String(80))
     condition = base.db.Column(base.db.String(4))
     quantity = base.db.Column(base.db.Integer)
     net = base.db.Column(base.db.Float)
@@ -17,9 +18,10 @@ class OfferItem(base.db.Model, base.JsonSerializable):
 
     variations = base.db.relationship('OfferItemVariation', backref='offer_item', lazy='dynamic')
 
-    def __init__(self, offer, title='', quantity=0, net=0, tax=0, shipping=0, status=0):
+    def __init__(self, offer, title_en='', title_fr='', quantity=0, net=0, tax=0, shipping=0, status=0):
         self.offer = offer
-        self.title = title
+        self.title_en = title_en
+        self.title_fr = title_fr
         self.quantity = quantity
         self.net = net
         self.tax = tax

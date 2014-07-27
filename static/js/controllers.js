@@ -376,6 +376,35 @@ angular.module('hh.controllers', [])
         $scope.offer = null;
         $scope.current = 1;
         $scope.savedSuccessfully = false;
+        $scope.languages = [];
+        $scope.active_language = null;
+        $scope.initLanguages = function() {
+            if ( window.admin_lang=='fr' ) {
+                $scope.languages[$scope.languages.length] = 'fr';
+                $scope.languages[$scope.languages.length] = 'en';
+                $scope.active_language = 'fr';
+            } else {
+                $scope.languages[$scope.languages.length] = 'en';
+                $scope.languages[$scope.languages.length] = 'fr';
+                $scope.active_language = 'en';
+            }
+        }
+        $scope.getOfferTitle = function(offer) {
+            if ( window.admin_lang=='fr' ) {
+                if ( offer.title_fr && offer.title_fr!==undefined && offer.title_fr!=='' ) {
+                    return offer.title_fr;
+                } else {
+                    return offer.title_en;
+                }
+            } else {
+                if ( offer.title_en && offer.title_en!==undefined && offer.title_en!=='' ) {
+                    return offer.title_en;
+                } else {
+                    return offer.title_fr;
+                }
+            }
+        }
+        $scope.initLanguages();
         jaxrs.query('offer/?page=1', null, function (response) {
             $scope.offers = response.offers;
             $scope.pages = Math.ceil(response.count/10);
@@ -578,6 +607,21 @@ angular.module('hh.controllers', [])
             $scope.url = $scope.url.substring(0, $scope.url.indexOf('#'));
         }
         $scope.url = $scope.url.substring($scope.url.lastIndexOf('/')+1);
+        $scope.getItemTitle = function(item) {
+            if ( $scope.language=='fr') {
+                if ( item.title_fr && item.title_fr!==undefined && item.title_fr!=='' ) {
+                    return item.title_fr;
+                } else {
+                    return item.title_en;
+                }
+            } else {
+                if ( item.title_en && item.title_en!==undefined && item.title_en!=='' ) {
+                    return item.title_en;
+                } else {
+                    return item.title_fr;
+                }
+            }
+        }
         jaxrs.query('offer/'+$scope.url, null, function (response) {
             $scope.offer = response;
             jq('#clientCurrency').val($scope.offer.currency);
@@ -585,7 +629,7 @@ angular.module('hh.controllers', [])
                 var oi = $scope.offer.items[i];
                 if ( oi.multivariate ) {
                     if ( !$scope.payment.items ) $scope.payment.items = [];
-                    var item = {id:oi.id, title:oi.title, multivariate: true, selection:oi.variations[0].id };
+                    var item = {id:oi.id, title_en:oi.title_en, title_fr:oi.title_fr, multivariate: true, selection:oi.variations[0].id };
                     for(var j=0;j<oi.variations.length;j++) {
                         if ( !item.variations ) item.variations = [];
                         var oiv = oi.variations[j];
@@ -601,7 +645,7 @@ angular.module('hh.controllers', [])
                 } else {
                     if ( !$scope.payment.items ) $scope.payment.items = [];
                     if ( oi.quantity>0 ) {
-                        $scope.payment.items[$scope.payment.items.length] = {id:oi.id, available:oi.quantity, title:oi.title, net:oi.net, tax:oi.tax, shipping:oi.shipping, shipping_additional:oi.shipping_additional, quantity:1}
+                        $scope.payment.items[$scope.payment.items.length] = {id:oi.id, available:oi.quantity, title_en:oi.title_en, title_fr:oi.title_fr, net:oi.net, tax:oi.tax, shipping:oi.shipping, shipping_additional:oi.shipping_additional, quantity:1}
                     }
                 }
             }
@@ -615,11 +659,11 @@ angular.module('hh.controllers', [])
                 if (item.multivariate) {
                     for (var i = 0; i < item.variations.length; i++) {
                         if (item.variations[i].id == item.selection) {
-                            $scope.shoppingCart.items[$scope.shoppingCart.items.length] = {id: item.id, title: item.title, quantity: item.quantity, tax: item.variations[i].tax, net: item.variations[i].net, shipping: item.variations[i].shipping, shipping_additional: item.variations[i].shipping_additional, variation_id: item.variations[i].id, variation_title: item.variations[i].title, selection: item.selection};
+                            $scope.shoppingCart.items[$scope.shoppingCart.items.length] = {id: item.id, title_en: item.title_en, title_fr:item.title_fr, quantity: item.quantity, tax: item.variations[i].tax, net: item.variations[i].net, shipping: item.variations[i].shipping, shipping_additional: item.variations[i].shipping_additional, variation_id: item.variations[i].id, variation_title: item.variations[i].title, selection: item.selection};
                         }
                     }
                 } else {
-                    $scope.shoppingCart.items[$scope.shoppingCart.items.length] = {id: item.id, title: item.title, quantity: item.quantity, tax: item.tax, net: item.net, shipping: item.shipping, shipping_additional: item.shipping_additional}
+                    $scope.shoppingCart.items[$scope.shoppingCart.items.length] = {id: item.id, title_en: item.title_en, title_fr:item.title_fr, quantity: item.quantity, tax: item.tax, net: item.net, shipping: item.shipping, shipping_additional: item.shipping_additional}
                 }
             }
             jq.cookie("shoppingCart", angular.toJson($scope.shoppingCart));

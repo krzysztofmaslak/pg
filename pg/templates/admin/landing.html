@@ -72,6 +72,10 @@
     </script>
 
     <script type="text/javascript">
+        window.admin_lang = '{{ admin_lang }}';
+    </script>
+
+    <script type="text/javascript">
         window.messages = JSON.parse('{{ messages }}'.replaceAll('&#39;', '"'));
     </script>
     <div id="loadingIndicator" class="loadingIndicator"></div>

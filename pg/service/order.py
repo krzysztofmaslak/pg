@@ -160,7 +160,7 @@ class OrderService:
                 item = self.find_item_by_id(offer.items, item_dto.id)
                 if item is not None and item.status==1:
                     variations = []
-                    oi = model.OrderItem(o, item.title, item_dto.quantity, item.net, item.tax, item.shipping)
+                    oi = model.OrderItem(o, item.title_en, item.title_fr, item_dto.quantity, item.net, item.tax, item.shipping)
                     if hasattr(item, 'shipping_additional'):
                         oi.shipping_additional = item.shipping_additional
                     oi.multivariate = item.multivariate
@@ -187,7 +187,7 @@ class OrderService:
                             if item_dto.quantity>item.quantity:
                                 raise quantity_not_available.QuantityNotAvailable("Trying to buy more products then are available")
                             else:
-                                oi = model.OrderItem(o, item.title, item_dto.quantity, item.net, item.tax, item.shipping)
+                                oi = model.OrderItem(o, item.title_en, item.title_fr, item_dto.quantity, item.net, item.tax, item.shipping)
                                 oi.shipping_additional = item.shipping_additional
                                 oi.multivariate = item.multivariate
                                 o.items.append(oi)

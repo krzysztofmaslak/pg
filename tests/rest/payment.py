@@ -29,7 +29,7 @@ class PaymentTest(Base):
         a.users.append(u)
         o = model.Offer(a)
         o.status = 1
-        o1 = model.OfferItem(o, "My offer item", 2, 3.99, 1.20, 1.65, 1)
+        o1 = model.OfferItem(o, "My offer item", '', 2, 3.99, 1.20, 1.65, 1)
         o2 = model.OfferItem(o, "My offer item2")
         o2.status = 1
         blue = model.OfferItemVariation(o2, "Blue", 3)

@@ -143,6 +143,17 @@ def process_init():
     shipping = 0.0
     basket_items = []
     for item in order.items:
+        item_title = ''
+        if order.lang=='fr':
+            if item.title_fr is not None:
+                item_title = item.title_fr
+            else:
+                item_title = item.title_en
+        else:
+            if item.title_en is not None:
+                item_title = item.title_en
+            else:
+                item_title = item.title_fr
         if item.variations is not None and item.variations.count()>0:
             itotal = 0.0
             for iv in item.variations:
@@ -157,15 +168,15 @@ def process_init():
                         else:
                             shipping = shipping + iv.shipping
                 if order.offer.currency!=order.currency:
-                    basket_items.append({'index':(i+1), 'title':item.title+'('+iv.title+')', 'value':round(paypal_init.ioc.new_currency_service().convert(order.currency, itotal), 2)})
+                    basket_items.append({'index':(i+1), 'title':item_title+'('+iv.title+')', 'value':round(paypal_init.ioc.new_currency_service().convert(order.currency, itotal), 2)})
                 else:
-                    basket_items.append({'index':(i+1), 'title':item.title+'('+iv.title+')', 'value': round(itotal, 2)})
+                    basket_items.append({'index':(i+1), 'title':item_title+'('+iv.title+')', 'value': round(itotal, 2)})
                 i = i+1
         else:
             if order.offer.currency!=order.currency:
-                basket_items.append({'index':(i+1), 'title':item.title, 'value':round(paypal_init.ioc.new_currency_service().convert(order.currency, (item.quantity*(item.net+item.tax))), 2)})
+                basket_items.append({'index':(i+1), 'title':item_title, 'value':round(paypal_init.ioc.new_currency_service().convert(order.currency, (item.quantity*(item.net+item.tax))), 2)})
             else:
-                basket_items.append({'index':(i+1), 'title':item.title, 'value':round((item.quantity*(item.net+item.tax)), 2)})
+                basket_items.append({'index':(i+1), 'title':item_title, 'value':round((item.quantity*(item.net+item.tax)), 2)})
             if item.quantity==1:
                 shipping = shipping + item.shipping
             else:

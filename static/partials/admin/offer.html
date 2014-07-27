@@ -23,7 +23,7 @@
                             <th></th>
                         </tr>
                         <tr ng-repeat="offer in offers">
-                            <td>{{offer.title}}</td>
+                            <td>{{getOfferTitle(offer)}}</td>
                             <td>{{formatDate(offer.creation_date)}}</td>
                             <td>
                                 <div style="white-space: nowrap;">
@@ -54,10 +54,18 @@
     <form name="offerForm" enctype="multipart/form-data" novalidate>
     <div class="formSection detailsTitle">
         <div>
-            <label><b>{{ messages.offer_form_title }}</b></label>
-            <input type="text" name="title" nullifempty id="title"
-                   ng-class="{fieldError: offerForm.title.$used && offerForm.title.$invalid}"
-                   x-ng-model="offer.title" style="width:500px;"  x-ng-model-onblur input-required="true" maxlength="80" notags/>
+            <label>
+                <b style="margin-right: 6px;">{{ messages.offer_form_title }}</b>
+                <button class="btn lang-button {{ $parent.active_language==lang?'btn-info':'' }}" ng-click="$parent.active_language=lang" ng-repeat="lang in languages">{{ lang }}</button>
+            </label>
+            <input type="text" name="title_en" nullifempty id="title_en"
+                   ng-class="{fieldError: offerForm.title_en.$used && offerForm.title_en.$invalid}"
+                   ng-show="active_language=='en'"
+                   x-ng-model="offer.title_en" style="width:500px;"  x-ng-model-onblur input-required="{{ active_language=='en' }}" maxlength="80" notags/>
+            <input type="text" name="title_fr" nullifempty id="title_fr"
+                   ng-class="{fieldError: offerForm.title_fr.$used && offerForm.title_fr.$invalid}"
+                   ng-show="active_language=='fr'"
+                   x-ng-model="offer.title_fr" style="width:500px;"  x-ng-model-onblur input-required="{{ active_language=='fr' }}" maxlength="80" notags/>
         </div>
         <div ng-show="offer.items.length>0" class="currencyWrap">
             <label>{{ messages.offer_form_currency }}</label>
@@ -96,10 +104,18 @@
                                             <h1 style="margin-right:10px;font-size:24px;">{{$index+1}}</h1>
                                         </td>
                                         <td>
-                                            <label>{{ messages.checkout_product_title }}</label>
-                                            <input type="text" name="productTitle" nullifempty x-ng-model="item.title"
-                                                   ng-class="{fieldError: itemForm.productTitle.$used && itemForm.productTitle.$invalid}"
-                                                   notags style="width:500px"  x-ng-model-onblur input-required="true"/>
+                                            <label>
+                                                <span style="margin-right:6px;">{{ messages.checkout_product_title }}</span>
+                                                <button class="btn lang-button {{ $parent.active_language==lang?'btn-info':'' }}" ng-click="$parent.active_language=lang" ng-repeat="lang in languages">{{ lang }}</button>
+                                            </label>
+                                            <input type="text" name="productTitleEn" nullifempty x-ng-model="item.title_en"
+                                                   ng-show="active_language=='en'"
+                                                   ng-class="{fieldError: itemForm.productTitleEn.$used && itemForm.productTitleEn.$invalid}"
+                                                   notags style="width:500px"  x-ng-model-onblur input-required="{{ active_language=='en' }}"/>
+                                            <input type="text" name="productTitleFr" nullifempty x-ng-model="item.title_fr"
+                                                   ng-show="active_language=='fr'"
+                                                   ng-class="{fieldError: itemForm.productTitleFr.$used && itemForm.productTitleFr.$invalid}"
+                                                   notags style="width:500px"  x-ng-model-onblur input-required="{{ active_language=='fr' }}"/>
                                         </td>
                                         <td valign="top" style="width:140px;">
                                             <button ng-click="deleteItem($index)" class="btn btn-danger" style="margin-bottom:10px;">{{ messages.checkout_delete_product }}</button>
