@@ -272,26 +272,45 @@ angular.module('hh.controllers', [])
 
     }])
     .controller('EventCtrl', ['$scope', '$routeParams', '$location', 'jaxrs', function ($scope, $routeParams, $location, jaxrs) {
-        $scope.months = [];
-        var initMonthsNavigation = function() {
-            var current = new Date();
-            var currentyear = current.getFullYear();
-            var currenmonth = current.getMonth();
-            for(var i=0;i++;i<3) {
-                if ( currenmonth<9 ) {
-                    $scope.months[$scope.months.length] = '0'+(currenmonth+1)+'-'+currentyear;
-                } else {
-                    $scope.months[$scope.months.length] = (currenmonth+1)+'-'+currentyear;
-                }
-                currenmonth--;
-                if (currenmonth<0) {
-                    currenmonth=11;
-                    currentyear--;
-                }
-            }
-            $scope.months.reverse();
+        $scope.date = new Date();
+        $scope.dateFrom = new Date();
+        $scope.dateTo = new Date();
+        $scope.openFrom = function($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+
+            $scope.fromOpened = true;
         };
-        initMonthsNavigation();
+        $scope.openTo = function($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+
+            $scope.toOpened = true;
+        };
+        $scope.loadTraffic = function() {
+            var from = $scope.dateFrom.getFullYear()+'-'+($scope.dateFrom.getMonth()<10?'0'+$scope.dateFrom.getMonth():$scope.dateFrom.getMonth())+'-'+$scope.dateFrom.getDate();
+            var to = $scope.dateTo.getFullYear()+'-'+($scope.dateTo.getMonth()<10?'0'+$scope.dateTo.getMonth():$scope.dateTo.getMonth())+'-'+$scope.dateTo.getDate();
+            jaxrs.query('event/?from='+from+'&to='+to, null, function (response) {
+                if ( jQuery.isEmptyObject(response) ) {
+                    $scope.no_offers_traffic = true;
+                } else {
+                    $scope.no_offers_traffic = false;
+                    var offers = [];
+                    for(var hash in response) {
+                        var length = offers.length;
+                        offers[length] = response[hash];
+                        offers[length].hash = hash;
+                    }
+                    $scope.offers = offers;
+                }
+            });
+        }
+        $scope.$watch('dateFrom', function(newVal, oldVal){
+            $scope.loadTraffic();
+        });
+        $scope.$watch('dateTo', function(newVal, oldVal){
+            $scope.loadTraffic();
+        });
     }])
     .controller('OrderCtrl', ['$scope', '$routeParams', '$location', 'jaxrs', function ($scope, $routeParams, $location, jaxrs) {
         $scope.orders = [];

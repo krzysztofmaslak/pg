@@ -13,7 +13,5 @@ event_blueprint = Blueprint('event', __name__, url_prefix='/rest/event')
 @base.authenticated
 def list():
     user = event_blueprint.ioc.new_user_service().find_by_username(session['username'])
-    events = event_blueprint.ioc.new_event_service().find_by_page(user.account, request.args.get('date'), int(request.args.get('page')))
-    events_count = event_blueprint.ioc.new_event_service().find_events_count(user.account, request.args.get('date'))
-    js = { "events" : [o.as_json() for o in events], "count" : events_count}
-    return Response(json.dumps(js),  mimetype='application/json')
+    offer_traffic = event_blueprint.ioc.new_event_service().find_offer_traffic_for(user.account_id, request.args.get('from'), request.args.get('to'))
+    return Response(json.dumps(offer_traffic),  mimetype='application/json')

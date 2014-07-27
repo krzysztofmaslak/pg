@@ -1,208 +1,53 @@
 <div class="container-fluid min-height300" x-ng-controller="EventCtrl">
     <div class="row-fluid">
-        <div class="span3">
-            <form name="orderListForm" novalidate>
-                <div ng-show="orders.length!=0" class="formSection">
-                    <!--<table style="margin-top:10px;margin-bottom:20px;" >-->
-                    <!--<tr>-->
-                    <!--<td>-->
-                    <!--<input type="text" x-ng-model="query"  style="margin-bottom:0px;width:300px;" />-->
-                    <!--</td>-->
-                    <!--<td style="width:8px;"></td>-->
-                    <!--<td>-->
-                    <!--<button x-ng-click="search()" class="btn">Search</button>-->
-                    <!--</td>-->
-                    <!--</tr>-->
-                    <!--</table>-->
+        <table>
+            <tr>
+                <td>
+                    <label style="margin-right:6px;margin-bottom:8px;"><b>{{ messages.traffic_from }}</b></label>
+                </td>
+                <td>
+                    <p class="input-group" style="width:220px;">
+                      <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="dateFrom" is-open="fromOpened" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+                      <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="openFrom($event)">
+                            <i class="glyphicon glyphicon-calendar"></i>
+                        </button>
+                      </span>
+                    </p>
+                </td>
+                <td>
+                    <label style="margin-right:6px;margin-bottom:8px;margin-left:10px;"><b>{{ messages.traffic_to }}</b></label>
+                </td>
+                <td>
+                    <p class="input-group" style="width:220px;">
+                      <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="dateTo" is-open="toOpened" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+                      <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="openTo($event)">
+                            <i class="glyphicon glyphicon-calendar"></i>
+                        </button>
+                      </span>
+                    </p>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="row-fluid">
+        <p ng-if="no_offers_traffic">
+            {{ messages.traffic_no_offers_traffic }}
+        </p>
+        <div class="span3" ng-if="!no_offers_traffic">
+            <form name="offerTrafficList" novalidate>
+                <div ng-show="offers.length!=0" class="formSection">
                     <table class="table table-hover">
                         <tr>
-                            <th>{{ messages.order_list_number }}</th>
-                            <th>{{ messages.order_list_date }}</th>
-                            <th>{{ messages.order_list_fee }}</th>
-                            <th>{{ messages.order_list_total }}</th>
-                            <th></th>
+                            <th>{{ messages.offer_form_title }}</th>
+                            <th>{{ messages.traffic_visits }}</th>
                         </tr>
-                        <tr ng-repeat="order in orders">
-                            <td>{{ order.order_number }}</td>
-                            <td>{{formatDate(order.creation_date)}}</td>
-                            <td>{{formatPrice(order.fee)}}</td>
-                            <td>{{formatPrice(order.total)}}</td>
-                            <td>
-                                <div style="white-space: nowrap;">
-                                    <button ng-click="show(order)" class="btn btn-success">{{ messages.order_list_show }}</button>
-                                    <button ng-click="refund(order)" class="btn btn-danger" ng-if="order.refund_payment!=0">{{ messages.order_list_refund }}</button>
-                                </div>
-                            </td>
+                        <tr ng-repeat="offer in offers">
+                            <td>{{ offer.title }}</td>
+                            <td>{{ offer.count }}</td>
                         </tr>
                     </table>
-                    <div class="my_block pag" ng-show="pages>1">
-                        <button class="btn btn-inverse btn-small" ng-show="current!='1'" x-ng-click="previous()">{{ messages.order_list_previous }}</button>
-                        <button class="btn {{paginatorItemClass($index)}} btn-small" style="margin-left:2px;" ng-repeat="n in [] | range:pages" x-ng-click="go($index+1)">{{$index+1}}</button>
-                        <button class="btn btn-inverse btn-small" style="margin-left:2px;" x-ng-click="next()" ng-show="current!=pages">{{ messages.order_list_next }}</button>
-                    </div>
-                </div>
-                <div ng-show="orders.length==0">
-                    {{ messages.order_list_no_orders }}
-                </div>
-            </form>
-        </div>
-        <div class="span9">
-            <form name="orderForm" ng-show="order!=null" novalidate>
-                <div class="formSection detailsTitle">
-                    <div>
-                        <label><b>{{ messages.order_form_number }}</b></label>
-                        <input type="text" name="order_number" id="order_number" x-ng-model="order.order_number" style="width:400px;" readonly="true"/>
-                    </div>
-                    <div>
-                        <label><b>{{ messages.order_form_total }}</b></label>
-                        <input type="text" name="total" id="total" value="{{ formatPrice(order.total) }}" style="width:400px;" readonly="true"/>
-                    </div>
-                </div>
-                <div class="formSection bilingDetailsTitle">
-                    <div>
-                        <table>
-                            <tr>
-                                <td>
-                                    <div>
-                                         <label><b>{{ messages.order_form_first_name }}</b></label>
-                                         <input type="text" name="first_name" id="first_name" x-ng-model="order.billing[0].first_name" style="width:200px;" readonly="true"/>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div>
-                                        <label><b>{{ messages.order_form_last_name }}</b></label>
-                                        <input type="text" name="last_name" id="last_name" x-ng-model="order.billing[0].last_name" style="width:200px;" readonly="true"/>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div>
-                        <label><b>{{ messages.order_form_email }}</b></label>
-                        <input type="text" name="email" id="email" x-ng-model="order.billing[0].email" style="width:400px;" readonly="true"/>
-                    </div>
-                    <div>
-                        <label><b>{{ messages.order_form_address1 }}</b></label>
-                        <input type="text" name="address1" id="address1" x-ng-model="order.billing[0].address1" style="width:400px;" readonly="true"/>
-                    </div>
-                    <div>
-                        <label><b>{{ messages.order_form_address2 }}</b></label>
-                        <input type="text" name="address2" id="address2" x-ng-model="order.billing[0].address2" style="width:400px;" readonly="true"/>
-                    </div>
-
-                    <div>
-                        <table>
-                            <tr>
-                                <td>
-                                    <div>
-                                        <label><b>{{ messages.order_form_county }}</b></label>
-                                        <input type="text" name="county" id="county" x-ng-model="order.billing[0].county" style="width:200px;" readonly="true"/>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div>
-                                        <label><b>{{ messages.order_form_postal_code }}</b></label>
-                                        <input type="text" name="postal_code" id="postal_code" x-ng-model="order.billing[0].postal_code" style="width:200px;" readonly="true"/>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div>
-                        <table>
-                            <tr>
-                                <td>
-                                    <div>
-                                        <label><b>{{ messages.order_form_country }}</b></label>
-                                        <input type="text" name="country" id="country" x-ng-model="order.billing[0].country" style="width:200px;" readonly="true"/>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div>
-                                        <label><b>{{ messages.order_form_city }}</b></label>
-                                        <input type="text" name="city" id="city" x-ng-model="order.billing[0].city" style="width:200px;" readonly="true"/>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="formSection bilingDetailsTitle" ng-show="!order.billing[0].same_address">
-                    <div>
-                        <div>
-                            <table>
-                                <tr>
-                                    <td>
-                                        <div>
-                                            <label><b>{{ messages.order_form_first_name }}</b></label>
-                                            <input type="text" name="first_name" id="first_name" x-ng-model="order.shipping[0].first_name" style="width:200px;" readonly="true"/>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div>
-                                            <label><b>{{ messages.order_form_last_name }}</b></label>
-                                            <input type="text" name="last_name" id="last_name" x-ng-model="order.shipping[0].last_name" style="width:200px;" readonly="true"/>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                        <div>
-                            <label><b>{{ messages.order_form_address1 }}</b></label>
-                            <input type="text" name="address1" id="address1" x-ng-model="order.shipping[0].address1" style="width:400px;" readonly="true"/>
-                        </div>
-                        <div>
-                            <label><b>{{ messages.order_form_address2 }}</b></label>
-                            <input type="text" name="address2" id="address2" x-ng-model="order.shipping[0].address2" style="width:400px;" readonly="true"/>
-                        </div>
-                        <div>
-                            <label><b>{{ messages.order_form_country }}</b></label>
-                            <input type="text" name="country" id="country" x-ng-model="order.shipping[0].country" style="width:400px;" readonly="true"/>
-                        </div>
-                        <div>
-                            <label><b>{{ messages.order_form_city }}</b></label>
-                            <input type="text" name="city" id="city" x-ng-model="order.shipping[0].city" style="width:400px;" readonly="true"/>
-                        </div>
-                        <div>
-                            <label><b>{{ messages.order_form_county }}</b></label>
-                            <input type="text" name="county" id="county" x-ng-model="order.shipping[0].county" style="width:400px;" readonly="true"/>
-                        </div>
-                        <div>
-                            <label><b>{{ messages.order_form_postal_code }}</b></label>
-                            <input type="text" name="postal_code" id="postal_code" x-ng-model="order.shipping[0].postal_code" style="width:400px;" readonly="true"/>
-                        </div>
-                        <div>
-                            <label><b>{{ messages.order_form_company }}</b></label>
-                            <input type="text" name="company" id="company" x-ng-model="order.shipping[0].company" style="width:400px;" readonly="true"/>
-                        </div>
-                        <div>
-                            <label><b>{{ messages.order_form_phone_number }}</b></label>
-                            <input type="text" name="phone_number" id="phone_number" x-ng-model="order.shipping[0].phone_number" style="width:400px;" readonly="true"/>
-                        </div>
-                        <div>
-                            <label><b>{{ messages.order_form_email }}</b></label>
-                            <input type="text" name="email" id="email" x-ng-model="order.shipping[0].email" style="width:400px;" readonly="true"/>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="formSection categoryProducts">
-                    <table class="table table-hover">
-                        <tr>
-                            <th>{{ messages.order_form_order_item_title }}</th>
-                            <th>{{ messages.order_form_order_item_quantity }}</th>
-                            <th>{{ messages.order_form_order_item_net }}</th>
-                            <th>{{ messages.order_form_order_item_tax }}</th>
-                        </tr>
-                        <tr ng-repeat="item in order.items">
-                            <td>{{item.title}}</td>
-                            <td>{{item.quantity}}</td>
-                            <td>{{item.net}}</td>
-                            <td>{{item.tax}}</td>
-                        </tr>
-                    </table>
-
                 </div>
             </form>
         </div>
