@@ -15,3 +15,4 @@ from .stripe import StripeService
 from .paypal import PaypalService
 from .withdraw import WithdrawService
 from .contact import ContactService
+from .event import EventService

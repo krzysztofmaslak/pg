@@ -44,7 +44,7 @@ class OrderServiceTest(Base):
         payment.shipping = base.An(first_name='Chuck', last_name='Norris', address1='South Central', address2='Rockbrook', country='ie', city='Dublin', postal_code='18', county='Dublin', email='krzysztof.maslak@123.ie', company='Spreadline', phone_number='0842342342')
         o = order_service.save(payment)
         self.assertEqual(o.account_id, a.id)
-        self.assertEqual(21.27, o.total)
+        self.assertEqual(22.92, o.total)
         self.assertEqual(payment.offer_id, o.offer_id)
         self.assertEqual(payment.subscribe, o.subscribe)
         self.assertEqual(payment.payment_method, o.payment_method)
@@ -124,7 +124,7 @@ class OrderServiceTest(Base):
         oi.variations.append(oiv2)
         order.items.append(oi)
         total = self.ioc.new_order_service().find_order_total(order)
-        self.assertEqual(187.65, total)
+        self.assertEqual(190.95, total)
 
     def test_process_paid_order(self):
         a = model.Account()
@@ -292,7 +292,7 @@ class OrderServiceTest(Base):
         oi.variations.append(oiv2)
         order.items.append(oi)
         total = self.ioc.new_order_service().find_order_total(order)
-        self.assertEqual(187.65, total)
+        self.assertEqual(190.95, total)
         order.total = total
         order_net = self.ioc.new_order_service().get_order_total_reduced_by_fee(order)
-        self.assertEqual(179.74, round(order_net, 2))
+        self.assertEqual(182.91, round(order_net, 2))

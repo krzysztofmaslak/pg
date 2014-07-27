@@ -1,9 +1,9 @@
 from datetime import date
+from pg.util import sanitizer
+
 __author__ = 'xxx'
 
 from pg import model
-
-
 
 class OfferService:
     dictionary = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "A", "S", "D", "F", "G", "H", "J", "K", "L", "Z", "X", "C", "V", "B", "N", "M", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
@@ -63,7 +63,7 @@ class OfferService:
         if o.status==0:
             o.hash = self.generate_hash()
         o.status = 1
-        o.title = offer_dto.title
+        o.title = sanitizer.html_to_text(offer_dto.title)
         o.currency = offer_dto.currency
         if o.items is not None and len(o.items.all())>0:
             for item in o.items:
@@ -74,7 +74,7 @@ class OfferService:
             for item in o.items:
                 offer_item_dto = self.find_item_by_id(item.id, offer_dto.items)
                 if offer_item_dto is not None:
-                    item.title = offer_item_dto.title
+                    item.title = sanitizer.html_to_text(offer_item_dto.title)
                     item.status = 1
 
                     item.multivariate = offer_item_dto.multivariate

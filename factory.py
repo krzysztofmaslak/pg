@@ -22,6 +22,7 @@ class ServiceFactory:
             'paypal.url':'https://www.sandbox.paypal.com',
             'address.www':'https://www.justsale.it',
             'registration_email':'sales@justsale.it',
+            'purchase_confirmation_email':'sales@justsale.it',
             'contact_email':'contact@justsale.it',
             'no_reply':'no-reply@justsale.it',
             'SKIP_ACCOUNT_ACTIVATION':True,
@@ -84,3 +85,6 @@ class ServiceFactory:
 
     def new_withdrawal_service(self):
         return service.WithdrawService(self)
+
+    def new_event_service(self):
+        return service.EventService(self)

@@ -9,7 +9,7 @@ class Offer(base.db.Model, base.JsonSerializable):
     id = base.db.Column(base.db.Integer, primary_key=True)
     creation_date = base.db.Column(base.db.DateTime)
     title = base.db.Column(base.db.String(80))
-    hash = base.db.Column(base.db.String(80))
+    hash = base.db.Column(base.db.String(15))
     status = base.db.Column(base.db.Integer)
     currency = base.db.Column(base.db.String(3))
 

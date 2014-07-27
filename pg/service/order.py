@@ -1,5 +1,7 @@
 from datetime import date
 import random
+from pg.util import sanitizer
+
 __author__ = 'xxx'
 from pg.exception import quantity_not_available
 from pg import model
@@ -15,6 +17,13 @@ class OrderService:
     def find_by_id(self, order_id):
         return model.Order.query.filter(model.Order.id == order_id).first()
 
+    def refund_order(self, order):
+        if isinstance(order, model.Order):
+            order.refund_payment = 1;
+            model.base.db.session.commit()
+        else:
+            raise TypeError("Expected Order type in OrderService.refund_order %s"%type(order))
+
     def find_paid_orders_count(self, account):
         if isinstance(account, model.Account):
             return model.Order.query.filter(model.Order.payment_status == 'Completed', model.Order.account_id == account.id).count()
@@ -23,7 +32,7 @@ class OrderService:
 
     def find_by_page(self, account, page):
         if isinstance(account, model.Account):
-            return model.Order.query.filter(model.Order.payment_status == 'Completed', model.Order.account_id == account.id).paginate(page, 10, False).items
+            return model.Order.query.filter(model.Order.payment_status == 'Completed', model.Order.account_id == account.id).order_by(model.Order.creation_date.desc()).paginate(page, 10, False).items
         else:
             raise TypeError("Expected Account type in OrderService.find_by_page %s"%type(account))
 
@@ -105,38 +114,38 @@ class OrderService:
         o.lang = payment.lang
 
         b = model.Billing()
-        b.first_name = payment.billing.first_name
-        b.last_name = payment.billing.last_name
-        b.address1 = payment.billing.address1
+        b.first_name = sanitizer.html_to_text(payment.billing.first_name)
+        b.last_name = sanitizer.html_to_text(payment.billing.last_name)
+        b.address1 = sanitizer.html_to_text(payment.billing.address1)
         if hasattr(payment.billing, 'address2'):
-            b.address2 = payment.billing.address2
+            b.address2 = sanitizer.html_to_text(payment.billing.address2)
         b.country = payment.billing.country
-        b.city = payment.billing.city
-        b.postal_code = payment.billing.postal_code
+        b.city = sanitizer.html_to_text(payment.billing.city)
+        b.postal_code = sanitizer.html_to_text(payment.billing.postal_code)
         if hasattr(payment.billing, 'county'):
-            b.county = payment.billing.county
-        b.email = payment.billing.email
+            b.county = sanitizer.html_to_text(payment.billing.county)
+        b.email = sanitizer.html_to_text(payment.billing.email)
         b.same_address = payment.billing.same_address
         o.billing.append(b)
 
         if payment.shipping is not None and b.same_address == False:
             s = model.Shipping()
-            s.first_name = payment.shipping.first_name
-            s.last_name = payment.shipping.last_name
-            s.address1 = payment.shipping.address1
+            s.first_name = sanitizer.html_to_text(payment.shipping.first_name)
+            s.last_name = sanitizer.html_to_text(payment.shipping.last_name)
+            s.address1 = sanitizer.html_to_text(payment.shipping.address1)
             if hasattr(payment.shipping, 'address2'):
-                s.address2 = payment.shipping.address2
+                s.address2 = sanitizer.html_to_text(payment.shipping.address2)
             s.country = payment.shipping.country
-            s.city = payment.shipping.city
-            s.postal_code = payment.shipping.postal_code
+            s.city = sanitizer.html_to_text(payment.shipping.city)
+            s.postal_code = sanitizer.html_to_text(payment.shipping.postal_code)
             if hasattr(payment.shipping, 'county'):
-                s.county = payment.shipping.county
+                s.county = sanitizer.html_to_text(payment.shipping.county)
             if hasattr(payment.shipping, 'email'):
-                s.email = payment.shipping.email
+                s.email = sanitizer.html_to_text(payment.shipping.email)
             if hasattr(payment.shipping, 'company'):
-                s.company = payment.shipping.company
+                s.company = sanitizer.html_to_text(payment.shipping.company)
             if hasattr(payment.shipping, 'phone_number'):
-                s.phone_number = payment.shipping.phone_number
+                s.phone_number = sanitizer.html_to_text(payment.shipping.phone_number)
             o.shipping.append(s)
         offer_service = self.ioc.new_offer_service()
         offer = offer_service.find_by_id(payment.offer_id)
@@ -147,7 +156,7 @@ class OrderService:
         o.account_id = offer.account_id
         # validate requested availability
         for item_dto in payment.items:
-            if hasattr(item_dto, 'variations') and len(item_dto.variations)!=0:
+            if hasattr(item_dto, 'variation_id'):
                 item = self.find_item_by_id(offer.items, item_dto.id)
                 if item is not None and item.status==1:
                     variations = []
@@ -155,16 +164,15 @@ class OrderService:
                     if hasattr(item, 'shipping_additional'):
                         oi.shipping_additional = item.shipping_additional
                     oi.multivariate = item.multivariate
-                    for item_var_dto in item_dto.variations:
-                        item_variation = self.find_item_by_id(item.variations, item_var_dto.id)
-                        if item_variation is not None and item_variation.status==1 and item_variation.id==item_dto.selection:
-                            if item_dto.quantity>item_variation.quantity:
-                                raise quantity_not_available.QuantityNotAvailable("Trying to buy more products then are available")
-                            else:
-                                oiv = model.OrderItemVariation(oi, item_variation.title, item_dto.quantity, item_variation.net, item_variation.tax, item_variation.shipping)
-                                if hasattr(item_variation, 'shipping_additional'):
-                                    oiv.shipping_additional = item_variation.shipping_additional
-                                variations.append(oiv)
+                    item_variation = self.find_item_by_id(item.variations, item_dto.variation_id)
+                    if item_variation is not None and item_variation.status==1 and item_variation.id==item_dto.selection:
+                        if item_dto.quantity>item_variation.quantity:
+                            raise quantity_not_available.QuantityNotAvailable("Trying to buy more products then are available")
+                        else:
+                            oiv = model.OrderItemVariation(oi, item_variation.title, item_dto.quantity, item_variation.net, item_variation.tax, item_variation.shipping)
+                            if hasattr(item_variation, 'shipping_additional'):
+                                oiv.shipping_additional = item_variation.shipping_additional
+                            variations.append(oiv)
                     oi.variations = variations
                     o.items.append(oi)
                 else:

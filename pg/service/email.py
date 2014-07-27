@@ -3,7 +3,7 @@ import traceback
 from flask import render_template
 from flask.ext.mail import Message
 from werkzeug.security import generate_password_hash
-from pg import model
+from pg import model, resource_bundle
 
 __author__ = 'krzysztof.maslak'
 
@@ -94,15 +94,15 @@ class PurchaseConfirmationEmailHandler(EmailHandler):
                             else:
                                 shipping = shipping + iv.shipping
                     if order.offer.currency!=order.currency:
-                        basket_items.append({'index':(i+1), 'title':item.title+'('+iv.title+')', 'quantity':iv.quantity, 'value':self.ioc.new_currency_service().convert(order.currency, itotal)})
+                        basket_items.append({'index':(i+1), 'title':item.title+'('+iv.title+')', 'quantity':iv.quantity, 'value': round(self.ioc.new_currency_service().convert(order.currency, itotal), 2)})
                     else:
-                        basket_items.append({'index':(i+1), 'title':item.title+'('+iv.title+')', 'quantity':iv.quantity, 'value': itotal})
+                        basket_items.append({'index':(i+1), 'title':item.title+'('+iv.title+')', 'quantity':iv.quantity, 'value': round(itotal, 2)})
                     i = i+1
             else:
                 if order.offer.currency!=order.currency:
-                    basket_items.append({'index':(i+1), 'title':item.title, 'quantity':item.quantity,'value':self.ioc.new_currency_service().convert(order.currency, (item.quantity*(item.net+item.tax)))})
+                    basket_items.append({'index':(i+1), 'title':item.title, 'quantity':item.quantity,'value': round(self.ioc.new_currency_service().convert(order.currency, (item.quantity*(item.net+item.tax))), 2)})
                 else:
-                    basket_items.append({'index':(i+1), 'title':item.title, 'quantity':item.quantity, 'value':(item.quantity*(item.net+item.tax))})
+                    basket_items.append({'index':(i+1), 'title':item.title, 'quantity':item.quantity, 'value':round((item.quantity*(item.net+item.tax)), 2)})
                 if item.quantity==1:
                     shipping = shipping + item.shipping
                 else:
@@ -112,7 +112,13 @@ class PurchaseConfirmationEmailHandler(EmailHandler):
                         else:
                             shipping = shipping + item.shipping
                 i = i+1
-        email.html = render_template('emails/'+email.language+'/purchase-confirmation.html',
+        if order.offer.currency!=order.currency:
+            basket_items.append({'index':(i+1), 'title':resource_bundle.ResourceBundle().get_text(order.lang, "shipping"), 'value':round(self.ioc.new_currency_service().convert(order.currency, shipping), 2)})
+        else:
+            basket_items.append({'index':(i+1), 'title':resource_bundle.ResourceBundle().get_text(order.lang, "shipping"), 'value':round(shipping, 2)})
+
+        msg = Message(email.subject, sender= email.from_address, recipients= [email.to_address])
+        msg.html = render_template('emails/'+email.language+'/purchase-confirmation.html',
                                      order_number = order.order_number,
                                      creation_date = order.creation_date,
                                      email = order.billing[0].email,
@@ -127,8 +133,8 @@ class PurchaseConfirmationEmailHandler(EmailHandler):
                                      shipment_city = shipment_city,
                                      items= basket_items
                                      )
-        self.logger.debug('Purchase confirmation: %s'%email.html)
-        self.send(email)
+        self.logger.debug('Purchase confirmation: %s'%msg.html)
+        self.send(msg)
 
 class EmailService:
 

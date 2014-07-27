@@ -271,6 +271,28 @@ angular.module('hh.controllers', [])
     .controller('SettingsCtrl', ['$scope', '$routeParams', '$location', 'jaxrs', function ($scope, $routeParams, $location, jaxrs) {
 
     }])
+    .controller('EventCtrl', ['$scope', '$routeParams', '$location', 'jaxrs', function ($scope, $routeParams, $location, jaxrs) {
+        $scope.months = [];
+        var initMonthsNavigation = function() {
+            var current = new Date();
+            var currentyear = current.getFullYear();
+            var currenmonth = current.getMonth();
+            for(var i=0;i++;i<3) {
+                if ( currenmonth<9 ) {
+                    $scope.months[$scope.months.length] = '0'+(currenmonth+1)+'-'+currentyear;
+                } else {
+                    $scope.months[$scope.months.length] = (currenmonth+1)+'-'+currentyear;
+                }
+                currenmonth--;
+                if (currenmonth<0) {
+                    currenmonth=11;
+                    currentyear--;
+                }
+            }
+            $scope.months.reverse();
+        };
+        initMonthsNavigation();
+    }])
     .controller('OrderCtrl', ['$scope', '$routeParams', '$location', 'jaxrs', function ($scope, $routeParams, $location, jaxrs) {
         $scope.orders = [];
         $scope.errors = [];
@@ -301,6 +323,15 @@ angular.module('hh.controllers', [])
                 $scope.orders = response.orders;
             });
         };
+        $scope.refund = function(order) {
+            if (confirm(messages.order_list_refund_confirm)) {
+                jaxrs.create('order/refund', {id:order.id} , function (response, status) {
+                    if ( status==200 ) {
+                        order.refund_payment = 1;
+                    }
+                });
+            }
+        }
         $scope.show = function(order) {
             $scope.order = order;
             var items = [];
@@ -382,7 +413,7 @@ angular.module('hh.controllers', [])
             }
         };
         $scope.delete = function (id) {
-            if (confirm("Are you sure you want to delete")) {
+            if (confirm(messages.offer_list_delete_confirm)) {
                 if ( $scope.offer && $scope.offer.id==id ) {
                     $scope.offer = null;
                 }
@@ -521,13 +552,13 @@ angular.module('hh.controllers', [])
         $scope.payment = {month:'', year:''};
         $scope.countries = [{code:'', label:'Country'}];
         $scope.offer = null;
-        $scope.quantityMissing = false;
         $scope.paymentAccepted = false;
+        $scope.shoppingCart = {items:[]};
         $scope.url = $location.absUrl();
-        $scope.url = $scope.url.substring($scope.url.lastIndexOf('/x/')+3);
         if ( $scope.url.indexOf('#')!=-1 ) {
             $scope.url = $scope.url.substring(0, $scope.url.indexOf('#'));
         }
+        $scope.url = $scope.url.substring($scope.url.lastIndexOf('/')+1);
         jaxrs.query('offer/'+$scope.url, null, function (response) {
             $scope.offer = response;
             jq('#clientCurrency').val($scope.offer.currency);
@@ -558,6 +589,35 @@ angular.module('hh.controllers', [])
         });
         for(var i=0;i<window.countries.length;i++) {
             $scope.countries[$scope.countries.length] = {code:window.countries[i].code, label:messages['country_'+window.countries[i].code]};
+        }
+        $scope.addToCart = function(item) {
+            if ( item.quantity>0 ) {
+                $scope.shoppingCartEmpty = false;
+                if (item.multivariate) {
+                    for (var i = 0; i < item.variations.length; i++) {
+                        if (item.variations[i].id == item.selection) {
+                            $scope.shoppingCart.items[$scope.shoppingCart.items.length] = {id: item.id, title: item.title, quantity: item.quantity, tax: item.variations[i].tax, net: item.variations[i].net, shipping: item.variations[i].shipping, shipping_additional: item.variations[i].shipping_additional, variation_id: item.variations[i].id, variation_title: item.variations[i].title, selection: item.selection};
+                        }
+                    }
+                } else {
+                    $scope.shoppingCart.items[$scope.shoppingCart.items.length] = {id: item.id, title: item.title, quantity: item.quantity, tax: item.tax, net: item.net, shipping: item.shipping, shipping_additional: item.shipping_additional}
+                }
+            }
+        };
+        $scope.removeFromCart = function(item) {
+            for(var i=0;i<$scope.shoppingCart.items.length;i++) {
+                if ( $scope.shoppingCart.items[i].id==item.id ) {
+                   if ( item.variation_id ) {
+                       if ( $scope.shoppingCart.items[i].variation_id==item.variation_id ) {
+                           $scope.shoppingCart.items.splice(i, 1);
+                           return;
+                       }
+                   } else {
+                       $scope.shoppingCart.items.splice(i, 1);
+                       return;
+                   }
+                }
+            }
         }
         $scope.billing = {same_address:true, country:''};
         $scope.shipping = null;
@@ -600,34 +660,21 @@ angular.module('hh.controllers', [])
         };
         $scope.subtotalNet = function() {
             var net = 0;
-            if ( $scope.payment.items ) {
-                for(var i=0;i<$scope.payment.items.length;i++) {
-                    if ( $scope.payment.items[i].variations ) {
-                        for(var j=0;j<$scope.payment.items[i].variations.length;j++) {
-                            if ( $scope.payment.items[i].variations[j].id==$scope.payment.items[i].selection ) {
-                                net += ($scope.payment.items[i].quantity*$scope.payment.items[i].variations[j].net);
-                            }
-                        }
-                    } else {
-                        net += ($scope.payment.items[i].quantity*$scope.payment.items[i].net);
-                    }
+            if ( $scope.shoppingCart.items ) {
+                for(var i=0;i<$scope.shoppingCart.items.length;i++) {
+                    net += ($scope.shoppingCart.items[i].quantity*$scope.shoppingCart.items[i].net);
                 }
             }
             return net;
         };
+        $scope.subtotal = function() {
+            return $scope.subtotalNet()+$scope.subtotalTax();
+        }
         $scope.subtotalTax = function() {
             var tax = 0;
-            if ( $scope.payment.items ) {
-                for(var i=0;i<$scope.payment.items.length;i++) {
-                    if ( $scope.payment.items[i].variations ) {
-                        for(var j=0;j<$scope.payment.items[i].variations.length;j++) {
-                            if ( $scope.payment.items[i].variations[j].id==$scope.payment.items[i].selection ) {
-                                tax += ($scope.payment.items[i].quantity*$scope.payment.items[i].variations[j].tax);
-                            }
-                        }
-                    } else {
-                        tax += ($scope.payment.items[i].quantity*$scope.payment.items[i].tax);
-                    }
+            if ( $scope.shoppingCart.items ) {
+                for(var i=0;i<$scope.shoppingCart.items.length;i++) {
+                    tax += ($scope.shoppingCart.items[i].quantity*$scope.shoppingCart.items[i].tax);
                 }
             }
             return tax;
@@ -647,32 +694,15 @@ angular.module('hh.controllers', [])
         }
         $scope.shippingCost = function() {
             var shipping = 0;
-            if ( $scope.payment.items ) {
-                for (var i = 0; i < $scope.payment.items.length; i++) {
-                    if ($scope.payment.items[i].variations) {
-                        for (var j = 0; j < $scope.payment.items[i].variations.length; j++) {
-                            if ($scope.payment.items[i].variations[j].id==$scope.payment.items[i].selection && $scope.payment.items[i].quantity > 0) {
-                                shipping += $scope.payment.items[i].variations[j].shipping;
-                                if ($scope.payment.items[i].quantity>1 ) {
-                                    for (var q = 1; q < $scope.payment.items[i].quantity; q++) {
-                                        if ( $scope.payment.items[i].variations[j].shipping_additional ) {
-                                            shipping += $scope.payment.items[i].variations[j].shipping_additional;
-                                        } else {
-                                            shipping += $scope.payment.items[i].variations[j].shipping;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    } else if ($scope.payment.items[i].quantity > 0) {
-                        shipping += $scope.payment.items[i].shipping;
-                        if ($scope.payment.items[i].quantity > 1) {
-                            for (var q = 1; q < $scope.payment.items[i].quantity; q++) {
-                                if ( $scope.payment.items[i].shipping_additional ) {
-                                    shipping += $scope.payment.items[i].shipping_additional;
-                                } else {
-                                    shipping += $scope.payment.items[i].shipping;
-                                }
+            if ( $scope.shoppingCart.items ) {
+                for (var i = 0; i < $scope.shoppingCart.items.length; i++) {
+                    shipping += $scope.shoppingCart.items[i].shipping;
+                    if ($scope.shoppingCart.items[i].quantity > 1) {
+                        for (var q = 1; q < $scope.shoppingCart.items[i].quantity; q++) {
+                            if ( $scope.shoppingCart.items[i].shipping_additional ) {
+                                shipping += $scope.shoppingCart.items[i].shipping_additional;
+                            } else {
+                                shipping += $scope.shoppingCart.items[i].shipping;
                             }
                         }
                     }
@@ -687,7 +717,6 @@ angular.module('hh.controllers', [])
             item.quantity = item.quantity - 1;
         };
         $scope.increaseItemQuantity = function(item) {
-            $scope.quantityMissing = false;
             item.quantity = item.quantity + 1;
         };
         $scope.paypaylPayment = function(orderId) {
@@ -783,7 +812,7 @@ angular.module('hh.controllers', [])
                     offer_id: $scope.offer.id,
                     lang: window.language,
                     subscribe: $scope.subscribe,
-                    items: $scope.payment.items,
+                    items: $scope.shoppingCart.items,
                     billing: $scope.billing,
                     shipping: $scope.shipping,
                     payment_method: method,
@@ -791,8 +820,8 @@ angular.module('hh.controllers', [])
                     country: window.client_country
                 });
             } else {
-                if ( $scope.total()<=0 ) {
-                    $scope.quantityMissing = true;
+                if ( $scope.shoppingCart.items.length==0 ) {
+                    $scope.shoppingCartEmpty = true;
                 }
                 setTimeout(function(){
                     var top = 100000;

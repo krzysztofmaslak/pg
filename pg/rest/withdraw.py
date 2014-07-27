@@ -1,6 +1,7 @@
 import json
 from pg import model
 from pg.rest import base
+from pg.util.http_utils import get_customer_ip
 
 __author__ = 'xxx'
 
@@ -19,7 +20,7 @@ def balance():
 @withdraw.route('/request', methods=['POST'])
 @base.authenticated
 def request_withdrawal():
-    withdraw.logger.debug('['+request.remote_addr+'] processing withdrawal request for user %s'%(session['username']))
+    withdraw.logger.debug('['+get_customer_ip()+'] processing withdrawal request for user %s'%(session['username']))
     user = withdraw.ioc.new_user_service().find_by_username(session['username'])
     amount = request.json['amount']
     iban = request.json['iban']
@@ -32,7 +33,7 @@ def request_withdrawal():
         js = { "balance" : user.account.balance, "withdrawals" : [o.as_json() for o in user.account.withdrawals] }
         return Response(json.dumps(js),  mimetype='application/json', status=200)
     else:
-        withdraw.logger.debug('['+request.remote_addr+'] not enough funds to make withdrawal for user %s'%(session['username']))
+        withdraw.logger.debug('['+get_customer_ip()+'] not enough funds to make withdrawal for user %s'%(session['username']))
         messages = resource_bundle.ResourceBundle()
         js = { "msg" : messages.get_text(user.account.lang, 'not_enough_funds')}
         return Response(json.dumps(js),  mimetype='application/json', status=400)

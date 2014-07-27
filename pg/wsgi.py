@@ -11,6 +11,7 @@ from wtforms import Form, TextField, PasswordField
 from werkzeug.security import check_password_hash, generate_password_hash
 from wtforms.fields.html5 import EmailField
 from pg import resource_bundle
+from pg.util.http_utils import get_customer_ip
 
 __author__ = 'xxx'
 
@@ -117,20 +118,6 @@ def detect_language():
         else:
             return lang
 
-@wsgi_blueprint.route('/x/<offer_code>', methods=['GET'])
-def show_offer(offer_code):
-    messages = resource_bundle.ResourceBundle()
-    lang = detect_language()
-    wsgi_blueprint.logger.info('['+request.remote_addr+'] loading offer page by hash: %s'%offer_code)
-    offer = wsgi_blueprint.ioc.new_offer_service().find_by_hash(offer_code)
-    return render_template('offer.html',
-                           messages=messages.get_all(lang),
-                           language = lang,
-                           title=offer.title,
-                           countries = [c.as_json() for c in wsgi_blueprint.ioc.new_country_service().find_all()],
-                           project_version=wsgi_blueprint.ioc.get_config()['PROJECT_VERSION'],
-                           stripe_publishable=wsgi_blueprint.ioc.get_config()['stripe.publishable'])
-
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif', 'PNG', 'JPG', 'JPEG', 'GIF'])
 
 def allowed_file(filename):
@@ -155,12 +142,12 @@ def index():
 
 @wsgi_blueprint.route('/api/image/<target>/<id>', methods=['POST'])
 def upload_image(target, id):
-    wsgi_blueprint.logger.info('['+request.remote_addr+'] Starting image upload')
+    wsgi_blueprint.logger.info('['+get_customer_ip()+'] Starting image upload')
     try:
         file = request.files['file']
-        wsgi_blueprint.logger.info('['+request.remote_addr+'] Starting image upload file=%s'%file.filename)
+        wsgi_blueprint.logger.info('['+get_customer_ip()+'] Starting image upload file=%s'%file.filename)
         if file and allowed_file(file.filename):
-            wsgi_blueprint.logger.debug('['+request.remote_addr+'] image extenssion allowed')
+            wsgi_blueprint.logger.debug('['+get_customer_ip()+'] image extenssion allowed')
             filename = secure_filename(file.filename)
             mkdirs(wsgi_blueprint.ioc.get_config()['UPLOAD_FOLDER']+'/'+target)
             file.save(wsgi_blueprint.ioc.get_config()['UPLOAD_FOLDER']+'/'+target+'/'+id+'.png')
@@ -175,7 +162,7 @@ def upload_image(target, id):
                 print("cannot create thumbnail for '%s'" % filename)
                 return Response(status=500)
         else:
-            wsgi_blueprint.logger.debug('['+request.remote_addr+'] extenssion not allowed filename=%s'%file.filename)
+            wsgi_blueprint.logger.debug('['+get_customer_ip()+'] extenssion not allowed filename=%s'%file.filename)
             return Response(status=400)
     except:
         traceback.print_exc(file=sys.stdout)
@@ -188,7 +175,7 @@ def login():
     activation_hash = request.args.get('h')
     email_hash = request.args.get('e')
     if activation_hash is not None and email_hash is not None:
-        wsgi_blueprint.logger.info('['+request.remote_addr+'] Starting user activation with h=%s,e=%s'%(activation_hash, email_hash))
+        wsgi_blueprint.logger.info('['+get_customer_ip()+'] Starting user activation with h=%s,e=%s'%(activation_hash, email_hash))
         user = wsgi_blueprint.ioc.new_user_service().find_by_activation_hash(activation_hash)
         if user is not None:
             if hashlib.sha224(user.username.encode('utf-8')).hexdigest()==email_hash:
@@ -197,11 +184,11 @@ def login():
                 session['username'] = user.username
                 return redirect('/admin/')
             else:
-                wsgi_blueprint.logger.info('['+request.remote_addr+'] Failed activation, email hash not equal was: %s, expected: %s'%(hashlib.sha224(user.username.encode('utf-8')).hexdigest(), email_hash))
+                wsgi_blueprint.logger.info('['+get_customer_ip()+'] Failed activation, email hash not equal was: %s, expected: %s'%(hashlib.sha224(user.username.encode('utf-8')).hexdigest(), email_hash))
                 # todo handle when hash not equal
         else:
             # todo handle when user is null
-            wsgi_blueprint.logger.info('['+request.remote_addr+'] Failed activation, no user for given hash:%s'%activation_hash)
+            wsgi_blueprint.logger.info('['+get_customer_ip()+'] Failed activation, no user for given hash:%s'%activation_hash)
             pass
     return render_template('main.html',
        project_version=wsgi_blueprint.ioc.get_config()['PROJECT_VERSION'],
@@ -213,7 +200,7 @@ def login():
 def register():
     messages = resource_bundle.ResourceBundle()
     lang = detect_language()
-    wsgi_blueprint.logger.info('['+request.remote_addr+'] Detected customer language %s'%(lang))
+    wsgi_blueprint.logger.info('['+get_customer_ip()+'] Detected customer language %s'%(lang))
     return render_template('main.html',
        project_version=wsgi_blueprint.ioc.get_config()['PROJECT_VERSION'],
        messages=messages.get_all(lang),
@@ -280,3 +267,21 @@ def admin_landing():
                            messages=messages.get_all(user.account.lang),
                            countries = [c.as_json() for c in wsgi_blueprint.ioc.new_country_service().find_all()],
                            project_version=wsgi_blueprint.ioc.get_config()['PROJECT_VERSION'])
+
+@wsgi_blueprint.route('/<path:path>', methods=['GET'])
+def fallback(path):
+    offer = wsgi_blueprint.ioc.new_offer_service().find_by_hash(path)
+    if offer is not None:
+        messages = resource_bundle.ResourceBundle()
+        lang = detect_language()
+        wsgi_blueprint.logger.info('['+get_customer_ip()+'] loading offer page by hash: %s'%path)
+        wsgi_blueprint.ioc.new_event_service().persist(model.Event(get_customer_ip(), offer.account, path))
+        return render_template('offer.html',
+               messages=messages.get_all(lang),
+               language = lang,
+               title=offer.title,
+               countries = [c.as_json() for c in wsgi_blueprint.ioc.new_country_service().find_all()],
+               project_version=wsgi_blueprint.ioc.get_config()['PROJECT_VERSION'],
+               stripe_publishable=wsgi_blueprint.ioc.get_config()['stripe.publishable'])
+    else:
+        return Response(status=404)

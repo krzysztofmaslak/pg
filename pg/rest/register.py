@@ -3,11 +3,12 @@ import json
 import uuid
 from werkzeug.security import generate_password_hash
 from pg import model, resource_bundle
+from pg.util.http_utils import get_customer_ip
 from pg.wsgi import detect_language
 
 __author__ = 'xxx'
 
-from flask import Blueprint, Response
+from flask import Blueprint, Response, session
 from flask import request
 
 register_rest = Blueprint('register', __name__, url_prefix='/rest/register')
@@ -15,7 +16,7 @@ register_rest = Blueprint('register', __name__, url_prefix='/rest/register')
 @register_rest.route('/', methods=['POST'])
 def register():
     username = request.json['username']
-    register_rest.logger.info('['+request.remote_addr+'] Processing registration request')
+    register_rest.logger.info('['+get_customer_ip()+'] Processing registration request')
     user = register_rest.ioc.new_user_service().find_by_username(username)
     lang = detect_language()
     messages = resource_bundle.ResourceBundle()
@@ -50,10 +51,10 @@ def register():
             u.active = True
             session['username'] = u.username
         model.base.db.session.commit()
-        login_blueprint.logger.info('['+request.remote_addr+'] Registration successful')
+        register_rest.logger.info('['+get_customer_ip()+'] Registration successful')
 
-        return Response(json.dumps({"success_message": success_message, 'skip_activation':self.ioc.get_config()['SKIP_ACCOUNT_ACTIVATION']}),  status=200, mimetype='application/json')
+        return Response(json.dumps({"success_message": success_message, 'skip_activation':register_rest.ioc.get_config()['SKIP_ACCOUNT_ACTIVATION']}),  status=200, mimetype='application/json')
     else:
-        register_rest.logger.info('['+request.remote_addr+'] Registration failed, user already exist')
+        register_rest.logger.info('['+get_customer_ip()+'] Registration failed, user already exist')
         error_message = messages.get_text(lang, 'register_user_already_exist')
         return Response(json.dumps({"error_message": error_message}),  status=409, mimetype='application/json')

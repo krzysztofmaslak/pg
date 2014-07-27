@@ -41,7 +41,7 @@ class PaymentProcessorService:
         admin_confirmation_email_subject = resource_bundle.ResourceBundle().get_text(order.offer.account.lang, 'admin_confirmation_email_subject')
         admin_email = model.Email()
         admin_email.type = 'PURCHASE_CONFIRMATION_ADMIN'
-        admin_email.from_address = ps.find_value_by_code(order.offer.account, 'sales.email')
-        admin_email.to_address = ps.find_value_by_code(order.offer.account, 'sales.email')
+        admin_email.from_address = self.ioc.get_config()['no_reply']
+        admin_email.to_address = self.ioc.get_config()['purchase_confirmation_email']
         admin_email.subject = admin_confirmation_email_subject.format(order.order_number, str(ioc.new_order_service().find_order_total(order)))
         self.ioc.new_email_service().save(admin_email)

@@ -4,6 +4,7 @@ from urllib.request import urlopen
 import requests
 from pg import resource_bundle, model
 from pg.util import security
+from pg.util.http_utils import get_customer_ip
 
 __author__ = 'krzysztof.maslak'
 from flask import Blueprint, Response
@@ -12,7 +13,7 @@ paypal_success = Blueprint('paypal_success', __name__, url_prefix='/paypal_succe
 
 @paypal_success.route('/', methods=['GET'])
 def process_success():
-    paypal_success.logger.info('['+request.remote_addr+'] Paypal success')
+    paypal_success.logger.info('['+get_customer_ip()+'] Paypal success')
     # TODO implement payment-successful.html
     return redirect('/payment-successful.html')
 
@@ -135,7 +136,7 @@ def process_ip():
 @paypal_init.route('/', methods=['GET'])
 def process_init():
     order_id = request.args.get('order_id')
-    paypal_init.logger.info('['+request.remote_addr+'] Paypal init [order_id:'+order_id+']')
+    paypal_init.logger.info('['+get_customer_ip()+'] Paypal init [order_id:'+order_id+']')
     order = paypal_init.ioc.new_order_service().find_by_id(int(order_id))
     payment_reference = security.Security().encrypt(str(order.id)+"#"+order.order_number)
     i = 0
@@ -183,6 +184,6 @@ def process_init():
     seller = paypal_init.ioc.get_config()['paypal.seller']
     paypal_url = paypal_init.ioc.get_config()['paypal.url']
     ipn_host = paypal_init.ioc.get_config()['address.www']
-    paypal_init.logger.info('['+request.remote_addr+'] Paypal generating html [order_id:'+order_id+']')
+    paypal_init.logger.info('['+get_customer_ip()+'] Paypal generating html [order_id:'+order_id+']')
     return paypal_init.ioc.new_paypal_service().generate_init_html(order, payment_reference, basket_items, ipn_host, seller, paypal_url)
 

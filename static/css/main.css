@@ -180,3 +180,12 @@ input[type="password"].fieldError, input[type="text"].fieldError, input[type="em
 .actionNav {
     margin-top:10px;
 }
+.accountBalance {
+    margin-bottom:10px;
+}
+#withdrawForm .btn {
+    margin-top:6px;
+}
+#withdrawForm label {
+    margin-bottom:0px;padding-bottom: 0px;
+}

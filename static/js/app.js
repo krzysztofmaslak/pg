@@ -70,6 +70,7 @@ angular.module('pgadminapp', ['ngRoute', 'hh.filters', 'hh.services', 'hh.direct
         $routeProvider.when('/offers',      {templateUrl: '/static/${pom.version}/partials/admin/offer.html'});
         $routeProvider.when('/orders',      {templateUrl: '/static/${pom.version}/partials/admin/order.html'});
         $routeProvider.when('/withdraw',      {templateUrl: '/static/${pom.version}/partials/admin/withdraw.html'});
+        $routeProvider.when('/traffic',      {templateUrl: '/static/${pom.version}/partials/admin/traffic.html'});
         $routeProvider.otherwise({redirectTo: '/offers'});
 	}]);
 angular.module('pgapp', ['ngRoute', 'hh.filters', 'hh.services', 'hh.directives', 'hh.controllers', 'ui.bootstrap.modal']).

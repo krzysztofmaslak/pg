@@ -11,8 +11,9 @@ DEFAULT_BLUEPRINTS = [
     rest.offer_item,
     rest.offer_item_variation,
     rest.payment,
+    rest.event_blueprint,
     rest.login_blueprint,
-    rest.order,
+    rest.order_blueprint,
     rest.password_blueprint,
     rest.register_rest,
     rest.withdraw,
@@ -66,9 +67,10 @@ class App:
         app.debug = self.ioc.get_config()['IS_DEBUG']
         if str(app.debug)==str(False):
             import logging
-            logging.basicConfig(level=logging.DEBUG, format='%(name)-14s > [%(levelname)s] [%(asctime)s] : %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+            logging.basicConfig(level=logging.DEBUG, format='%(name)-1s > [%(levelname)s] [%(asctime)s] : %(message)s')
             from logging.handlers import TimedRotatingFileHandler
             file_handler = TimedRotatingFileHandler("web.log", when='D')
+            file_handler.setFormatter(logging.Formatter('%(name)-1s > [%(levelname)s] [%(asctime)s] : %(message)s'))
             file_handler.setLevel(logging.DEBUG)
             app.logger.addHandler(file_handler)
         self.ioc.logger = app.logger

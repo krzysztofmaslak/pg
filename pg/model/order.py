@@ -15,6 +15,7 @@ class Order(base.db.Model, base.JsonSerializable):
     payment_status = base.db.Column(base.db.String(20))
     delivery_status = base.db.Column(base.db.String(20))
     order_number = base.db.Column(base.db.String(10))
+    refund_payment = base.db.Column(base.db.INT)
     total = base.db.Column(base.db.Float)
     fee = base.db.Column(base.db.Float)
     billing = base.db.relationship('Billing', backref='order', lazy='dynamic')
@@ -29,6 +30,7 @@ class Order(base.db.Model, base.JsonSerializable):
     def __init__(self):
         self.creation_date=datetime.datetime.now()
         self.confirmation_email = 0
+        self.refund_payment = 0
 
     def __eq__(self, other):
         print("Calling order eq %s"%(isinstance(other, self.__class__) and self.id==other.id))

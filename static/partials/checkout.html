@@ -37,24 +37,24 @@
                             <h2 class="order-summary-heading">{{ messages['order_summary'] }}</h2>
 
                             <ul class="cart-items media-list">
-                                <li ng-repeat="item in payment.items" class="ng-scope" x-ng-controller="ItemSelectionCtrl">
+                                <li ng-repeat="item in payment.items" ng-if="!paymentAccepted" class="ng-scope" x-ng-controller="ItemSelectionCtrl">
                                     <div>
                                         <div class="media">
+                                            <div class="media-heading">
+                                                <div class="product-title">
+                                                    <strong class="ng-binding">
+                                                        <span>{{ item.title }}</span>
+                                                    </strong>
+                                                </div>
+                                                <div class="cart-item-price">
+                                                    <div class="ng-binding">{{ formatCurrency(itemPrice(item)) }}</div>
+                                                </div>
+                                            </div>
                                             <div class="media-wrapper" style="width:104px;margin:4px;float:left;">
                                                 <img class="media-object" ng-src="{{ defaultImage(item) }}" style="width:100px"/>
                                             </div>
                                             <div class="media-body">
                                                 <div class="cart-item-title">
-                                                    <div class="media-heading">
-                                                        <div class="product-title">
-                                                            <strong class="ng-binding">
-                                                                <span>{{ item.title }}</span>
-                                                            </strong>
-                                                        </div>
-                                                        <div class="cart-item-price">
-                                                            <div class="ng-binding">{{ formatCurrency(itemPrice(item)) }}</div>
-                                                        </div>
-                                                    </div>
                                                     <div class="cart-units" ng-show="item.available>1">
                                                         <div class="cart-item-quantity clearfix">
                                                             <div class="cart-item-label"
@@ -62,19 +62,16 @@
                                                             <div class="page-up-down">
                                                                 <button type="button" ng-show="item.quantity!=0" class="decreaseQuantity"
                                                                         id="decreaseQuantity" ng-click="decreaseItemQuantity(item)"
-                                                                        ng-if="!paymentAccepted"
                                                                         style="background: url('/static/${pom.version}/img/button_arrow_bottom.png') no-repeat scroll left top transparent;border: medium none;cursor: pointer;height: 26px;width: 26px;float: left;margin-left: 2px;overflow: hidden;text-indent: -100px;">
                                                                     -
                                                                 </button>
                                                                 <input value="{{ item.quantity }}" ng-disabled="true"
                                                                        id="userSelectionQuantity" name="userSelectionQuantity"
-                                                                       class="itemQuantity"
-                                                                       ng-class="{'itemQuantityOk': !quantityMissing, 'itemQuantityErr': quantityMissing}"
+                                                                       class="itemQuantity itemQuantityOk"
                                                                        style="-moz-border-bottom-colors: none;-moz-border-image: none;-moz-border-left-colors: none;-moz-border-right-colors: none;-moz-border-top-colors: none;float: left;font-size: 1.091em;margin: 0 3px;padding: 4px 0 !important;text-align: center;width: 24px;height:16px;"
                                                                        spellcheck="false">
                                                                 <button type="button" class="increaseQuantity" id="increaseQuantity"
                                                                         ng-click="increaseItemQuantity(item)"
-                                                                        ng-if="!paymentAccepted"
                                                                         ng-show="item.quantity!=item.available"
                                                                         style="background: url('/static/${pom.version}/img/button_arrow_top.png') no-repeat scroll left top transparent;border: medium none;cursor: pointer;height: 26px;width: 26px;float: left;margin-right: 2px;overflow: hidden;text-indent: -100px;">
                                                                     +
@@ -89,23 +86,34 @@
                                                                 style="margin-top: 6px;width:95%"
                                                                 x-ng-options="obj.id as obj.title for obj in item.variations"/>
                                                     </div>
+                                                    <div class="cart-item-add">
+                                                        <button type="button" ng-click="addToCart(item);" class="btn btn-success" ng-class="{'shoppingCartEmpty': shoppingCartEmpty}">{{ messages.offer_add_to_basket }}</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </li>
                             </ul>
-                            <ul class="cart-pricing unstyled" ng-if="offer!=null">
+                            <div ng-if="shoppingCart.items.length==0">
+                                {{ messages.offer_your_basket_is_empty }}
+                            </div>
+                            <ul class="cart-items-list unstyled" ng-if="offer!=null && shoppingCart.items.length!=0">
+                                <li ng-repeat="item in shoppingCart.items">
+                                    <div class="cart-pricing-label">
+                                        {{ item.quantity }} x {{ item.title }}
+                                        <span ng-if="item.variation_title">[{{ item.variation_title }}]</span>
+                                    </div>
+                                    <div class="cart-item-remove" ng-if="!paymentAccepted">
+                                        <button class="btn btn-danger" ng-click="removeFromCart(item)">X</button>
+                                    </div>
+                                </li>
+                            </ul>
+                            <ul class="cart-pricing unstyled" ng-if="offer!=null && shoppingCart.items.length!=0">
                                 <li class="cart-pricing-subtotal">
                                     <div class="cart-pricing-label">{{ messages['subtotal'] }}</div>
-                                    <div class="ng-binding">{{ formatCurrency(subtotalNet()) }}</div>
-
+                                    <div class="ng-binding">{{ formatCurrency(subtotal()) }}</div>
                                 </li>
-                                <li>
-                                    <div class="cart-pricing-label">{{ messages['tax'] }}</div>
-                                    <div class="ng-binding">{{ formatCurrency(subtotalTax()) }}</div>
-                                </li>
-
                                 <li>
                                     <div class="cart-pricing-label">{{ messages['shipping'] }}</div>
                                     <div class="ng-binding">{{ formatCurrency(shippingCost()) }}</div>
@@ -144,6 +152,7 @@
                                                                    ng-readonly="paymentAccepted"
                                                                    placeholder="{{ messages['first_name'] }}" name="firstname" ng-model="billing.first_name"
                                                                    class="span6"
+                                                                   notags
                                                                    x-ng-model-onblur
                                                                    ng-class="{fieldError: checkoutDetailsForm.firstname.$used && checkoutDetailsForm.firstname.$invalid}"
                                                                    input-required="true">
@@ -152,6 +161,7 @@
                                                                    ng-readonly="paymentAccepted"
                                                                    placeholder="{{ messages['last_name'] }}" name="lastname" ng-model="billing.last_name"
                                                                    class="span6"
+                                                                   notags
                                                                    x-ng-model-onblur
                                                                    ng-class="{fieldError: checkoutDetailsForm.lastname.$used && checkoutDetailsForm.lastname.$invalid}"
                                                                    input-required="true">
@@ -163,6 +173,7 @@
                                                                    ng-readonly="paymentAccepted"
                                                                    placeholder="{{ messages['address_1'] }}" ng-maxlength="150" maxlength="150"
                                                                    class="span12"
+                                                                   notags
                                                                    x-ng-model-onblur
                                                                    ng-class="{fieldError: checkoutDetailsForm.address1.$used && checkoutDetailsForm.address1.$invalid}"
                                                                    input-required="true">
@@ -171,6 +182,7 @@
                                                         <div class="controls">
                                                             <input type="text" autocomplete="off" ng-model="billing.address2" name="address2"
                                                                    nullifempty
+                                                                   notags
                                                                    ng-readonly="paymentAccepted"
                                                                    placeholder="{{ messages['address_2'] }}" class="span12">
                                                         </div>
@@ -185,6 +197,7 @@
                                                             <input type="text" autocomplete="off" placeholder="{{ messages['city'] }}" ng-model="billing.city"
                                                                    name="city"
                                                                    ng-readonly="paymentAccepted"
+                                                                   notags
                                                                    x-ng-model-onblur
                                                                    nullifempty class="span6"
                                                                    ng-class="{fieldError: checkoutDetailsForm.city.$used && checkoutDetailsForm.city.$invalid}"
@@ -195,6 +208,7 @@
                                                             <input type="text" autocomplete="true" name="postal" ng-model="billing.postal_code"
                                                                    nullifempty placeholder="{{ messages['post_code'] }}" class="span6"
                                                                    ng-readonly="paymentAccepted"
+                                                                   notags
                                                                    x-ng-model-onblur
                                                                    ng-class="{fieldError: checkoutDetailsForm.postal.$used && checkoutDetailsForm.postal.$invalid}"
                                                                    input-required="true"/>
@@ -205,6 +219,7 @@
                                                                    ng-class="{fieldError: checkoutDetailsForm.county.$used && checkoutDetailsForm.county.$invalid}"
                                                                    ng-show="billing.country!=='' && billing.country!=='fr' && billing.country!=='de'"
                                                                    ng-model="billing.county" class="span6"
+                                                                   notags
                                                                    x-ng-model-onblur
                                                                    input-required="billing.country!=='' && billing.country!=='fr' && billing.country!=='de'">
                                                         </div>
@@ -215,6 +230,7 @@
                                                            nullifempty ng-model="billing.email" class="span12 email-input"
                                                            ng-readonly="paymentAccepted"
                                                            ng-class="{fieldError: checkoutDetailsForm.email.$used && checkoutDetailsForm.email.$invalid}"
+                                                           notags
                                                            x-ng-model-onblur
                                                            input-required="true"/>
                                                 </div>
@@ -250,6 +266,7 @@
                                                                    ng-model="shipping.first_name"
                                                                    nullifempty class="span6"
                                                                    ng-readonly="paymentAccepted"
+                                                                   notags
                                                                    x-ng-model-onblur
                                                                    ng-class="{fieldError: checkoutDetailsForm.sfirstname.$used && checkoutDetailsForm.sfirstname.$invalid}"
                                                                    input-required="!billing.same_address" name="sfirstname">
@@ -257,6 +274,7 @@
                                                                    ng-model="shipping.last_name"
                                                                    nullifempty class="span6"
                                                                    ng-readonly="paymentAccepted"
+                                                                   notags
                                                                    x-ng-model-onblur
                                                                    ng-class="{fieldError: checkoutDetailsForm.slastname.$used && checkoutDetailsForm.slastname.$invalid}"
                                                                    input-required="!billing.same_address" name="slastname">
@@ -265,6 +283,7 @@
                                                             <input type="text" autocomplete="off" ng-model="shipping.address1" name="saddress1"
                                                                    placeholder="{{ messages['address_1'] }}" ng-maxlength="150" maxlength="150"
                                                                    nullifempty class="span12"
+                                                                   notags
                                                                    x-ng-model-onblur
                                                                    ng-readonly="paymentAccepted"
                                                                    ng-class="{fieldError: checkoutDetailsForm.saddress1.$used && checkoutDetailsForm.saddress1.$invalid}"
@@ -273,6 +292,7 @@
     
                                                         <div class="controls">
                                                             <input type="text" nullifempty autocomplete="off" ng-model="shipping.address2" name="saddress2"
+                                                                   notags
                                                                    ng-readonly="paymentAccepted"
                                                                    placeholder="{{ messages['address_2'] }}" class="span12 ng-pristine ng-valid">
                                                         </div>
@@ -285,6 +305,7 @@
                                                                     x-ng-options="obj.code as obj.label for obj in countries">
                                                             </select>
                                                             <input type="text" nullifempty autocomplete="off" placeholder="{{ messages['city'] }}"
+                                                                   notags
                                                                    ng-readonly="paymentAccepted" x-ng-model-onblur
                                                                    ng-class="{fieldError: checkoutDetailsForm.scity.$used && checkoutDetailsForm.scity.$invalid}"
                                                                    ng-model="shipping.city" name="scity" class="span6" input-required="!billing.same_address"/>
@@ -292,6 +313,7 @@
     
                                                         <div class="controls controls-row">
                                                             <input type="text" nullifempty autocomplete="off" name="spostal" ng-model="shipping.postal_code"
+                                                                   notags
                                                                    ng-class="{fieldError: checkoutDetailsForm.spostal.$used && checkoutDetailsForm.spostal.$invalid}"
                                                                    placeholder="{{ messages['post_code'] }}"
                                                                    ng-readonly="paymentAccepted" x-ng-model-onblur
@@ -301,6 +323,7 @@
                                                                    ng-show="shipping.country!=='' && shipping.country!=='fr' && shipping.country!=='de'"
                                                                    ng-model="shipping.county" class="span6"
                                                                    ng-readonly="paymentAccepted"
+                                                                   notags
                                                                    x-ng-model-onblur
                                                                    ng-class="{fieldError: checkoutDetailsForm.scounty.$used && checkoutDetailsForm.scounty.$invalid}"
                                                                    input-required="shipping.country!=='' && shipping.country!=='fr' && shipping.country!=='de'">
@@ -309,11 +332,13 @@
                                                             <div>
                                                                 <input type="text" autocomplete="off" nullifempty name="company" ng-model="shipping.company"
                                                                        ng-readonly="paymentAccepted"
+                                                                       notags
                                                                        placeholder="{{ messages['company'] }}" class="span12 ng-pristine ng-valid">
                                                             </div>
                                                         </div>
                                                         <div class="controls controls-row">
                                                             <input type="text" autocomplete="off" nullifempty name="phoneNumber"
+                                                                   notags
                                                                    ng-readonly="paymentAccepted"
                                                                    ng-model="shipping.phone_number" placeholder="{{ messages['phone'] }}"
                                                                    class="span12 ng-pristine ng-valid">
@@ -321,6 +346,7 @@
     
                                                         <div class="controls controls-row">
                                                             <input type="email" autocomplete="off" nullifempty placeholder="{{ messages['email_opt'] }}"
+                                                                   notags
                                                                    name="semail"
                                                                    ng-readonly="paymentAccepted"
                                                                    ng-model="shipping.email" class="span12">
@@ -430,7 +456,7 @@
                                                                                 <button style="border: medium none; display: block; height: 40px; width: 184px; margin-bottom: 10px; overflow: hidden; text-align: center; color: white; background-color: #69C1E7; text-transform: uppercase;font-size:15px;margin-left:auto;margin-right:auto;margin-top:20px;"
                                                                                         class="projector_butttons_buy" id="ccPayment" ng-click="pay($event, 'cc')"
                                                                                         type="submit" ng-if="offer!=null">{{ messages['pay'] }}
-                                                                                    {{ formatCurrency(total()) }}
+                                                                                    <span ng-if="shoppingCart.items.length!=0">{{ formatCurrency(total()) }}</span>
                                                                                 </button>
                                                                             </td>
                                                                             <td id="ccPaymentWait">

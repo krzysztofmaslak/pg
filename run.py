@@ -30,7 +30,6 @@ def process_emails():
     if processing_emails:
         return
     processing_emails = True
-    app.logger.info('Process emails')
     gateway.ioc.new_email_service().process_emails()
     processing_emails = False
 

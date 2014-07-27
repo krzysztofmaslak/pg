@@ -1,5 +1,6 @@
 import hashlib
 import uuid
+from pg.util.http_utils import get_customer_ip
 
 __author__ = 'root'
 
@@ -17,7 +18,7 @@ password_blueprint = Blueprint('password', __name__, url_prefix='/rest/password'
 
 @password_blueprint.route('/reset', methods=['POST'])
 def reset():
-    password_blueprint.logger.info('['+request.remote_addr+'] Processing reset password request')
+    password_blueprint.logger.info('['+get_customer_ip()+'] Processing reset password request')
     user = password_blueprint.ioc.new_user_service().find_by_username(request.json['username'])
     messages = resource_bundle.ResourceBundle()
     if user is not None:
@@ -35,14 +36,15 @@ def reset():
         success_message = messages.get_text(user.account.lang, 'reset_password_link_info')
         return Response(json.dumps({"success_message": success_message}),  status=200, mimetype='application/json')
     else:
-        password_blueprint.logger.info('['+request.remote_addr+'] Failed to request reset password, no such user')
-        error_message = messages.get_text(user.account.lang, 'reset_password_no_email')
+        password_blueprint.logger.info('['+get_customer_ip()+'] Failed to request reset password, no such user')
+        lang = detect_language()
+        error_message = messages.get_text(lang, 'reset_password_no_email')
         return Response(json.dumps({"error_message": error_message}), status=204, mimetype='application/json')
 
 @password_blueprint.route('/new', methods=['POST'])
 def new():
     messages = resource_bundle.ResourceBundle()
-    password_blueprint.logger.info('['+request.remote_addr+'] Processing new password request')
+    password_blueprint.logger.info('['+get_customer_ip()+'] Processing new password request')
     password = request.json['password']
     if password==request.json['confirmPassword']:
         reset_hash = request.json['h']
@@ -53,15 +55,15 @@ def new():
                 user.password = generate_password_hash(password)
                 user.active = True
                 model.base.db.session.commit()
-                password_blueprint.logger.info('['+request.remote_addr+'] Authenticating after password reset')
+                password_blueprint.logger.info('['+get_customer_ip()+'] Authenticating after password reset')
                 session['username'] = user.username
                 return Response(status=200, mimetype='application/json')
             else:
-                password_blueprint.logger.info('['+request.remote_addr+'] Failed to process new password request, email hash invalid')
+                password_blueprint.logger.info('['+get_customer_ip()+'] Failed to process new password request, email hash invalid')
         else:
-            password_blueprint.logger.info('['+request.remote_addr+'] Failed to process new password request, no such user')
+            password_blueprint.logger.info('['+get_customer_ip()+'] Failed to process new password request, no such user')
     else:
-        password_blueprint.logger.info('['+request.remote_addr+'] Failed to process new password request, password mismatch confirm password')
+        password_blueprint.logger.info('['+get_customer_ip()+'] Failed to process new password request, password mismatch confirm password')
         lang = detect_language()
         error_message = messages.get_text(lang, 'new_password_mismatch')
         return Response(json.dumps({"error_message": error_message}), status=400, mimetype='application/json')

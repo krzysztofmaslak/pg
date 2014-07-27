@@ -1,6 +1,7 @@
 from collections import namedtuple
 import json
 from pg.rest import base
+from pg.util.http_utils import get_customer_ip
 
 __author__ = 'xxx'
 
@@ -14,17 +15,17 @@ offer_item_variation = Blueprint('offer_item_variation', __name__, url_prefix='/
 @offer.route('/')
 @base.authenticated
 def list():
-    offer.logger.debug('['+request.remote_addr+'] list offers username %s, page=%s'%(session['username'], request.args.get('page')))
+    offer.logger.debug('['+get_customer_ip()+'] list offers username %s, page=%s'%(session['username'], request.args.get('page')))
     user = offer.ioc.new_user_service().find_by_username(session['username'])
     offers = offer.ioc.new_offer_service().find_by_page(user.account, int(request.args.get('page')))
-    offer.logger.debug('['+request.remote_addr+'] returning %s offers'%(len(offers)))
+    offer.logger.debug('['+get_customer_ip()+'] returning %s offers'%(len(offers)))
     count = offer.ioc.new_offer_service().find_offers_count(user.account)
     js = { "offers" : [o.as_json() for o in offers], "count" : count}
     return Response(json.dumps(js),  mimetype='application/json')
 
 @offer.route('/<hash>', methods=['GET'])
 def get_by_hash(hash):
-    offer.logger.debug('['+request.remote_addr+'] retrieve offer by hash %s'%hash)
+    offer.logger.debug('['+get_customer_ip()+'] retrieve offer by hash %s'%hash)
     js = offer.ioc.new_offer_service().find_by_hash(hash).as_json()
     return Response(json.dumps(js),  mimetype='application/json')
 
@@ -59,7 +60,7 @@ def new_offer_item_variation():
 @base.authenticated
 def save():
     user = offer.ioc.new_user_service().find_by_username(session['username'])
-    offer.logger.debug('['+request.remote_addr+'] save offer %s'%json.dumps(request.json))
+    offer.logger.debug('['+get_customer_ip()+'] save offer %s'%json.dumps(request.json))
     x = json.loads(json.dumps(request.json), object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
     o = offer.ioc.new_offer_service().save_offer(user.account, x)
     return Response(json.dumps(o.as_json()),  mimetype='application/json')
