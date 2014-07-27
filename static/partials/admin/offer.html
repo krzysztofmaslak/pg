@@ -108,6 +108,18 @@
                                 </table>
                             </div>
                             <div class="form-group" style="margin-top:6px;">
+                                <label>{{ messages.offer_form_condition }}</label>
+                                <div  style="margin-top:6px;">
+                                   <select x-ng-model="item.condition" name="condition"
+                                        ng-class="{fieldError: itemForm.condition.$dirty && itemForm.condition.$invalid}"
+                                        select-required="true" style="background-color:white;padding:6px;">
+                                        <option value="">{{ messages.offer_form_please_select }}</option>
+                                        <option value="new">{{ messages.offer_form_condition_new }}</option>
+                                        <option value="used">{{ messages.offer_form_condition_used }}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-top:6px;">
                                 <label>{{ messages.offer_form_multiple_variations }}</label>
                                 <div  style="margin-top:6px;">
                                     <input type="hidden" name="multivariate" ng-model="item.multivariate" ng-required="true"/>

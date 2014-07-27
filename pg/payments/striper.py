@@ -1,4 +1,5 @@
 import math
+from pg.util.http_utils import get_customer_ip
 
 __author__ = 'krzysztof.maslak'
 

@@ -572,7 +572,7 @@ angular.module('hh.controllers', [])
         $scope.countries = [{code:'', label:'Country'}];
         $scope.offer = null;
         $scope.paymentAccepted = false;
-        $scope.shoppingCart = {items:[]};
+        $scope.shoppingCart = jq.cookie("shoppingCart")!=null?angular.fromJson(jq.cookie("shoppingCart")):{items:[]};
         $scope.url = $location.absUrl();
         if ( $scope.url.indexOf('#')!=-1 ) {
             $scope.url = $scope.url.substring(0, $scope.url.indexOf('#'));
@@ -622,6 +622,7 @@ angular.module('hh.controllers', [])
                     $scope.shoppingCart.items[$scope.shoppingCart.items.length] = {id: item.id, title: item.title, quantity: item.quantity, tax: item.tax, net: item.net, shipping: item.shipping, shipping_additional: item.shipping_additional}
                 }
             }
+            jq.cookie("shoppingCart", angular.toJson($scope.shoppingCart));
         };
         $scope.removeFromCart = function(item) {
             for(var i=0;i<$scope.shoppingCart.items.length;i++) {
@@ -637,6 +638,7 @@ angular.module('hh.controllers', [])
                    }
                 }
             }
+            jq.cookie("shoppingCart", angular.toJson($scope.shoppingCart));
         }
         $scope.billing = {same_address:true, country:''};
         $scope.shipping = null;

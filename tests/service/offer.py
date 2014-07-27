@@ -57,6 +57,7 @@ class OfferServiceTest(TestCase):
         for item in o.items:
             if item.title == 'Item2':
                 item.title = 'MyItem2'
+                item.condition='used'
                 item_id = item.id
             items.append(item)
         # modify item 2
@@ -66,6 +67,7 @@ class OfferServiceTest(TestCase):
         for item in o.items:
             if item.id == item_id:
                 self.assertEqual(item.title, 'MyItem2')
+                self.assertEqual(item.condition, 'used')
         # remove item 3
         offer_service.save_offer(a, base.An(items= items[0:2], id= o.id, title='My offer', currency='USD'))
         o = model.Offer.query.filter(model.Offer.id == o.id).first()

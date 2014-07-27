@@ -5,6 +5,7 @@ __author__ = 'krzysztof.maslak'
 class OfferItem(base.db.Model, base.JsonSerializable):
     id = base.db.Column(base.db.Integer, primary_key=True)
     title = base.db.Column(base.db.String(80))
+    condition = base.db.Column(base.db.String(4))
     quantity = base.db.Column(base.db.Integer)
     net = base.db.Column(base.db.Float)
     tax = base.db.Column(base.db.Float)
