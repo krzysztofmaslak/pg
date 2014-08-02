@@ -140,8 +140,8 @@ def get_sha_part(hash):
 def index():
     return redirect('/register.html')
 
-@wsgi_blueprint.route('/api/image/<target>/<id>', methods=['POST'])
-def upload_image(target, id):
+@wsgi_blueprint.route('/api/image/<offer_item_id>/<target>/<id>', methods=['POST'])
+def upload_image(offer_item_id, target, id):
     wsgi_blueprint.logger.info('['+get_customer_ip()+'] Starting image upload')
     try:
         file = request.files['file']
@@ -151,11 +151,27 @@ def upload_image(target, id):
             filename = secure_filename(file.filename)
             mkdirs(wsgi_blueprint.ioc.get_config()['UPLOAD_FOLDER']+'/'+target)
             file.save(wsgi_blueprint.ioc.get_config()['UPLOAD_FOLDER']+'/'+target+'/'+id+'.png')
+            offer_item = wsgi_blueprint.ioc.new_offer_service().find_offer_item_by_id(offer_item_id)
+            user = wsgi_blueprint.ioc.new_user_service().find_by_username(session['username'])
+            if offer_item.offer.account_id!=user.account_id:
+                raise RuntimeError('Tried to change image for different account') 
+            if target=='offer_item':
+                offer_item.img = target+'/'+id
+            elif offer_item.img is not None and offer_item.img.startswith('offer_item_variation'):
+                offer_item.img = target+'/'+id
+            if target.startswith('offer_item_variation'):
+                offer_item_variation = wsgi_blueprint.ioc.new_offer_service().find_offer_item_variation_by_id(id)
+                offer_item_variation.img = target+'/'+id
+            model.base.db.session.commit()
             try:
                 with Image(filename=wsgi_blueprint.ioc.get_config()['UPLOAD_FOLDER']+'/'+target+'/'+id+'.png') as img:
                     with img.clone() as i:
                         i.resize(int(100), int(100/i.width*i.height))
                         i.save(filename=wsgi_blueprint.ioc.get_config()['UPLOAD_FOLDER']+'/'+target+'/'+id+'_thumb.png')
+                    with img.clone() as i:
+                        i.compression_quality=99
+                        i.resize(int(500), int(500/i.width*i.height))
+                        i.save(filename=wsgi_blueprint.ioc.get_config()['UPLOAD_FOLDER']+'/'+target+'/'+id+'_500.png')
                 return Response(status=200)
             except IOError:
                 traceback.print_exc(file=sys.stdout)
@@ -271,29 +287,46 @@ def admin_landing():
 
 @wsgi_blueprint.route('/<path:path>', methods=['GET'])
 def fallback(path):
-    offer = wsgi_blueprint.ioc.new_offer_service().find_by_hash(path)
-    if offer is not None:
-        messages = resource_bundle.ResourceBundle()
-        lang = detect_language()
-        wsgi_blueprint.logger.info('['+get_customer_ip()+'] loading offer page by hash: %s'%path)
-        wsgi_blueprint.ioc.new_event_service().persist(model.Event(get_customer_ip(), offer.account, path))
-        offer_title = ''
-        if lang=='fr':
-            if offer.title_fr is not None:
-                offer_title = offer.title_fr
-            else:
-                offer_title = offer.title_en
+    messages = resource_bundle.ResourceBundle()
+    lang = detect_language()
+    if path.startswith('X'):
+    	offer = wsgi_blueprint.ioc.new_offer_service().find_by_hash(path)
+    	if offer is not None:
+                wsgi_blueprint.logger.info('['+get_customer_ip()+'] loading offer page by hash: %s'%path)
+                wsgi_blueprint.ioc.new_event_service().persist(model.Event(get_customer_ip(), offer.account, path))
+                offer_title = ''
+                if lang=='fr':
+                        if offer.title_fr is not None:
+                                offer_title = offer.title_fr
+                        else:
+                                offer_title = offer.title_en
+                else:
+                        if offer.title_en is not None:
+                                offer_title = offer.title_en
+                        else:
+                                offer_title = offer.title_fr
+                return render_template('offer.html', 
+			messages=messages.get_all(lang),
+               		language = lang,
+               		title=offer_title,
+               		account_hash = offer.account.hash,
+               		account_name = offer.account.name.replace("'", "&#39;"),
+               		countries = [c.as_json() for c in wsgi_blueprint.ioc.new_country_service().find_all()],
+               		project_version=wsgi_blueprint.ioc.get_config()['PROJECT_VERSION'],
+               		stripe_publishable=wsgi_blueprint.ioc.get_config()['stripe.publishable'])
+    elif path.startswith('S'):
+        wsgi_blueprint.logger.info('['+get_customer_ip()+'] loading seller page by hash: %s'%path)	
+        account = wsgi_blueprint.ioc.new_account_service().find_by_hash(path)
+        if account is not None:
+               return render_template('offer_list.html',
+                        messages=messages.get_all(lang),
+                        language = lang,
+                        title=account.name,
+                        account_hash = account.hash,
+                        account_name = account.name.replace("'", "&#39;"),
+			project_version=wsgi_blueprint.ioc.get_config()['PROJECT_VERSION'])
         else:
-            if offer.title_en is not None:
-                offer_title = offer.title_en
-            else:
-                offer_title = offer.title_fr
-        return render_template('offer.html',
-               messages=messages.get_all(lang),
-               language = lang,
-               title=offer_title,
-               countries = [c.as_json() for c in wsgi_blueprint.ioc.new_country_service().find_all()],
-               project_version=wsgi_blueprint.ioc.get_config()['PROJECT_VERSION'],
-               stripe_publishable=wsgi_blueprint.ioc.get_config()['stripe.publishable'])
+                wsgi_blueprint.logger.info('['+get_customer_ip()+'] could not find seller by name: [%s]'%path)
+                return Response(status=404)
     else:
         return Response(status=404)

@@ -40,11 +40,13 @@
                 <div ng-show="offers.length!=0" class="formSection">
                     <table class="table table-hover">
                         <tr>
-                            <th>{{ messages.offer_form_title }}</th>
+                            <th></th>
+			    <th>{{ messages.offer_form_title }}</th>
                             <th>{{ messages.traffic_visits }}</th>
                         </tr>
                         <tr ng-repeat="offer in offers">
-                            <td>{{ offer.title }}</td>
+                            <td>{{offer.hash}}</td>
+			    <td>{{ offer.title }}</td>
                             <td>{{ offer.count }}</td>
                         </tr>
                     </table>

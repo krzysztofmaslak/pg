@@ -5,6 +5,12 @@
 String.prototype.endsWith = function(suffix) {
     return this.indexOf(suffix, this.length - suffix.length) !== -1;
 };
+if (typeof String.prototype.startsWith != 'function') {
+  // see below for better implementation!
+  String.prototype.startsWith = function (str){
+    return this.indexOf(str) == 0;
+  };
+}
 String.prototype.replaceAll = function( token, newToken, ignoreCase ) {
     var _token;
     var str = this + "";
@@ -51,6 +57,9 @@ window.hideLoadingIndicator = function() {
     jq('#loadingIndicator').css('display', 'none');
     jq('#loadingIndicator').removeClass('hover');
 }
+window.resizeIframe = function(obj) {
+    obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+}
 window.clickOnParentSibling = function(element, nodeType) {
     if ( element.childNodes && element.childNodes.length!=0 ) {
         for(var i=0;i<element.childNodes.length;i++) {
@@ -73,10 +82,16 @@ angular.module('pgadminapp', ['ngRoute', 'hh.filters', 'hh.services', 'hh.direct
         $routeProvider.when('/traffic',      {templateUrl: '/static/${pom.version}/partials/admin/traffic.html'});
         $routeProvider.otherwise({redirectTo: '/offers'});
 	}]);
-angular.module('pgapp', ['ngRoute', 'hh.filters', 'hh.services', 'hh.directives', 'hh.controllers', 'ui.bootstrap.modal']).
+angular.module('pgapp', ['ngRoute', 'hh.filters', 'hh.services', 'hh.directives', 'hh.controllers', 'ui.bootstrap']).
     config(['$routeProvider', '$sceProvider', function($routeProvider, $sceProvider) {
         $routeProvider.when('/checkout',      {templateUrl: '/static/${pom.version}/partials/checkout.html'});
         $routeProvider.otherwise({redirectTo: '/checkout'});
+        $sceProvider.enabled(false);
+    }]);
+angular.module('pgapp-list', ['ngRoute', 'hh.filters', 'hh.services', 'hh.directives', 'hh.controllers', 'ui.bootstrap.modal']).
+    config(['$routeProvider', '$sceProvider', function($routeProvider, $sceProvider) {
+        $routeProvider.when('/',      {templateUrl: '/static/${pom.version}/partials/list.html'});
+        $routeProvider.otherwise({redirectTo: '/'});
         $sceProvider.enabled(false);
     }]);
 angular.module('pgapp-register', ['ngRoute', 'hh.filters', 'hh.services', 'hh.directives', 'hh.controllers', 'ui.bootstrap.modal']).

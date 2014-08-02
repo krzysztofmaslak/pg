@@ -169,7 +169,7 @@ class OrderService:
                         if item_dto.quantity>item_variation.quantity:
                             raise quantity_not_available.QuantityNotAvailable("Trying to buy more products then are available")
                         else:
-                            oiv = model.OrderItemVariation(oi, item_variation.title, item_dto.quantity, item_variation.net, item_variation.tax, item_variation.shipping)
+                            oiv = model.OrderItemVariation(oi, item_variation.title_en, item_variation.title_fr, item_dto.quantity, item_variation.net, item_variation.tax, item_variation.shipping)
                             if hasattr(item_variation, 'shipping_additional'):
                                 oiv.shipping_additional = item_variation.shipping_additional
                             variations.append(oiv)

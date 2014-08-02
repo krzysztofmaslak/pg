@@ -18,6 +18,15 @@ class OfferService:
     def find_by_id(self, offer_id):
         return model.Offer.query.filter(model.Offer.status == 1, model.Offer.id == offer_id).first()
 
+    def find_offer_item_by_id(self, offer_item_id):
+        return model.OfferItem.query.get(offer_item_id)
+ 
+    def find_offer_item_variation_by_id(self, offer_item_variation_id):
+        return model.OfferItemVariation.query.get(offer_item_variation_id)
+
+    def find_by_account_id(self, account_id):
+        return model.Offer.query.filter(model.Offer.account_id==account_id, model.Offer.status==1).all()
+
     def find_by_page(self, account, page):
         if isinstance(account, model.Account):
             return model.Offer.query.filter(model.Offer.status == 1, model.Offer.account_id == account.id).paginate(page, 10, False).items
@@ -37,18 +46,24 @@ class OfferService:
         year = self.dictionary[int(str(date.today().year)[3:])]
         month = self.dictionary[date.today().month]
         day = self.dictionary[date.today().day]
-        hash = year+month+day
+        hash = 'X'+year+month+day
         if self.is_not_used(hash):
             return hash
         for jstr in self.dictionary:
             if self.is_not_used(hash+jstr):
                 return hash+jstr
+        for jstr in self.dictionary:
             for kstr in self.dictionary:
                 if self.is_not_used(hash+jstr+kstr):
                     return hash+jstr+kstr
+        for jstr in self.dictionary:
+            for kstr in self.dictionary:
                 for lstr in self.dictionary:
                     if self.is_not_used(hash+jstr+kstr+lstr):
                         return hash+jstr+kstr+lstr
+        for jstr in self.dictionary:
+            for kstr in self.dictionary:
+                for lstr in self.dictionary:
                     for mstr in self.dictionary:
                         if self.is_not_used(hash+jstr+kstr+lstr+mstr):
                             return hash+jstr+kstr+lstr+mstr
@@ -81,6 +96,11 @@ class OfferService:
                         item.title_en = sanitizer.html_to_text(offer_item_dto.title_en)
                     if hasattr(offer_item_dto, 'title_fr'):
                         item.title_fr = sanitizer.html_to_text(offer_item_dto.title_fr)
+                    if hasattr(offer_item_dto, 'description_en'):
+                        item.description_en = offer_item_dto.description_en
+                    if hasattr(offer_item_dto, 'description_fr'):
+                        item.description_fr = offer_item_dto.description_fr
+
                     if hasattr(offer_item_dto, 'condition'):
                         item.condition = offer_item_dto.condition
                     item.status = 1
@@ -95,7 +115,11 @@ class OfferService:
                             for iv in item.variations:
                                 iv_dto = self.find_item_by_id(iv.id, offer_item_dto.variations)
                                 if iv_dto is not None:
-                                   iv.title = iv_dto.title
+                                   if hasattr(iv_dto, 'title_en'):
+                                        iv.title_en = sanitizer.html_to_text(iv_dto.title_en)
+                                   if hasattr(iv_dto, 'title_fr'):
+                                        iv.title_fr = sanitizer.html_to_text(iv_dto.title_fr)
+
                                    iv.quantity = iv_dto.quantity
                                    iv.net = iv_dto.net
                                    if hasattr(iv_dto, 'tax'):

@@ -1,4 +1,4 @@
-<div class="container" id="checkoutPage">
+<div class="container" id="checkoutPage" fancybox>
     <div ng-controller="CheckoutCtrl" class="cart-container container ng-scope">
         <div class="row hidden-phone" style="display: block;text-align:right;margin-top: 8px;">
             <div class="span12">
@@ -51,7 +51,9 @@
                                                 </div>
                                             </div>
                                             <div class="media-wrapper" style="width:104px;margin:4px;float:left;">
-                                                <img class="media-object" ng-src="{{ defaultImage(item) }}" style="width:100px"/>
+                                                <a class="grouped_elements productImage" rel="gallery_{{ item.id }}" href="{{ defaultImage(item) }}.png" onclick="return false;">
+                                                    <img class="media-object" ng-src="{{ defaultImage(item) }}_thumb.png" style="width:100px"/>
+                                                </a>
                                             </div>
                                             <div class="media-body">
                                                 <div class="cart-item-title">
@@ -80,15 +82,27 @@
                                                         </div>
                                                     </div>
                                                     <div class="cart-item-attrs">
+                                                        <div ng-repeat="var in item.variations">
+                                                            <a class="grouped_elements productImage" ng-if="var.img && var.img!=''"
+                                                               rel="gallery_{{ item.id }}" href="/static/images/offer_item_variation/{{ var.id }}.png" style="display:none">
+                                                                <img class="media-object" ng-src="/static/images/offer_item_variation/{{ var.id }}_thumb.png" style="width:100px"/>
+                                                            </a>
+                                                        </div>
                                                         <select name="variationSelection" ng-model="item.selection"
                                                                 x-select-required="true"
                                                                 ng-if="item.multivariate"
                                                                 style="margin-top: 6px;width:95%"
-                                                                x-ng-options="obj.id as obj.title for obj in item.variations"/>
+                                                                x-ng-options="obj.id as getItemTitle(obj) for obj in item.variations"/>
                                                     </div>
                                                     <div class="cart-item-add">
                                                         <button type="button" ng-click="addToCart(item);" class="btn btn-success" ng-class="{'shoppingCartEmpty': shoppingCartEmpty}">{{ messages.offer_add_to_basket }}</button>
+                                                        <a href="#" onclick="return false;" class="toolTipLink"
+                                                            data-toggle="popover" popovertitle="{{ getItemTitle(item) }}"
+                                                            data-html="true" popover ng-show="hasDescription(item)"
+                                                            data-content="{{ getItemDescription(item) }}"
+                                                            data-placement="right">{{ messages.show_details }}</a>
                                                     </div>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -101,7 +115,7 @@
                             <ul class="cart-items-list unstyled" ng-if="offer!=null && shoppingCart.items.length!=0">
                                 <li ng-repeat="item in shoppingCart.items">
                                     <div class="cart-pricing-label">
-                                        {{ item.quantity }} x {{ item.title }}
+                                        {{ item.quantity }} x {{ getItemTitle(item) }}
                                         <span ng-if="item.variation_title">[{{ item.variation_title }}]</span>
                                     </div>
                                     <div class="cart-item-remove" ng-if="!paymentAccepted">
@@ -124,6 +138,16 @@
                                     <div class="ng-binding">{{ formatCurrency(total()) }}</div>
                                 </li>
                             </ul>
+                        </div>
+
+                        <div class="cart-summary ng-scope" style="margin-top:10px;"><b>{{ messages.seller_information }}</b>
+                          <div>
+                            <a href="/{{ account_hash }}">e-littleangel.com</a><br>
+                            {{ messages.positive_feedback }}<br>
+                            <div style="width:100%;border-top:1px solid #dddddd;margin-top:6px;">
+                                <a href="/{{ account_hash }}">{{ messages.see_other_items }}</a>
+                            </div>
+                          </div>
                         </div>
                     </div>
 

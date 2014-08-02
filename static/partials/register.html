@@ -2,9 +2,16 @@
     <h1 class="heading1"><span class="heading1s">{{ messages.register_title }}</span></h1>
     <p style="color:#d44950;margin-top:6px;font-size:13px;" ng-if="error_message">{{ error_message }}</p>
     <p style="color:#468847;margin-top:6px;font-size:13px;" ng-if="success_message">{{ success_message }}</p>
+
+    <p>
+        <label for="j_name"><i class="icon-user"></i>{{ messages.register_name }}</label>
+        <input type="text" name="name" ng-model="register.name" maxlength="30"
+               ng-class="{fieldError: registerForm.name.$used && registerForm.name.$invalid}"
+               placeholder="{{ messages.register_name_placeholder }}" x-ng-model-onblur input-required="true"/>
+    </p>
     <p>
         <label for="j_username"><i class="icon-user"></i>{{ messages.register_username }}</label>
-        <input type="email" name="username" ng-model="register.username"
+        <input type="email" name="username" ng-model="register.username" maxlength="50"
                ng-class="{fieldError: registerForm.username.$used && registerForm.username.$invalid}"
                placeholder="{{ messages.register_username_placeholder }}" x-ng-model-onblur input-required="true"/>
     </p>

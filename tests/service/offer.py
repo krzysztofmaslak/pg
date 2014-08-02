@@ -77,8 +77,8 @@ class OfferServiceTest(TestCase):
         model.base.db.session.commit()
         variations = []
         for variation in o.items[0].variations:
-            if variation.title == 'Red':
-                variation.title = 'Red2'
+            if variation.title_en == 'Red':
+                variation.title_en = 'Red2'
             variations.append(variation)
         items = []
         for item in o.items:
@@ -86,7 +86,7 @@ class OfferServiceTest(TestCase):
         items[0].variations = variations
         offer_service.save_offer(a, base.An(items= items, id= o.id, title_en='My offer', currency='USD'))
         o = model.Offer.query.filter(model.Offer.id == o.id).first()
-        self.assertEqual('Red2', o.items[0].variations[1].title)
+        self.assertEqual('Red2', o.items[0].variations[1].title_en)
 
     def test_save_with_variations(self):
         a = model.Account()

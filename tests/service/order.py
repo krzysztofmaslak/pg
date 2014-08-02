@@ -116,10 +116,10 @@ class OrderServiceTest(Base):
         oi2.shipping_additional = 1
         order.items.append(oi2)
         oi = model.OrderItem(order, 'Toy', '', 0, 0, 0, 0)
-        oiv1 = model.OrderItemVariation(oi, "Big", 5, 11.21, 0, 1.65)
+        oiv1 = model.OrderItemVariation(oi, "Big", '', 5, 11.21, 0, 1.65)
         oiv1.shipping_additional = 1
         oi.variations.append(oiv1)
-        oiv2 = model.OrderItemVariation(oi, "Small", 1, 13.79, 0, 1.65)
+        oiv2 = model.OrderItemVariation(oi, "Small", '', 1, 13.79, 0, 1.65)
         oiv2.shipping_additional = 1
         oi.variations.append(oiv2)
         order.items.append(oi)
@@ -134,8 +134,8 @@ class OrderServiceTest(Base):
         o.status = 1
         o1 = model.OfferItem(o, "My offer item", '', 2)
         o2 = model.OfferItem(o, "My offer item2")
-        blue = model.OfferItemVariation(o2, "Blue", 3)
-        red = model.OfferItemVariation(o2, "Red", 1)
+        blue = model.OfferItemVariation(o2, "Blue", '', 3)
+        red = model.OfferItemVariation(o2, "Red", '', 1)
         o2.variations = [blue, red]
         o.items.append(o1)
         o.items.append(o2)
@@ -151,7 +151,7 @@ class OrderServiceTest(Base):
         order.items.append(or1)
         oi = model.OrderItem(order, 'Toy', '', 0, 0, 0, 0)
         oi.offer_item_id = o2.id
-        orv1 = model.OrderItemVariation(oi, "Big", 1, 11.21, 0, 1.65)
+        orv1 = model.OrderItemVariation(oi, "Big", '', 1, 11.21, 0, 1.65)
         orv1.shipping_additional = 1
         orv1.offer_item_variation_id = blue.id
         oi.variations.append(orv1)
@@ -179,8 +179,8 @@ class OrderServiceTest(Base):
         o.status = 1
         o1 = model.OfferItem(o, "My offer item", '', 2)
         o2 = model.OfferItem(o, "My offer item2")
-        blue = model.OfferItemVariation(o2, "Blue", 3)
-        red = model.OfferItemVariation(o2, "Red", 1)
+        blue = model.OfferItemVariation(o2, "Blue", '', 3)
+        red = model.OfferItemVariation(o2, "Red", '', 1)
         o2.variations = [blue, red]
         o.items.append(o1)
         o.items.append(o2)
@@ -199,7 +199,7 @@ class OrderServiceTest(Base):
             order.items.append(or1)
             oi = model.OrderItem(order, 'Toy', '', 0, 0, 0, 0)
             oi.offer_item_id = o2.id
-            orv1 = model.OrderItemVariation(oi, "Big", 1, 11.21, 0, 1.65)
+            orv1 = model.OrderItemVariation(oi, "Big", '', 1, 11.21, 0, 1.65)
             orv1.shipping_additional = 1
             orv1.offer_item_variation_id = blue.id
             oi.variations.append(orv1)
@@ -229,8 +229,8 @@ class OrderServiceTest(Base):
         o.status = 1
         o1 = model.OfferItem(o, "My offer item", '', 2)
         o2 = model.OfferItem(o, "My offer item2")
-        blue = model.OfferItemVariation(o2, "Blue", 3)
-        red = model.OfferItemVariation(o2, "Red", 1)
+        blue = model.OfferItemVariation(o2, "Blue", '', 3)
+        red = model.OfferItemVariation(o2, "Red", '', 1)
         o2.variations = [blue, red]
         o.items.append(o1)
         o.items.append(o2)
@@ -245,9 +245,9 @@ class OrderServiceTest(Base):
         or1.shipping_additional = 1
         or1.offer_item_id = o1.id
         order.items.append(or1)
-        oi = model.OrderItem(order, 'Toy', 0, 0, 0, 0)
+        oi = model.OrderItem(order, 'Toy', '', 0, 0, 0, 0)
         oi.offer_item_id = o2.id
-        orv1 = model.OrderItemVariation(oi, "Big", 1, 11.21, 0, 1.65)
+        orv1 = model.OrderItemVariation(oi, "Big", '', 1, 11.21, 0, 1.65)
         orv1.shipping_additional = 1
         orv1.offer_item_variation_id = blue.id
         oi.variations.append(orv1)
@@ -264,7 +264,7 @@ class OrderServiceTest(Base):
             order.items.append(or1)
             oi = model.OrderItem(order, 'Toy', '', 0, 0, 0, 0)
             oi.offer_item_id = o2.id
-            orv1 = model.OrderItemVariation(oi, "Big", 1, 11.21, 0, 1.65)
+            orv1 = model.OrderItemVariation(oi, "Big", '', 1, 11.21, 0, 1.65)
             orv1.shipping_additional = 1
             orv1.offer_item_variation_id = blue.id
             oi.variations.append(orv1)
@@ -284,10 +284,10 @@ class OrderServiceTest(Base):
         oi2.shipping_additional = 1
         order.items.append(oi2)
         oi = model.OrderItem(order, 'Toy', '', 0, 0, 0, 0)
-        oiv1 = model.OrderItemVariation(oi, "Big", 5, 11.21, 0, 1.65)
+        oiv1 = model.OrderItemVariation(oi, "Big", '', 5, 11.21, 0, 1.65)
         oiv1.shipping_additional = 1
         oi.variations.append(oiv1)
-        oiv2 = model.OrderItemVariation(oi, "Small", 1, 13.79, 0, 1.65)
+        oiv2 = model.OrderItemVariation(oi, "Small", '', 1, 13.79, 0, 1.65)
         oiv2.shipping_additional = 1
         oi.variations.append(oiv2)
         order.items.append(oi)

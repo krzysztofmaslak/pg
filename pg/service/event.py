@@ -22,14 +22,24 @@ class EventService:
         from_date = datetime.datetime.strptime(from_date_str, '%Y-%m-%d')
         to_date = datetime.datetime.strptime(to_date_str+' 23:59:59', '%Y-%m-%d %H:%M:%S')
         events = model.Event.query.filter(model.Event.account_id==account_id, model.Event.creation_date>from_date, model.Event.creation_date<to_date).all()
+        print('listing events from %s to %s total %s'%(from_date, to_date, len(events)))
+        account = self.ioc.new_account_service().find_by_id(account_id)
         all_offers_traffic = {}
         for event in events:
             if event.hash is not None:
-                offer_traffic = all_offers_traffic[event.hash]
-                if offer_traffic is None:
-                    offer = self.ioc.new_offer_srvice().find_by_hash(event.hash)
-                    offer_traffic.count = 1
-                    offer_traffic.title = offer.title
+                if event.hash not in all_offers_traffic:
+                    offer = self.ioc.new_offer_service().find_by_hash(event.hash)
+                    offer_traffic = {'count':1, 'hash':offer.hash}
+                    if account.lang=='fr':
+                        offer_traffic['title']=offer.title_fr
+                    elif account.lang=='en':
+                        offer_traffic['title']=offer.title_en
+                    all_offers_traffic[event.hash]=offer_traffic
                 else:
-                    offer_traffic.count += 1
-        return all_offers_traffic
+                    offer_traffic = all_offers_traffic[event.hash]
+                    offer_traffic['count'] = 1 + offer_traffic['count']
+        traffic_list = []
+        for k in all_offers_traffic:
+            traffic_list.append(all_offers_traffic[k])
+        traffic_list.sort(key=lambda x: x['count'], reverse=True)
+        return traffic_list

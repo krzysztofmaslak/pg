@@ -81,6 +81,18 @@ class PurchaseConfirmationEmailHandler(EmailHandler):
         shipping = 0.0
         basket_items = []
         for item in order.items:
+            item_title = ''
+            if order.lang=='en':
+                if item.title_en is not None and len(item.title_en)>0:
+                    item_title = item.title_en
+                else:
+                    item_title = item.title_fr
+            else:
+                if item.title_fr is not None and len(item.title_fr)>0:
+                    item_title = item.title_fr
+                else:
+                    item_title = item.title_en
+
             if item.variations is not None and item.variations.count()>0:
                 itotal = 0.0
                 for iv in item.variations:
@@ -93,16 +105,27 @@ class PurchaseConfirmationEmailHandler(EmailHandler):
                                 shipping = shipping + iv.shipping_additional
                             else:
                                 shipping = shipping + iv.shipping
-                    if order.offer.currency!=order.currency:
-                        basket_items.append({'index':(i+1), 'title':item.title+'('+iv.title+')', 'quantity':iv.quantity, 'value': round(self.ioc.new_currency_service().convert(order.currency, itotal), 2)})
+                    item_variation_title = '';
+                    if order.lang=='en':
+                        if iv.title_en is not None and len(iv.title_en)>0:
+                            item_variation_title = iv.title_en
+                        else:
+                            item_variation_title = iv.title_fr
                     else:
-                        basket_items.append({'index':(i+1), 'title':item.title+'('+iv.title+')', 'quantity':iv.quantity, 'value': round(itotal, 2)})
+                        if iv.title_fr is not None and len(iv.title_fr)>0:
+                            item_variation_title = iv.title_fr
+                        else:
+                            item_variation_title = iv.title_en
+                    if order.offer.currency!=order.currency:
+                        basket_items.append({'index':(i+1), 'title':item_title+'('+item_variation_title+')', 'quantity':iv.quantity, 'value': round(self.ioc.new_currency_service().convert(order.currency, itotal), 2)})
+                    else:
+                        basket_items.append({'index':(i+1), 'title':item_title+'('+item_variation_title+')', 'quantity':iv.quantity, 'value': round(itotal, 2)})
                     i = i+1
             else:
                 if order.offer.currency!=order.currency:
-                    basket_items.append({'index':(i+1), 'title':item.title, 'quantity':item.quantity,'value': round(self.ioc.new_currency_service().convert(order.currency, (item.quantity*(item.net+item.tax))), 2)})
+                    basket_items.append({'index':(i+1), 'title':item_title, 'quantity':item.quantity,'value': round(self.ioc.new_currency_service().convert(order.currency, (item.quantity*(item.net+item.tax))), 2)})
                 else:
-                    basket_items.append({'index':(i+1), 'title':item.title, 'quantity':item.quantity, 'value':round((item.quantity*(item.net+item.tax)), 2)})
+                    basket_items.append({'index':(i+1), 'title':item_title, 'quantity':item.quantity, 'value':round((item.quantity*(item.net+item.tax)), 2)})
                 if item.quantity==1:
                     shipping = shipping + item.shipping
                 else:

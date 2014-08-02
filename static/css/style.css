@@ -6,20 +6,20 @@ body {
     line-height: 18px;
     margin: 0;
 }
-#checkoutPage .logo {
+#checkoutPage .logo, #listPage .logo {
     /*background: url("https://s3.amazonaws.com/sneakpeeq-sites/diamondcandles/images/freeshippingbanner.png") repeat scroll 0 0 rgba(0, 0, 0, 0);*/
     height: 125px;
     line-height: 125px;
     text-align: center;
 }
-#checkoutPage {
+#checkoutPage, #listPage {
     margin-left: auto;
     margin-right: auto;
 }
-#checkoutPage {
+#checkoutPage, #listPage {
     width: 954px;
 }
-#checkoutPage {
+#checkoutPage, #listPage {
     background-color: #FFFFFF;
     border-left: 1px solid #DDDDDD;
     border-right: 1px solid #DDDDDD;
@@ -260,4 +260,77 @@ body .media-heading {
 }
 .cart-item-attrs {
     margin-bottom:8px;
+}
+#listPage .product {
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    margin-left: 3%;
+    width: 94%;
+    position: relative;
+}
+#listPage .row {
+    margin-bottom: 10px;
+}
+#listPage .product .info {
+    border-bottom: 1px dashed #e5e5e5;
+    position: relative;
+    width: 100%;
+}
+#listPage .product .info .price:after {
+    background: url("../img/bg-price.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+    content: "";
+    display: inline-block;
+    float: right;
+    height: 21px;
+    position: absolute;
+    width: 10px;
+    z-index: 100;
+}
+#listPage .product .info .price {
+    background: none repeat scroll 0 0 #888;
+    color: #fff;
+    cursor: pointer;
+    display: block;
+    float: left;
+    font-size: 16px;
+    height: 21px;
+    line-height: 20px;
+    margin: 0;
+    padding: 0 0 0 8px;
+    position: relative;
+    top: 1px;
+}
+#listPage .showDetails {
+    border-radius: 5px;
+    bottom: 0;
+    height: 14px;
+    padding: 5px 2px;
+    position: absolute;
+    right: 0;
+}
+#listPage .cat {
+    padding: 4px;
+}
+#listPage .cat a {
+    color:#555;
+    outline: 0;
+}
+body a:focus {
+    outline: 0;
+    text-decoration: none;
+}
+body a:hover {
+    text-decoration: none;
+    outline: 0;
+}
+#checkoutPage .toolTipLink {
+    float:right;margin-right:8px;margin-top:6px;
+}
+#checkoutPage .popover {
+    max-width: 600px;
+}
+#checkoutPage .popover-content {
+    background:#f7f7f7;
+}
+#checkoutPage .popover.right .arrow {
+    top: 130px;
 }

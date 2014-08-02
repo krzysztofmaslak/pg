@@ -43,6 +43,7 @@ def init_db():
 def add_root():
     a = model.Account()
     a.lang = 'en'
+    a.name = 'elittleangel'
     u = model.User('dublin.krzysztof.maslak@gmail.com', generate_password_hash('abcd'))
     u.active = True
     a.users.append(u)

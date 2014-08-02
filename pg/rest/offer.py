@@ -23,11 +23,44 @@ def list():
     js = { "offers" : [o.as_json() for o in offers], "count" : count}
     return Response(json.dumps(js),  mimetype='application/json')
 
+@offer.route('/account/<hash>', methods=['GET'])
+def get_by_account(hash):
+    offer.logger.debug('['+get_customer_ip()+'] retrieve offers by hash %s'%hash)
+    account = offer.ioc.new_account_service().find_by_hash(hash)
+    offers = offer.ioc.new_offer_service().find_by_account_id(account.id)
+    js = {"offers" : [o.as_json() for o in offers]}
+    return Response(json.dumps(js),  mimetype='application/json')
+
 @offer.route('/<hash>', methods=['GET'])
 def get_by_hash(hash):
     offer.logger.debug('['+get_customer_ip()+'] retrieve offer by hash %s'%hash)
     js = offer.ioc.new_offer_service().find_by_hash(hash).as_json()
     return Response(json.dumps(js),  mimetype='application/json')
+
+@offer.route('/description/<hash>/<id>', methods=['GET'])
+def get_offer_description_by_hash(hash, id):
+    o = offer.ioc.new_offer_service().find_by_hash(hash)
+    lang = request.args.get('lang')
+    project_version=offer.ioc.get_config()['PROJECT_VERSION']
+    html = '<html><head><link href="/static/'+str(project_version)+'/css/style.css" rel="stylesheet" media="screen" /></head><body>'
+    if o.items is not None and o.items.count()>0:
+        for item in o.items.all():
+            if str(item.id)==str(id):
+                item = o.items[0]
+                if item.img is not None:
+                    html += "<img src='/static/images/"+item.img+"_500.png' style='float:left;margin:30px;margin-left:10px;margin-top:10px;width:200px;'/>"
+                if lang=='fr':
+                    if item.description_fr is not None and len(item.description_fr)>0:
+                        html += item.description_fr
+                    else:
+                        html += item.description_en
+                else:
+                    if item.description_en is not None and len(item.description_en)>0:
+                        html += item.description_en
+                    else:
+                        html += item.description_fr
+    html = html+'</html>'
+    return Response(html,  mimetype='text/html')
 
 @offer.route('/new', methods=['POST'])
 @base.authenticated

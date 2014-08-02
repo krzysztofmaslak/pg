@@ -13,7 +13,7 @@ class Offer(base.db.Model, base.JsonSerializable):
     hash = base.db.Column(base.db.String(15))
     status = base.db.Column(base.db.Integer)
     currency = base.db.Column(base.db.String(3))
-
+    
     account_id = base.db.Column(base.db.Integer, base.db.ForeignKey('account.id'))
     account = base.db.relationship('Account', backref=base.db.backref('offers', lazy='dynamic'))
     items = base.db.relationship('OfferItem', backref='offer', lazy='dynamic')

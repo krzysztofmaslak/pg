@@ -16,6 +16,7 @@
                     <!--</table>-->
                     <table class="table table-hover">
                         <tr>
+                            <th></th>
                             <th>
                                 {{ messages.offer_list_title }}
                             </th>
@@ -23,6 +24,9 @@
                             <th></th>
                         </tr>
                         <tr ng-repeat="offer in offers">
+                            <td>
+                                <a href="https://www.justsale.it/{{offer.hash}}" style="margin-left:4px" target="_blank">{{ offer.hash }}</a>
+                            </td>
                             <td>{{getOfferTitle(offer)}}</td>
                             <td>{{formatDate(offer.creation_date)}}</td>
                             <td>
@@ -58,19 +62,19 @@
                 <b style="margin-right: 6px;">{{ messages.offer_form_title }}</b>
                 <button class="btn lang-button {{ $parent.active_language==lang?'btn-info':'' }}" ng-click="$parent.active_language=lang" ng-repeat="lang in languages">{{ lang }}</button>
             </label>
-            <input type="text" name="title_en" nullifempty id="title_en"
-                   ng-class="{fieldError: offerForm.title_en.$used && offerForm.title_en.$invalid}"
+            <input type="text" name="input_title_en" nullifempty id="title_en"
+                   ng-class="{fieldError: offerForm.input_title_en.$used && offerForm.input_title_en.$invalid}"
                    ng-show="active_language=='en'"
                    x-ng-model="offer.title_en" style="width:500px;"  x-ng-model-onblur input-required="{{ active_language=='en' }}" maxlength="80" notags/>
-            <input type="text" name="title_fr" nullifempty id="title_fr"
-                   ng-class="{fieldError: offerForm.title_fr.$used && offerForm.title_fr.$invalid}"
+            <input type="text" name="input_title_fr" nullifempty id="title_fr"
+                   ng-class="{fieldError: offerForm.input_title_fr.$used && offerForm.input_title_fr.$invalid}"
                    ng-show="active_language=='fr'"
                    x-ng-model="offer.title_fr" style="width:500px;"  x-ng-model-onblur input-required="{{ active_language=='fr' }}" maxlength="80" notags/>
         </div>
         <div ng-show="offer.items.length>0" class="currencyWrap">
             <label>{{ messages.offer_form_currency }}</label>
-            <select x-ng-model="offer.currency" name="currency"
-                    ng-class="{fieldError: offerForm.currency.$dirty && offerForm.currency.$invalid}"
+            <select x-ng-model="offer.currency" name="input_currency"
+                    ng-class="{fieldError: offerForm.input_currency.$dirty && offerForm.input_currency.$invalid}"
                     select-required="true" style="background-color:white;padding:6px;">
                 <option value="">{{ messages.offer_form_please_select }}</option>
                 <option value="aud">AUD</option>
@@ -108,17 +112,17 @@
                                                 <span style="margin-right:6px;">{{ messages.checkout_product_title }}</span>
                                                 <button class="btn lang-button {{ $parent.active_language==lang?'btn-info':'' }}" ng-click="$parent.active_language=lang" ng-repeat="lang in languages">{{ lang }}</button>
                                             </label>
-                                            <input type="text" name="productTitleEn" nullifempty x-ng-model="item.title_en"
+                                            <input type="text" name="input_product_title_en" nullifempty x-ng-model="item.title_en"
                                                    ng-show="active_language=='en'"
-                                                   ng-class="{fieldError: itemForm.productTitleEn.$used && itemForm.productTitleEn.$invalid}"
+                                                   ng-class="{fieldError: itemForm.input_product_title_en.$used && itemForm.input_product_title_en.$invalid}"
                                                    notags style="width:500px"  x-ng-model-onblur input-required="{{ active_language=='en' }}"/>
-                                            <input type="text" name="productTitleFr" nullifempty x-ng-model="item.title_fr"
+                                            <input type="text" name="input_product_title_fr" nullifempty x-ng-model="item.title_fr"
                                                    ng-show="active_language=='fr'"
-                                                   ng-class="{fieldError: itemForm.productTitleFr.$used && itemForm.productTitleFr.$invalid}"
+                                                   ng-class="{fieldError: itemForm.input_product_title_fr.$used && itemForm.input_product_title_fr.$invalid}"
                                                    notags style="width:500px"  x-ng-model-onblur input-required="{{ active_language=='fr' }}"/>
                                         </td>
                                         <td valign="top" style="width:140px;">
-                                            <button ng-click="deleteItem($index)" class="btn btn-danger" style="margin-bottom:10px;">{{ messages.checkout_delete_product }}</button>
+                                            <button ng-click="deleteItem($index)" class="btn btn-danger" style="margin-bottom:10px;" ng-if="$index!=0">{{ messages.checkout_delete_product }}</button>
                                         </td>
                                     </tr>
                                 </table>
@@ -126,8 +130,8 @@
                             <div class="form-group" style="margin-top:6px;">
                                 <label>{{ messages.offer_form_condition }}</label>
                                 <div  style="margin-top:6px;">
-                                   <select x-ng-model="item.condition" name="condition"
-                                        ng-class="{fieldError: itemForm.condition.$dirty && itemForm.condition.$invalid}"
+                                   <select x-ng-model="item.condition" name="input_condition"
+                                        ng-class="{fieldError: itemForm.input_condition.$dirty && itemForm.input_condition.$invalid}"
                                         select-required="true" style="background-color:white;padding:6px;">
                                         <option value="">{{ messages.offer_form_please_select }}</option>
                                         <option value="new">{{ messages.offer_form_condition_new }}</option>
@@ -157,32 +161,32 @@
                                     </tr>
                                     <tr>
                                         <td valign="top">
-                                            <input type="text" name="squantity" nullifempty x-ng-model="item.quantity"
+                                            <input type="text" name="input_squantity" nullifempty x-ng-model="item.quantity"
                                                    ng-pattern="/^[0-9]*$/"
-                                                   ng-class="{fieldError: itemForm.squantity.$used && itemForm.squantity.$invalid}"
-                                                   style="width:130px"  x-ng-model-onblur input-required="true" notags/>
+                                                   ng-class="{fieldError: itemForm.input_squantity.$used && itemForm.input_squantity.$invalid}"
+                                                   style="width:60px"  x-ng-model-onblur input-required="true" notags/>
                                         </td>
                                         <td valign="top">
-                                            <input type="text" name="snet" nullifempty x-ng-model="item.net"
+                                            <input type="text" name="input_snet" nullifempty x-ng-model="item.net"
                                                    money
-                                                   ng-class="{fieldError: itemForm.snet.$used && itemForm.snet.$invalid}"
-                                                   style="width:130px"  x-ng-model-onblur input-required="true" notags/>
+                                                   ng-class="{fieldError: itemForm.input_snet.$used && itemForm.input_snet.$invalid}"
+                                                   style="width:60px"  x-ng-model-onblur input-required="true" notags/>
                                         </td>
                                         <td valign="top">
-                                            <input type="text" name="stax" x-ng-model="item.tax" nullifempty
+                                            <input type="text" name="input_stax" x-ng-model="item.tax" nullifempty
                                                    money
-                                                   ng-class="{fieldError: itemForm.stax.$dirty && itemForm.stax.$invalid}"
-                                                   style="width:130px" notags/>
+                                                   ng-class="{fieldError: itemForm.input_stax.$dirty && itemForm.input_stax.$invalid}"
+                                                   style="width:60px" notags/>
                                         </td>
                                         <td valign="top">
-                                            <input type="text" x-ng-model="item.shipping" nullifempty name="sshipping"
-                                                   ng-class="{fieldError: itemForm.sshipping.$used && itemForm.sshipping.$invalid}"
+                                            <input type="text" x-ng-model="item.shipping" nullifempty name="input_sshipping"
+                                                   ng-class="{fieldError: itemForm.input_sshipping.$used && itemForm.input_sshipping.$invalid}"
                                                    money
-                                                   style="width:130px"  x-ng-model-onblur input-required="true" notags/>
+                                                   style="width:60px"  x-ng-model-onblur input-required="true" notags/>
                                         </td>
                                         <td valign="top">
-                                            <input type="text" nullifempty name="sshippingAdditional" x-ng-model="item.shippingAdditional" style="width:110px"
-                                                   ng-class="{fieldError: itemForm.sshippingAdditional.$dirty && itemForm.sshippingAdditional.$invalid}"
+                                            <input type="text" nullifempty name="input_sshippingAdditional" x-ng-model="item.shippingAdditional" style="width:110px"
+                                                   ng-class="{fieldError: itemForm.input_sshippingAdditional.$dirty && itemForm.input_sshippingAdditional.$invalid}"
                                                    money
                                                    notags/>
                                         </td>
@@ -192,7 +196,12 @@
                             <div ng-if="multivariate==1">
                                 <table>
                                     <tr>
-                                        <td>{{ messages.offer_form_variation }}</td>
+                                        <td>
+						<div style="margin-bottom:4px;">
+                                            <span style="margin-right:6px;">{{ messages.offer_form_variation }}</span>
+                                            <button class="btn lang-button {{ $parent.active_language==lang?'btn-info':'' }}" ng-click="$parent.active_language=lang" ng-repeat="lang in languages">{{ lang }}</button>
+                                        	</div>
+					</td>
                                         <td>{{ messages.offer_form_quantity }}</td>
                                         <td>{{ messages.offer_form_net }}</td>
                                         <td>{{ messages.offer_form_tax }}</td>
@@ -203,44 +212,49 @@
                                     </tr>
                                     <tr ng-repeat="variation in item.variations" ng-form="variationForm">
                                         <td valign="top">
-                                            <input type="text" name="mtitle" nullifempty x-ng-model="variation.title"
-                                                   ng-class="{fieldError: variationForm.mtitle.$used && variationForm.mtitle.$invalid}"
-                                                   style="width:250px"  x-ng-model-onblur input-required="true" placeholder="{{variation.placeholder}}" notags/>
+					<input type="text" name="input_mtitle_en" nullifempty x-ng-model="variation.title_en"
+                                                   ng-class="{fieldError: variationForm.input_mtitle_en.$used && variationForm.input_mtitle_en.$invalid}"
+                                                   ng-show="active_language=='en'"
+                                                   style="width:200px"  x-ng-model-onblur input-required="{{ active_language=='en' }}" placeholder="{{variation.placeholder}}" notags/>
+                                            <input type="text" name="input_mtitle_fr" nullifempty x-ng-model="variation.title_fr"
+                                                   ng-class="{fieldError: variationForm.input_mtitle_fr.$used && variationForm.input_mtitle_fr.$invalid}"
+                                                   ng-show="active_language=='fr'"
+                                                   style="width:200px"  x-ng-model-onblur input-required="{{ active_language=='fr' }}" placeholder="{{variation.placeholder}}" notags/>
                                         </td>
                                         <td valign="top">
-                                            <input type="text" name="mquantity" nullifempty x-ng-model="variation.quantity"
-                                                   ng-class="{fieldError: variationForm.mquantity.$used && variationForm.mquantity.$invalid}"
+                                            <input type="text" name="input_mquantity" nullifempty x-ng-model="variation.quantity"
+                                                   ng-class="{fieldError: variationForm.input_mquantity.$used && variationForm.input_mquantity.$invalid}"
                                                    ng-pattern="/^[0-9]*$/"
-                                                   style="width:130px"  x-ng-model-onblur input-required="true" notags/>
+                                                   style="width:60px"  x-ng-model-onblur input-required="true" notags/>
                                         </td>
                                         <td valign="top">
-                                            <input type="text" name="mnet" nullifempty x-ng-model="variation.net"
-                                                   ng-class="{fieldError: variationForm.mnet.$used && variationForm.mnet.$invalid}"
+                                            <input type="text" name="input_mnet" nullifempty x-ng-model="variation.net"
+                                                   ng-class="{fieldError: variationForm.input_mnet.$used && variationForm.input_mnet.$invalid}"
                                                    money
-                                                   style="width:130px"   x-ng-model-onblur input-required="true" notags/>
+                                                   style="width:60px"   x-ng-model-onblur input-required="true" notags/>
                                         </td>
                                         <td valign="top">
-                                            <input type="text" nullifempty name="mtax" x-ng-model="variation.tax"
-                                                   ng-class="{fieldError: variationForm.mtax.$dirty && variationForm.mtax.$invalid}"
+                                            <input type="text" nullifempty name="input_mtax" x-ng-model="variation.tax"
+                                                   ng-class="{fieldError: variationForm.input_mtax.$dirty && variationForm.input_mtax.$invalid}"
                                                    money
-                                                   style="width:80px" notags/>
+                                                   style="width:60px" notags/>
                                         </td>
                                         <td valign="top">
-                                            <input type="text" name="mshipping" nullifempty x-ng-model="variation.shipping"
-                                                   ng-class="{fieldError: variationForm.mshipping.$used && variationForm.mshipping.$invalid}"
+                                            <input type="text" name="input_mshipping" nullifempty x-ng-model="variation.shipping"
+                                                   ng-class="{fieldError: variationForm.input_mshipping.$used && variationForm.input_mshipping.$invalid}"
                                                    money
-                                                   style="width:130px"  x-ng-model-onblur input-required="true" notags/>
+                                                   style="width:60px"  x-ng-model-onblur input-required="true" notags/>
                                         </td>
                                         <td valign="top">
-                                            <input type="text" nullifempty name="mshippingAdditional" x-ng-model="variation.shippingAdditional"
-                                                   ng-class="{fieldError: variationForm.mshippingAdditional.$dirty && variationForm.mshippingAdditional.$invalid}"
+                                            <input type="text" nullifempty name="input_mshippingAdditional" x-ng-model="variation.shippingAdditional"
+                                                   ng-class="{fieldError: variationForm.input_mshippingAdditional.$dirty && variationForm.input_mshippingAdditional.$invalid}"
                                                    money
                                                    style="width:110px" notags/>
                                         </td>
                                         <td valign="top" style="width:140px;">
-                                            <input id="imageupload{{ $index }}" type="file" imageupload name="file" uploadTarget="offer_item_variation" uploadTargetId="{{variation.id}}" style="display: none;"/>
+                                            <input id="imageupload{{ $index }}" type="file" imageupload name="file" uploadTarget="offer_item_variation" uploadTargetId="{{variation.id}}" uploadItemId="{{item.id}}" style="display: none;"/>
                                             <div style="width:100px;">
-                                                <img class='thumbnail' src="/static/${pom.version}/img/blank.png" imagecheck="/static/images/offer_item_variation/{{variation.id}}_thumb.png" style="width:100px;display:none;"/>
+                                                <img class='thumbnail' src="/static/${pom.version}/img/blank.png" imagepresent="{{ variation.img && variation.img!='' }}" imagecheck="/static/images/offer_item_variation/{{variation.id}}_thumb.png" style="width:100px;display:none;"/>
                                                 <img src="/static/${pom.version}/img/chooseimageabove.png"
                                                      style="cursor:pointer;" onclick="clickOnParentSibling(this, 'input');event.preventDefault();return false;"/>
                                             </div>
@@ -256,12 +270,30 @@
                         <td>
                             <div>
                                 <label>{{ messages.offer_form_photos }}</label>
-                                <input id="imageupload" type="file" imageupload name="file" uploadTarget="offer_item" uploadTargetId="{{item.id}}" style="display: none;"/>
+                                <input id="imageupload" type="file" imageupload name="file" uploadTarget="offer_item" uploadTargetId="{{item.id}}" uploadItemId="{{item.id}}" style="display: none;"/>
                                 <div style="width:100px;">
-                                    <img class='thumbnail' src="/static/${pom.version}/img/blank.png" imagecheck="/static/images/offer_item/{{item.id}}_thumb.png" style="width:100px;display:none;"/>
+                                    <img class='thumbnail' src="/static/${pom.version}/img/blank.png" imagepresent="{{ item.img && item.img!='' }}" imagecheck="/static/images/offer_item/{{item.id}}_thumb.png" style="width:100px;display:none;"/>
                                     <img src="/static/${pom.version}/img/chooseimageabove.png"
                                          style="cursor:pointer;" onclick="clickOnParentSibling(this, 'input');event.preventDefault();return false;"/>
                                 </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div>
+                                <label style="margin-top:6px;">
+                                    <span style="margin-right:6px;">{{ messages.checkout_product_description }}</span>
+                                    <button class="btn lang-button {{ $parent.active_language==lang?'btn-info':'' }}" ng-click="$parent.active_language=lang" ng-repeat="lang in languages">{{ lang }}</button>
+                                </label>
+                                <textarea name="input_productDescriptionEn"  nullifempty x-ng-model="item.description_en"
+                                       ng-show="active_language=='en'"
+                                       ng-class="{fieldError: itemForm.input_productDescriptionEn.$used && itemForm.input_productDescriptionEn.$invalid}"
+                                       style="width:700px;height:240px;" x-ng-model-onblur></textarea>
+                                <textarea name="input_productDescriptionFr"  nullifempty x-ng-model="item.description_fr"
+                                       ng-show="active_language=='fr'"
+                                       ng-class="{fieldError: itemForm.input_productDescriptionFr.$used && itemForm.input_productDescriptionFr.$invalid}"
+                                       style="width:700px;height:240px;" x-ng-model-onblur></textarea>
                             </div>
                         </td>
                     </tr>
