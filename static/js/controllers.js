@@ -414,6 +414,11 @@ angular.module('hh.controllers', [])
                 return 'btn-inverse';
             }
         };
+        $scope.removeImage = function(target, id) {
+            jaxrs.remove('offer/image/'+target, id, function (response) {
+                jq('thumbnail_'+target+'_'+id).attr('src', '/static/${pom.version}/img/blank.png');
+            });
+        }
         $scope.formatDate = function (date) {
             if (date == undefined)return '';
             if (date.indexOf('T') != -1) date = date.substring(0, date.indexOf('T'));

@@ -181,7 +181,7 @@ angular.module('hh.directives', [])
     }])
     .directive('imagecheck', function () {
         return function (scope, element, attrs, ctrl) {
-            if ( attrs.imagepresent=='true' ) {
+            if ( attrs.imagepresent==true ) {
                 var img = new Image();
                 img.src = attrs.imagecheck;
                 if (img.height != 0) {

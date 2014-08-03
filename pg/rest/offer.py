@@ -1,5 +1,8 @@
 from collections import namedtuple
+import glob
 import json
+import os
+from pg import model
 from pg.rest import base
 from pg.util.http_utils import get_customer_ip
 
@@ -104,3 +107,29 @@ def delete(offer_id):
     user = offer.ioc.new_user_service().find_by_username(session['username'])
     offer.ioc.new_offer_service().delete_offer(user.account, offer_id)
     return Response(status=200)
+
+@offer.route('/image/<target>/<id>', methods=['DELETE'])
+@base.authenticated
+def delete_image(target, id):
+    user = offer.ioc.new_user_service().find_by_username(session['username'])
+    if target=='offer_item':
+        offer_item = offer.ioc.new_offer_service().find_offer_item_by_id(id)
+        if offer_item.offer.account_id==user.account:
+            del offer_item.img
+            for fl in glob.glob(offer.ioc.get_config()['UPLOAD_FOLDER']+'/'+target+'/'+id+'*'):
+                os.remove(fl)
+            if offer_item.variations.count()>0:
+                for variation in offer_item.variations:
+                    if variation.img is None and variation.img is not None:
+                        offer_item.img = variation.img
+            model.base.db.session.commit()
+            return Response(status=200)
+    else:
+        offer_item_variation = offer.ioc.new_offer_service().find_offer_item_variation_by_id(id)
+        if offer_item_variation.offer_item.offer.account_id==user.account_id:
+            del offer_item_variation.img
+            for fl in glob.glob(offer.ioc.get_config()['UPLOAD_FOLDER']+'/'+target+'/'+id+'*'):
+                os.remove(fl)
+            model.base.db.session.commit()
+            return Response(status=200)
+    return Response(status=400)
