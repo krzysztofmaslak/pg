@@ -181,14 +181,14 @@ angular.module('hh.directives', [])
     }])
     .directive('imagecheck', function () {
         return function (scope, element, attrs, ctrl) {
-            if ( attrs.imagepresent==true ) {
-                var img = new Image();
-                img.src = attrs.imagecheck;
-                if (img.height != 0) {
-                    jq(element).css('display', 'block');
-                    jq(element).attr('src', attrs.imagecheck);
+            scope.$watch(attrs.imagepresent, function (newValue, oldValue) {
+                if (newValue && newValue !== undefined && newValue) {
+                    if (window.resourcePresent(attrs.imagecheck)) {
+                        jq(element).css('display', 'block');
+                        jq(element).attr('src', attrs.imagecheck);
+                    }
                 }
-            }
+            });
         };
     })
     .directive('popover', function () {
@@ -230,6 +230,7 @@ angular.module('hh.directives', [])
                     var thumbnail = jq('.thumbnail', jq(this).parent());
                     thumbnail.css('display', 'block')
                     thumbnail.attr('src', thumbnail.attr('imagecheck'));
+                    jq('#thumbnail_remove_'+attrs.uploadtarget+'_'+attrs.uploadtargetid).css('display', 'block');
                 }
             });
         };

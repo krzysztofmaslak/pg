@@ -255,7 +255,7 @@
                                             <input id="imageupload{{ $index }}" type="file" imageupload name="file" uploadTarget="offer_item_variation" uploadTargetId="{{variation.id}}" uploadItemId="{{item.id}}" style="display: none;"/>
                                             <div style="width:100px;position:relative;">
                                                 <img class='thumbnail' id="thumbnail_offer_item_variation_{{ variation.id }}" src="/static/${pom.version}/img/blank.png" imagepresent="{{ variation.img && variation.img!='' }}" imagecheck="/static/images/offer_item_variation/{{variation.id}}_thumb.png" style="width:100px;display:none;"/>
-                                                <div style="position:absolute;top:0px;right:0px;background:white;padding-left:2px;" ng-show="variation.img && variation.img!=''">
+                                                <div style="position:absolute;top:0px;right:0px;background:white;padding-left:2px;" ng-show="variation.img && variation.img!=''" id="thumbnail_remove_offer_item_variation_{{ variation.id }}" >
                                                     <a href="#" onclick="return false" ng-click="removeImage('offer_item_variation', variation.id);">x</a>
                                                 </div>
                                                 <img src="/static/${pom.version}/img/chooseimageabove.png"
@@ -276,7 +276,7 @@
                                 <input id="imageupload" type="file" imageupload name="file" uploadTarget="offer_item" uploadTargetId="{{item.id}}" uploadItemId="{{item.id}}" style="display: none;"/>
                                 <div style="position: relative; width:100px;">
                                     <img class='thumbnail' id="thumbnail_offer_item_{{ item.id }}" src="/static/${pom.version}/img/blank.png" imagepresent="{{ item.img && item.img!='' }}" imagecheck="/static/images/offer_item/{{item.id}}_thumb.png" style="width:100px;display:none;"/>
-                                    <div style="position:absolute;top:0px;right:0px;background:white;padding-left:2px;" ng-show="item.img && item.img!=''">
+                                    <div style="position:absolute;top:0px;right:0px;background:white;padding-left:2px;" ng-show="item.img && item.img!=''" id="thumbnail_remove_offer_item_{{ item.id }}">
                                         <a href="#" onclick="return false" ng-click="removeImage('offer_item', item.id);">x</a>
                                     </div>
                                     <img src="/static/${pom.version}/img/chooseimageabove.png"

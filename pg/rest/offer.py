@@ -113,9 +113,10 @@ def delete(offer_id):
 def delete_image(target, id):
     user = offer.ioc.new_user_service().find_by_username(session['username'])
     if target=='offer_item':
+        offer.logger.debug('['+get_customer_ip()+'] delete image - target offer_item')
         offer_item = offer.ioc.new_offer_service().find_offer_item_by_id(id)
         if offer_item.offer.account_id==user.account:
-            del offer_item.img
+            offer_item.img=None
             for fl in glob.glob(offer.ioc.get_config()['UPLOAD_FOLDER']+'/'+target+'/'+id+'*'):
                 os.remove(fl)
             if offer_item.variations.count()>0:
@@ -127,9 +128,10 @@ def delete_image(target, id):
     else:
         offer_item_variation = offer.ioc.new_offer_service().find_offer_item_variation_by_id(id)
         if offer_item_variation.offer_item.offer.account_id==user.account_id:
-            del offer_item_variation.img
+            offer_item_variation.img=None
             for fl in glob.glob(offer.ioc.get_config()['UPLOAD_FOLDER']+'/'+target+'/'+id+'*'):
                 os.remove(fl)
+            offer.logger.debug('['+get_customer_ip()+'] deleted images')
             model.base.db.session.commit()
             return Response(status=200)
     return Response(status=400)

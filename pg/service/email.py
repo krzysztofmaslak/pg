@@ -144,6 +144,7 @@ class PurchaseConfirmationEmailHandler(EmailHandler):
         msg.html = render_template('emails/'+email.language+'/purchase-confirmation.html',
                                      order_number = order.order_number,
                                      creation_date = order.creation_date,
+                                     currency = order.currency,
                                      email = order.billing[0].email,
                                      first_name = order.billing[0].first_name,
                                      last_name = order.billing[0].last_name,

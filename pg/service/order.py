@@ -151,6 +151,7 @@ class OrderService:
         offer = offer_service.find_by_id(payment.offer_id)
         if offer is None:
             raise ValueError("Couldn't find offer by id:"+payment.offer_id)
+        o.offer_hash = offer.hash
         if payment.items is None or len(payment.items)==0:
             raise ValueError("No items specified")
         o.account_id = offer.account_id
@@ -164,6 +165,7 @@ class OrderService:
                     if hasattr(item, 'shipping_additional'):
                         oi.shipping_additional = item.shipping_additional
                     oi.multivariate = item.multivariate
+                    oi.offer_item_id = item.id
                     item_variation = self.find_item_by_id(item.variations, item_dto.variation_id)
                     if item_variation is not None and item_variation.status==1 and item_variation.id==item_dto.selection:
                         if item_dto.quantity>item_variation.quantity:
@@ -172,6 +174,7 @@ class OrderService:
                             oiv = model.OrderItemVariation(oi, item_variation.title_en, item_variation.title_fr, item_dto.quantity, item_variation.net, item_variation.tax, item_variation.shipping)
                             if hasattr(item_variation, 'shipping_additional'):
                                 oiv.shipping_additional = item_variation.shipping_additional
+                            oiv.offer_item_variation_id = item_variation.id
                             variations.append(oiv)
                     oi.variations = variations
                     o.items.append(oi)
@@ -189,6 +192,7 @@ class OrderService:
                             else:
                                 oi = model.OrderItem(o, item.title_en, item.title_fr, item_dto.quantity, item.net, item.tax, item.shipping)
                                 oi.shipping_additional = item.shipping_additional
+                                oi.offer_item_id = item.id
                                 oi.multivariate = item.multivariate
                                 o.items.append(oi)
                     else:

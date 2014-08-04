@@ -1,4 +1,4 @@
-<div class="container-fluid min-height300" x-ng-controller="OrderCtrl">
+<div class="min-height300" x-ng-controller="OrderCtrl">
     <div class="alert alert-error" ng-show="errors.length!=0">
         <div ng-repeat="error in errors">
             {{error.message}}
@@ -8,7 +8,7 @@
         {{ messages.order_saved_successfully }}
     </div>
     <div class="row-fluid">
-        <div class="span3">
+        <div class="container-fluid">
             <form name="orderListForm" novalidate>
                 <div ng-show="orders.length!=0" class="formSection">
                     <!--<table style="margin-top:10px;margin-bottom:20px;" >-->
@@ -28,6 +28,7 @@
                             <th>{{ messages.order_list_date }}</th>
                             <th>{{ messages.order_list_fee }}</th>
                             <th>{{ messages.order_list_total }}</th>
+                            <th>{{ messages.offer_form_currency }}</th>
                             <th></th>
                         </tr>
                         <tr ng-repeat="order in orders">
@@ -35,6 +36,7 @@
                             <td>{{formatDate(order.creation_date)}}</td>
                             <td>{{formatPrice(order.fee)}}</td>
                             <td>{{formatPrice(order.total)}}</td>
+                            <td>{{ order.currency }}</td>
                             <td>
                                 <div style="white-space: nowrap;">
                                     <button ng-click="show(order)" class="btn btn-success">{{ messages.order_list_show }}</button>
@@ -54,7 +56,7 @@
                 </div>
             </form>
         </div>
-        <div class="span9">
+        <div class="span9" style="margin-top:10px;">
             <form name="orderForm" ng-show="order!=null" novalidate>
                 <div class="formSection detailsTitle">
                     <div>
@@ -65,153 +67,196 @@
                         <label><b>{{ messages.order_form_total }}</b></label>
                         <input type="text" name="total" id="total" value="{{ formatPrice(order.total) }}" style="width:400px;" readonly="true"/>
                     </div>
+                    <div>
+                        <label><b>{{ messages.offer_form_currency }}</b></label>
+                        <input type="text" name="currency" id="currency" value="{{ order.currency }}" style="width:400px;" readonly="true"/>
+                    </div>
+                    <div>
+                        <label><b>{{ messages.order_offer_code }}</b></label>
+                        <input type="text" name="offer_hash" id="offer_hash" value="{{ order.offer_hash }}" style="width:400px;" readonly="true"/>
+                    </div>
                 </div>
-                <div class="formSection bilingDetailsTitle">
-                    <div>
-                        <table>
+                <div class="panel panel-success">
+                  <div class="panel-heading">{{ messages.order_ordered_products }}</div>
+                  <div class="panel-body">
+                     <div class="formSection categoryProducts">
+                        <table class="table table-hover">
                             <tr>
+                                <th></th>
+                                <th>{{ messages.order_form_order_item_title }}</th>
+                                <th>{{ messages.order_form_order_item_quantity }}</th>
+                                <th>{{ messages.order_form_order_item_net }}</th>
+                                <th>{{ messages.order_form_order_item_tax }}</th>
+                            </tr>
+                            <tr ng-repeat="item in order.items">
                                 <td>
-                                    <div>
-                                         <label><b>{{ messages.order_form_first_name }}</b></label>
-                                         <input type="text" name="first_name" id="first_name" x-ng-model="order.billing[0].first_name" style="width:200px;" readonly="true"/>
-                                    </div>
+                                    <a href="#/offers/{{ order.offer_hash }}">
+                                        <img class='thumbnail' imagepresent="true" src="/static/${pom.version}/img/blank.png"
+                                             imagecheck="/static/images/{{ item.img }}_thumb.png" style="width:100px;display:none;"/>
+                                    </a>
                                 </td>
                                 <td>
-                                    <div>
-                                        <label><b>{{ messages.order_form_last_name }}</b></label>
-                                        <input type="text" name="last_name" id="last_name" x-ng-model="order.billing[0].last_name" style="width:200px;" readonly="true"/>
-                                    </div>
+                                    <a href="#/offers/{{ order.offer_hash }}">
+                                        {{item.title}}
+                                    </a>
                                 </td>
+                                <td>{{item.quantity}}</td>
+                                <td>{{item.net}}</td>
+                                <td>{{item.tax}}</td>
                             </tr>
                         </table>
                     </div>
-                    <div>
-                        <label><b>{{ messages.order_form_email }}</b></label>
-                        <input type="text" name="email" id="email" x-ng-model="order.billing[0].email" style="width:400px;" readonly="true"/>
-                    </div>
-                    <div>
-                        <label><b>{{ messages.order_form_address1 }}</b></label>
-                        <input type="text" name="address1" id="address1" x-ng-model="order.billing[0].address1" style="width:400px;" readonly="true"/>
-                    </div>
-                    <div>
-                        <label><b>{{ messages.order_form_address2 }}</b></label>
-                        <input type="text" name="address2" id="address2" x-ng-model="order.billing[0].address2" style="width:400px;" readonly="true"/>
-                    </div>
+                  </div>
+                </div>
 
-                    <div>
-                        <table>
-                            <tr>
-                                <td>
+                <div class="container-fluid" style="padding-left:0px;padding-right:0px;">
+                    <div class="row">
+                        <div class="formSection col-md-6 bilingDetailsTitle" ng-show="!order.billing[0].same_address">
+                            <div class="panel panel-success">
+                              <div class="panel-heading">{{ messages.order_shipping_details }}</div>
+                              <div class="panel-body">
+                                <div>
                                     <div>
-                                        <label><b>{{ messages.order_form_county }}</b></label>
-                                        <input type="text" name="county" id="county" x-ng-model="order.billing[0].county" style="width:200px;" readonly="true"/>
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <div>
+                                                        <label><b>{{ messages.order_form_first_name }}</b></label>
+                                                        <input type="text" name="first_name" id="first_name" x-ng-model="order.shipping[0].first_name" style="width:200px;" readonly="true"/>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div>
+                                                        <label><b>{{ messages.order_form_last_name }}</b></label>
+                                                        <input type="text" name="last_name" id="last_name" x-ng-model="order.shipping[0].last_name" style="width:200px;" readonly="true"/>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
                                     </div>
-                                </td>
-                                <td>
                                     <div>
-                                        <label><b>{{ messages.order_form_postal_code }}</b></label>
-                                        <input type="text" name="postal_code" id="postal_code" x-ng-model="order.billing[0].postal_code" style="width:200px;" readonly="true"/>
+                                        <label><b>{{ messages.order_form_address1 }}</b></label>
+                                        <input type="text" name="address1" id="address1" x-ng-model="order.shipping[0].address1" style="width:400px;" readonly="true"/>
                                     </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div>
-                        <table>
-                            <tr>
-                                <td>
+                                    <div>
+                                        <label><b>{{ messages.order_form_address2 }}</b></label>
+                                        <input type="text" name="address2" id="address2" x-ng-model="order.shipping[0].address2" style="width:400px;" readonly="true"/>
+                                    </div>
                                     <div>
                                         <label><b>{{ messages.order_form_country }}</b></label>
-                                        <input type="text" name="country" id="country" x-ng-model="order.billing[0].country" style="width:200px;" readonly="true"/>
+                                        <input type="text" name="country" id="country" x-ng-model="order.shipping[0].country" style="width:400px;" readonly="true"/>
                                     </div>
-                                </td>
-                                <td>
                                     <div>
                                         <label><b>{{ messages.order_form_city }}</b></label>
-                                        <input type="text" name="city" id="city" x-ng-model="order.billing[0].city" style="width:200px;" readonly="true"/>
+                                        <input type="text" name="city" id="city" x-ng-model="order.shipping[0].city" style="width:400px;" readonly="true"/>
                                     </div>
-                                </td>
-                            </tr>
-                        </table>
+                                    <div>
+                                        <label><b>{{ messages.order_form_county }}</b></label>
+                                        <input type="text" name="county" id="county" x-ng-model="order.shipping[0].county" style="width:400px;" readonly="true"/>
+                                    </div>
+                                    <div>
+                                        <label><b>{{ messages.order_form_postal_code }}</b></label>
+                                        <input type="text" name="postal_code" id="postal_code" x-ng-model="order.shipping[0].postal_code" style="width:400px;" readonly="true"/>
+                                    </div>
+                                    <div>
+                                        <label><b>{{ messages.order_form_company }}</b></label>
+                                        <input type="text" name="company" id="company" x-ng-model="order.shipping[0].company" style="width:400px;" readonly="true"/>
+                                    </div>
+                                    <div>
+                                        <label><b>{{ messages.order_form_phone_number }}</b></label>
+                                        <input type="text" name="phone_number" id="phone_number" x-ng-model="order.shipping[0].phone_number" style="width:400px;" readonly="true"/>
+                                    </div>
+                                    <div>
+                                        <label><b>{{ messages.order_form_email }}</b></label>
+                                        <input type="text" name="email" id="email" x-ng-model="order.shipping[0].email" style="width:400px;" readonly="true"/>
+                                    </div>
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+
+                        <div class="formSection col-md-6 bilingDetailsTitle">
+                            <div class="panel panel-default">
+                              <div class="panel-heading">
+                                  <span ng-show="!order.billing[0].same_address">{{ messages.order_billing_details }}</span>
+                                  <span ng-show="order.billing[0].same_address">{{ messages.order_billing_and_shipping_details }}</span>
+                              </div>
+                              <div class="panel-body">
+                                <div>
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <div>
+                                                     <label><b>{{ messages.order_form_first_name }}</b></label>
+                                                     <input type="text" name="first_name" id="first_name" x-ng-model="order.billing[0].first_name" style="width:200px;" readonly="true"/>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <label><b>{{ messages.order_form_last_name }}</b></label>
+                                                    <input type="text" name="last_name" id="last_name" x-ng-model="order.billing[0].last_name" style="width:200px;" readonly="true"/>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div>
+                                    <label><b>{{ messages.order_form_email }}</b></label>
+                                    <input type="text" name="email" id="email" x-ng-model="order.billing[0].email" style="width:400px;" readonly="true"/>
+                                </div>
+                                <div>
+                                    <label><b>{{ messages.order_form_address1 }}</b></label>
+                                    <input type="text" name="address1" id="address1" x-ng-model="order.billing[0].address1" style="width:400px;" readonly="true"/>
+                                </div>
+                                <div>
+                                    <label><b>{{ messages.order_form_address2 }}</b></label>
+                                    <input type="text" name="address2" id="address2" x-ng-model="order.billing[0].address2" style="width:400px;" readonly="true"/>
+                                </div>
+
+                                <div>
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <div>
+                                                    <label><b>{{ messages.order_form_county }}</b></label>
+                                                    <input type="text" name="county" id="county" x-ng-model="order.billing[0].county" style="width:200px;" readonly="true"/>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <label><b>{{ messages.order_form_postal_code }}</b></label>
+                                                    <input type="text" name="postal_code" id="postal_code" x-ng-model="order.billing[0].postal_code" style="width:200px;" readonly="true"/>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div>
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <div>
+                                                    <label><b>{{ messages.order_form_country }}</b></label>
+                                                    <input type="text" name="country" id="country" x-ng-model="order.billing[0].country" style="width:200px;" readonly="true"/>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <label><b>{{ messages.order_form_city }}</b></label>
+                                                    <input type="text" name="city" id="city" x-ng-model="order.billing[0].city" style="width:200px;" readonly="true"/>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
-                <div class="formSection bilingDetailsTitle" ng-show="!order.billing[0].same_address">
-                    <div>
-                        <div>
-                            <table>
-                                <tr>
-                                    <td>
-                                        <div>
-                                            <label><b>{{ messages.order_form_first_name }}</b></label>
-                                            <input type="text" name="first_name" id="first_name" x-ng-model="order.shipping[0].first_name" style="width:200px;" readonly="true"/>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div>
-                                            <label><b>{{ messages.order_form_last_name }}</b></label>
-                                            <input type="text" name="last_name" id="last_name" x-ng-model="order.shipping[0].last_name" style="width:200px;" readonly="true"/>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                        <div>
-                            <label><b>{{ messages.order_form_address1 }}</b></label>
-                            <input type="text" name="address1" id="address1" x-ng-model="order.shipping[0].address1" style="width:400px;" readonly="true"/>
-                        </div>
-                        <div>
-                            <label><b>{{ messages.order_form_address2 }}</b></label>
-                            <input type="text" name="address2" id="address2" x-ng-model="order.shipping[0].address2" style="width:400px;" readonly="true"/>
-                        </div>
-                        <div>
-                            <label><b>{{ messages.order_form_country }}</b></label>
-                            <input type="text" name="country" id="country" x-ng-model="order.shipping[0].country" style="width:400px;" readonly="true"/>
-                        </div>
-                        <div>
-                            <label><b>{{ messages.order_form_city }}</b></label>
-                            <input type="text" name="city" id="city" x-ng-model="order.shipping[0].city" style="width:400px;" readonly="true"/>
-                        </div>
-                        <div>
-                            <label><b>{{ messages.order_form_county }}</b></label>
-                            <input type="text" name="county" id="county" x-ng-model="order.shipping[0].county" style="width:400px;" readonly="true"/>
-                        </div>
-                        <div>
-                            <label><b>{{ messages.order_form_postal_code }}</b></label>
-                            <input type="text" name="postal_code" id="postal_code" x-ng-model="order.shipping[0].postal_code" style="width:400px;" readonly="true"/>
-                        </div>
-                        <div>
-                            <label><b>{{ messages.order_form_company }}</b></label>
-                            <input type="text" name="company" id="company" x-ng-model="order.shipping[0].company" style="width:400px;" readonly="true"/>
-                        </div>
-                        <div>
-                            <label><b>{{ messages.order_form_phone_number }}</b></label>
-                            <input type="text" name="phone_number" id="phone_number" x-ng-model="order.shipping[0].phone_number" style="width:400px;" readonly="true"/>
-                        </div>
-                        <div>
-                            <label><b>{{ messages.order_form_email }}</b></label>
-                            <input type="text" name="email" id="email" x-ng-model="order.shipping[0].email" style="width:400px;" readonly="true"/>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="formSection categoryProducts">
-                    <table class="table table-hover">
-                        <tr>
-                            <th>{{ messages.order_form_order_item_title }}</th>
-                            <th>{{ messages.order_form_order_item_quantity }}</th>
-                            <th>{{ messages.order_form_order_item_net }}</th>
-                            <th>{{ messages.order_form_order_item_tax }}</th>
-                        </tr>
-                        <tr ng-repeat="item in order.items">
-                            <td>{{item.title}}</td>
-                            <td>{{item.quantity}}</td>
-                            <td>{{item.net}}</td>
-                            <td>{{item.tax}}</td>
-                        </tr>
-                    </table>
-
-                </div>
             </form>
         </div>
     </div>

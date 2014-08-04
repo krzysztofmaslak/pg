@@ -10,6 +10,7 @@ class Order(base.db.Model, base.JsonSerializable):
     currency = base.db.Column(base.db.String(3))
     country = base.db.Column(base.db.String(3))
     lang = base.db.Column(base.db.String(3))
+    offer_hash = base.db.Column(base.db.String(15))
     creation_date = base.db.Column(base.db.DateTime)
     confirmation_email = base.db.Column(base.db.Boolean)
     payment_status = base.db.Column(base.db.String(20))

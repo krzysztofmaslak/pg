@@ -49,6 +49,13 @@ window.getParameter = function( name ){
   else
     return results[1];
 }
+window.resourcePresent = function(url)
+{
+    var http = new XMLHttpRequest();
+    http.open('HEAD', url, false);
+    http.send();
+    return http.status!=404;
+}
 window.showLoadingIndicator = function() {
     jq('#loadingIndicator').css('display', 'block');
     jq('#loadingIndicator').addClass('hover');
@@ -77,6 +84,7 @@ angular.module('pgadminapp', ['ngRoute', 'hh.filters', 'hh.services', 'hh.direct
 	config(['$routeProvider', function($routeProvider) {
         $routeProvider.when('/landing',      {templateUrl: '/static/${pom.version}/partials/admin/landing.html'});
         $routeProvider.when('/offers',      {templateUrl: '/static/${pom.version}/partials/admin/offer.html'});
+        $routeProvider.when('/offers/:offer_hash',      {templateUrl: '/static/${pom.version}/partials/admin/offer.html'});
         $routeProvider.when('/orders',      {templateUrl: '/static/${pom.version}/partials/admin/order.html'});
         $routeProvider.when('/withdraw',      {templateUrl: '/static/${pom.version}/partials/admin/withdraw.html'});
         $routeProvider.when('/traffic',      {templateUrl: '/static/${pom.version}/partials/admin/traffic.html'});

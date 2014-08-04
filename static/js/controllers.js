@@ -322,6 +322,21 @@ angular.module('hh.controllers', [])
                 return 'btn-inverse';
             }
         };
+        $scope.getLocalizedTitle = function (order_item) {
+            if (window.admin_lang == 'fr') {
+                if (order_item.title_fr && order_item.title_fr !== undefined && order_item.title_fr !== '') {
+                    return order_item.title_fr;
+                } else {
+                    return order_item.title_en;
+                }
+            } else {
+                if (order_item.title_en && order_item.title_en !== undefined && order_item.title_en !== '') {
+                    return order_item.title_en;
+                } else {
+                    return order_item.title_fr;
+                }
+            }
+        }
         $scope.previous = function () {
             $scope.current -= 1;
             $scope.go($scope.current);
@@ -354,10 +369,15 @@ angular.module('hh.controllers', [])
                     if (item.variations && item.variations.length !== 0) {
                         for (var j = 0; j < item.variations.length; j++) {
                             var variation = item.variations[j];
-                            items[items.length] = {title: item.title + '(' + variation.title + ')', quantity: variation.quantity, net: variation.net, tax: variation.tax};
+                            if (window.resourcePresent('/static/images/offer_item_variation/'+variation.offer_item_variation_id+'_thumb.png')) {
+                                items[items.length] = {title: $scope.getLocalizedTitle(item) + ' [' + $scope.getLocalizedTitle(variation) + ']', quantity: variation.quantity, net: variation.net, tax: variation.tax, img:'offer_item_variation/'+variation.offer_item_variation_id};
+                            } else {
+                                items[items.length] = {title: $scope.getLocalizedTitle(item) + ' [' + $scope.getLocalizedTitle(variation) + ']', quantity: variation.quantity, net: variation.net, tax: variation.tax, img:'offer_item/'+item.offer_item_id};
+                            }
+
                         }
                     } else {
-                        items[items.length] = {title: item.title, quantity: item.quantity, net: item.net, tax: item.tax};
+                        items[items.length] = {title: $scope.getLocalizedTitle(item), quantity: item.quantity, net: item.net, tax: item.tax, img:'offer_item/'+item.offer_item_id};
                     }
                 }
                 $scope.order.items = items;
@@ -407,6 +427,11 @@ angular.module('hh.controllers', [])
                 $scope.new();
             }
         });
+        if ($routeParams.offer_hash && $routeParams.offer_hash!==undefined) {
+            jaxrs.query('offer/'+$routeParams.offer_hash, null, function (response) {
+                $scope.edit(response);
+            });
+        }
         $scope.paginatorItemClass = function (page) {
             if ($scope.current == (page + 1)) {
                 return 'btn-info';
@@ -417,6 +442,7 @@ angular.module('hh.controllers', [])
         $scope.removeImage = function(target, id) {
             jaxrs.remove('offer/image/'+target, id, function (response) {
                 jq('thumbnail_'+target+'_'+id).attr('src', '/static/${pom.version}/img/blank.png');
+                jq('thumbnail_'+target+'_'+id).css('display', 'none');
             });
         }
         $scope.formatDate = function (date) {
@@ -917,6 +943,7 @@ angular.module('hh.controllers', [])
                                     $scope.$digest();
                                     jq("body,html").animate({scrollTop: 50}, 'slow');
                                     hideLoadingIndicator();
+                                    jq.cookie("shoppingCart", angular.toJson({items:[]}));
                                 },
                                 error: function (response) {
                                     jq('#stripeChoosePayment').click(function (event) {
