@@ -16,15 +16,23 @@
     <title>www.justsale.it - {{ title }}</title>
 </head>
 
-<body id="x-ng-app">
+<body id="x-ng-app" x-ng-app='pgapp-list'>
+<div x-ng-controller='PGAppCtrl'>
+    <div style="background:white;margin-top:0px;padding:4px;background:white;margin-top:0px;padding:4px;border-bottom:1px solid #dddddd" id="banner_cookie_inner">
+            <a id="banner_cookie_close" style="float:right;cursor:pointer;font-size:12px;">[X]</a>
+            <p style="margin-top:0px;font-size:13px;margin-bottom:0px;"><b><span ng-bind="messages.cookie_heading"></span></b>
+                <span ng-bind="messages.cookie_info1"></span>
+                <span ng-bind="messages.cookie_info2"></span>
+                <a href="/privacy-policy.html" style="margin-left:4px;"><span ng-bind="messages.cookie_policy"></span></a>.
+            </p>                                     </div>
     <input type="hidden" id="clientCurrency" name="clientCurrency"/>
-    <div x-ng-app='pgapp-list'>
+    <div>
         <div data-loading></div>
-        <div x-ng-controller='PGAppCtrl'>
+        <div>
             <div x-ng-view></div>
         </div>
     </div>
-
+</div>
     <!--#include virtual="/static/{{ project_version }}/template/footer.html" -->
 
     <script type="text/javascript">

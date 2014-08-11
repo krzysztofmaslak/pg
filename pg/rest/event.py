@@ -2,6 +2,7 @@
 __author__ = 'xxx'
 
 import json
+from pg import wsgi
 from pg.rest import base
 from pg.util.http_utils import get_customer_ip
 from flask import Blueprint, jsonify, Response
@@ -11,6 +12,7 @@ event_blueprint = Blueprint('event', __name__, url_prefix='/rest/event')
 
 @event_blueprint.route('/')
 @base.authenticated
+@wsgi.catch_exceptions
 def list():
     user = event_blueprint.ioc.new_user_service().find_by_username(session['username'])
     offer_traffic = event_blueprint.ioc.new_event_service().find_offer_traffic_for(user.account_id, request.args.get('from'), request.args.get('to'))

@@ -2,8 +2,7 @@ import datetime
 
 __author__ = 'root'
 
-from pg import model
-
+from pg import model, util
 
 class EventService:
      def __init__(self, ioc):
@@ -30,10 +29,8 @@ class EventService:
                 if event.hash not in all_offers_traffic:
                     offer = self.ioc.new_offer_service().find_by_hash(event.hash)
                     offer_traffic = {'count':1, 'hash':offer.hash}
-                    if account.lang=='fr':
-                        offer_traffic['title']=offer.title_fr
-                    elif account.lang=='en':
-                        offer_traffic['title']=offer.title_en
+                    traffic_title = util.LocaleUtil().get_localized_title(offer, account.lang)
+                    offer_traffic['title']=traffic_title
                     all_offers_traffic[event.hash]=offer_traffic
                 else:
                     offer_traffic = all_offers_traffic[event.hash]

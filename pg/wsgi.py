@@ -19,7 +19,7 @@ __author__ = 'xxx'
 from flask import Blueprint, session, redirect, request, g, Response
 from flask import render_template
 from wand.image import Image
-from pg import model
+from pg import model, util
 import locale
 import re
 wsgi_blueprint = Blueprint('wsgi', __name__)
@@ -35,6 +35,18 @@ def login_required(f):
         if user is None:
             return redirect('/login.html')
         return f(*args, **kwargs)
+    return decorated_function
+
+def catch_exceptions(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        try:
+            return f(*args, **kwargs)
+        except Exception as e:
+            wsgi_blueprint.logger.exception(e)
+            return render_template('500.html',
+               project_version=wsgi_blueprint.ioc.get_config()['PROJECT_VERSION'],
+            )
     return decorated_function
 
 LANGUAGE_CODES = ('en')
@@ -137,10 +149,12 @@ def get_sha_part(hash):
 
 @wsgi_blueprint.route('/', methods=['GET', 'POST'])
 @wsgi_blueprint.route('/index.html', methods=['GET', 'POST'])
+@catch_exceptions
 def index():
     return redirect('/register.html')
 
 @wsgi_blueprint.route('/api/image/<offer_item_id>/<target>/<id>', methods=['POST'])
+@catch_exceptions
 def upload_image(offer_item_id, target, id):
     wsgi_blueprint.logger.info('['+get_customer_ip()+'] Starting image upload')
     try:
@@ -185,6 +199,7 @@ def upload_image(offer_item_id, target, id):
         return Response(status=400)
 
 @wsgi_blueprint.route('/login.html', methods=['GET'])
+@catch_exceptions
 def login():
     messages = resource_bundle.ResourceBundle()
     lang = detect_language()
@@ -206,13 +221,15 @@ def login():
             # todo handle when user is null
             wsgi_blueprint.logger.info('['+get_customer_ip()+'] Failed activation, no user for given hash:%s'%activation_hash)
             pass
+    messages = messages.get_all(lang)
     return render_template('main.html',
        project_version=wsgi_blueprint.ioc.get_config()['PROJECT_VERSION'],
-       messages=messages.get_all(lang),
+       messages=messages,
        page='login'
     )
 
 @wsgi_blueprint.route('/register.html', methods=['GET'])
+@catch_exceptions
 def register():
     messages = resource_bundle.ResourceBundle()
     lang = detect_language()
@@ -225,6 +242,7 @@ def register():
 
 
 @wsgi_blueprint.route('/new-password.html', methods=['GET'])
+@catch_exceptions
 def new_password():
     messages = resource_bundle.ResourceBundle()
     lang = detect_language()
@@ -236,6 +254,7 @@ def new_password():
 
 
 @wsgi_blueprint.route('/reset-password.html', methods=['GET'])
+@catch_exceptions
 def reset_password():
     messages = resource_bundle.ResourceBundle()
     lang = detect_language()
@@ -246,6 +265,7 @@ def reset_password():
     )
 
 @wsgi_blueprint.route('/contact.html', methods=['GET'])
+@catch_exceptions
 def contact_form():
     messages = resource_bundle.ResourceBundle()
     lang = detect_language()
@@ -256,12 +276,14 @@ def contact_form():
     )
 
 @wsgi_blueprint.route('/admin/logout')
+@catch_exceptions
 def do_logout():
     # remove the username from the session if it's there
     session.pop('username', None)
     return redirect("/logout.html")
 
 @wsgi_blueprint.route('/logout.html')
+@catch_exceptions
 def logout():
     messages = resource_bundle.ResourceBundle()
     lang = detect_language()
@@ -271,8 +293,19 @@ def logout():
        page='logout'
     )
 
+@wsgi_blueprint.route('/privacy-policy.html')
+@catch_exceptions
+def privacy_policy():
+    messages = resource_bundle.ResourceBundle()
+    lang = detect_language()
+    return render_template('privacy-policy.html',
+       project_version=wsgi_blueprint.ioc.get_config()['PROJECT_VERSION'],
+       messages=messages.get_all(lang)
+    )
+
 @wsgi_blueprint.route('/admin/')
 @login_required
+@catch_exceptions
 def admin_landing():
     messages = resource_bundle.ResourceBundle()
     user = wsgi_blueprint.ioc.new_user_service().find_by_username(session['username'])
@@ -286,6 +319,7 @@ def admin_landing():
                            project_version=wsgi_blueprint.ioc.get_config()['PROJECT_VERSION'])
 
 @wsgi_blueprint.route('/<path:path>', methods=['GET'])
+@catch_exceptions
 def fallback(path):
     messages = resource_bundle.ResourceBundle()
     lang = detect_language()
@@ -294,19 +328,9 @@ def fallback(path):
     	if offer is not None:
                 wsgi_blueprint.logger.info('['+get_customer_ip()+'] loading offer page by hash: %s'%path)
                 wsgi_blueprint.ioc.new_event_service().persist(model.Event(get_customer_ip(), offer.account, path))
-                offer_title = ''
-                if lang=='fr':
-                        if offer.title_fr is not None:
-                                offer_title = offer.title_fr
-                        else:
-                                offer_title = offer.title_en
-                else:
-                        if offer.title_en is not None:
-                                offer_title = offer.title_en
-                        else:
-                                offer_title = offer.title_fr
-                return render_template('offer.html', 
-			messages=messages.get_all(lang),
+                offer_title = util.LocaleUtil().get_localized_title(offer, lang)
+                return render_template('offer.html',
+			        messages=messages.get_all(lang),
                		language = lang,
                		title=offer_title,
                		account_hash = offer.account.hash,

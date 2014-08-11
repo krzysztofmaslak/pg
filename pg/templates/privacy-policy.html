@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="no-js ie6 oldie" ><![endif]-->
+<!--[if IE 7]><html class="no-js ie7 oldie" ><![endif]-->
+<!--[if IE 8]><html class="no-js ie8 oldie" ><![endif]-->
+<!--[if IE 9]><html class="no-js ie9 oldie" ><![endif]-->
+<!--[if gt IE 9]><html class="no-js" ><![endif]-->
+<!--[if !IE]><html class="no-js" ><![endif]-->
+<head>
+    <link rel="stylesheet" href="/static/{{ project_version }}/css/normalize.css" />
+    <link href="/static/{{ project_version }}/css/bootstrap.min.css" rel="stylesheet" media="screen" />
+    <link rel="stylesheet" href="/static/{{ project_version }}/css/main.css" />
+    <link rel="stylesheet" href="/static/{{ project_version }}/css/font-awesome.css" />
+    <title>Just Sale It</title>
+    <script src="/static/{{ project_version }}/lib/jquery.js"></script>
+    <script type="text/javascript">
+        var jq = jQuery.noConflict();
+    </script>
+</head>
+
+<body x-ng-app='pgapp-login'>
+    <div x-ng-controller='PGAppCtrl'>
+        <div style="background:white;margin-top:0px;padding:4px;" id="banner_cookie_inner">
+            <a id="banner_cookie_close" style="float:right;cursor:pointer;font-size:12px;">[X]</a>
+            <p style="margin-top:0px;font-size:13px;margin-bottom:0px;"><b><span ng-bind="messages.cookie_heading"></span></b>
+                <span ng-bind="messages.cookie_info1"></span>
+                <span ng-bind="messages.cookie_info2"></span>
+                <a href="/privacy-policy.html" style="margin-left:4px;"><span ng-bind="messages.cookie_policy"></span></a>.
+            </p>                                     </div>
+        <div style="opacity: 1;" id="bg" class="bg"></div>
+        <div class="outer">
+            <div class="inner inner">
+                <div data-loading></div>
+                <div class="content">
+                    <div class="main" style="max-width:1000px;background:white;border-radius: 4px;margin-top:10px;">
+                        <div id="privacyPolicy"><div class="grid_5 padding1a docContents" id="privacyPolicyContents">
+                        <h3>Contents</h3>
+                        <p>Jump to section:</p>
+
+                        <ul class="unstyled">
+                            <li><a href="#collection">Collection of information</a></li>
+                            <li><a href="#disclosure">Disclosure and sharing of information</a></li>
+                            <li><a href="#cookies">Cookies and log files</a></li>
+                            <li><a href="#delete">Deleting and deactivating your account</a></li>
+                            <li><a href="#security">Security</a></li>
+                            <li><a href="#changes">Policy changes</a></li>
+                        </ul>
+                    </div>
+                    <div class="grid_10 padding1a" id="privacyPolicyContent">
+                        <p>Last update on December 12, 2012</p>
+                        <p>This privacy statement discloses the privacy practices for Spreadline Limited trading as justsale.it website ("the Website").<br><br>
+                            "we", "us" and "our" refer collectively to Spreadline Limited (Company number 498302) registered at 34 South Central Rockbrook, Sandyford Business Park, Dublin 18, Ireland.<br>
+                            This privacy policy is intended to give you confidence in the privacy and security of the
+                            personal information we obtain from your activity with this website.<br><br>
+                            Please note that we are not responsible for any use of your personal information you provide to third party websites
+                            that use our services.<br>
+                            By using this website or our services, you are accepting the practices described in this Policy.<br>
+                            If you do not agree with this Policy, delete all cookies from your browser cache after visiting our
+                            Website and do not visit or use our Website or Services. Your continued use of our Website or Services will signify your acceptance of this Policy.
+                        </p>
+
+                        <h4><a name="collection"></a>Collection of information</h4>
+                        <p>
+                            When you visit the justsale.it website or use our Services, we collect information sent to us by your computer, mobile phone or other access device.<br>
+                            The information sent to us includes data on pages you access, your computer IP address, device identifiers, the type of operating system you’re using, your location, mobile network information
+                            and other information.<br>
+                            If you open an account with us, we will collect your personal information such as your name, address, phone, email, and other similar information.<br>
+                        </p>
+
+                        <h4><a name="disclosure"></a>Disclosure and sharing of information</h4>
+                        <p>
+                            We may disclose information to:
+                        </p><ul>
+                            <li style="margin-bottom:6px;line-height:1.2em;">Parties that help us with our business that is service providers with whom we have contracts and privacy agreements
+                                which will use that data only in connection with services they perform for us and not for their own benefit.</li>
+                            <li style="margin-bottom:6px;">Authorities and other institutions that work to prevent any frauds and work to make internet better safer place.</li>
+                            <li>Other third parties with your consent or direction to do so.</li>
+                        </ul>
+                        <p></p>
+                        <h4><a name="cookies"></a>Cookies and log files</h4>
+                        <p>When you access this website or use our services we may store cookies on your computer or device that you use.
+                            If you do not wish cookies to be placed on your PC, then they can be disabled in your web browser.
+                            When you use that website or our services we will record your IP address, we do that for security and analytic purposes.
+                        </p>
+
+                        <h4><a name="delete"></a>Deleting and deactivating your account</h4>
+                        <p>
+                            Ceasing you information can be done in two ways, you can temporarily deactivate your account - which will suspend all services that we provide you, or you can delete your account
+                            which will remove all your private information from our system except data that we collect for security purposes which will be archived and stored offline in secured premises.
+                        </p>
+
+                        <h4><a name="security"></a>Security</h4>
+                        <p>We care about your information, we implemented procedures and we run regular controls that have to ensure that your data is stored in secure manner.</p>
+
+                        <h4><a name="changes"></a>Policy changes</h4>
+                        <p>We reserve the right to make changes to this policy without prior notice. Any changes to this policy will be displayed on your dashboard after logging in to your account,
+                            we will also try to highlight all relevant changes that we made.</p>
+                    </div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--#include virtual="/static/{{ project_version }}/template/footer.html" -->
+
+        <script type="text/javascript">
+            window.messages = JSON.parse('{{ messages }}'.replaceAll('&amp;#39;', "'").replaceAll('&#39;', '"'))
+        </script>
+        <div id="loadingIndicator" class="loadingIndicator"></div>
+    </div>
+</body>
+<!--[if lt IE 7]></html><![endif]-->
+<!--[if IE 7]></html><![endif]-->
+<!--[if IE 8]></html><![endif]-->
+<!--[if IE 9]></html><![endif]-->
+<!--[if gt IE 9]></html><![endif]-->
+<!--[if !IE]></html><![endif]-->

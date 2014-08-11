@@ -1,4 +1,4 @@
-from pg import model
+from pg import model, util
 import stripe
 
 __author__ = 'xxx'
@@ -31,24 +31,26 @@ class PaypalService:
                                 <input type="hidden" name="currency_code" id="currency_code" value='"""+order.currency.upper()+"""'/>
                                 """
          for item in basket_items:
-            html += """<input type="hidden" name="item_name_"""+str(item['index'])+'" value="'+item['title']+'"/>'
+            html += """<input type="hidden" name="item_name_"""+str(item['index'])+'" value="'+util.Escape().escape_to_param(item['title'])+'"/>'
             html += '<input type="hidden" name="amount_'+str(item['index'])+'" value="'+ str(item['value'])+'"/>'
          html += """
                     <input type="hidden" name="item_number" value="BB-PROD1"/>
                     <input type="hidden" name="notify_url" value='"""+ipn_host+"""/paypal/ipn/'/>"""
          b = order.billing.first()
          html += """<input type="hidden" name="country_code" value='"""+b.country+"""'/>
-            <input type="hidden" name="address1" value='"""+b.address1+"""'/>
-            <input type="hidden" name="address2" value='"""+b.address2+"""'/>
-            <input type="hidden" name="city" value='"""+b.city+"""'/>"""
+            <input type="hidden" name="address1" value='"""+util.Escape().escape_to_param(b.address1)+"""'/>
+            <input type="hidden" name="address2" value='"""+util.Escape().escape_to_param(b.address2)+"""'/>
+            <input type="hidden" name="city" value='"""+util.Escape().escape_to_param(b.city)+"""'/>"""
+         if order.lang!='en':
+            html = html + "<input type=\"hidden\" name=\"lc\" value=\""+order.lang.upper()+"\"/>"
          if b.county is not None and len(b.county)!=0:
-            html = html + "<input type=\"hidden\" name=\"county\" value=\""+b.county+"\"/>"
+            html = html + "<input type=\"hidden\" name=\"county\" value=\""+util.Escape().escape_to_param(b.county)+"\"/>"
          if b.postal_code is not None and len(b.postal_code)!=0:
-            html = html + "<input type=\"hidden\" name=\"zip\" value=\""+b.postal_code+"\"/>"
+            html = html + "<input type=\"hidden\" name=\"zip\" value=\""+util.Escape().escape_to_param(b.postal_code)+"\"/>"
          html = html+"""<input type="hidden" name="email" value='"""+b.email+"""'/>
-        <input type="hidden" name="first_name" value='"""+b.first_name+"""'/>
-        <input type="hidden" name="last_name" value='"""+b.last_name+"""'/>
-        <input type="hidden" name="payer_email" value='"""+b.email+"""'/>
+        <input type="hidden" name="first_name" value='"""+util.Escape().escape_to_param(b.first_name)+"""'/>
+        <input type="hidden" name="last_name" value='"""+util.Escape().escape_to_param(b.last_name)+"""'/>
+        <input type="hidden" name="payer_email" value='"""+util.Escape().escape_to_param(b.email)+"""'/>
         <input type="hidden" name="payer_id" value='"""+str(b.id)+"""'/>
         <script type="text/javascript">document.getElementById('paypalForm').submit()</script>
         </form>

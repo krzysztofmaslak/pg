@@ -2,6 +2,7 @@
 __author__ = 'xxx'
 
 import json
+from pg import wsgi
 from pg.rest import base
 from pg.util.http_utils import get_customer_ip
 from flask import Blueprint, jsonify, Response
@@ -11,6 +12,7 @@ order_blueprint = Blueprint('order', __name__, url_prefix='/rest/order')
 
 @order_blueprint.route('/refund')
 @base.authenticated
+@wsgi.catch_exceptions
 def refund():
     order_blueprint.logger.debug('['+get_customer_ip()+'] process order refund request by username %s, order_id=%s'%(session['username'], request.args.get('id')))
     user = order_blueprint.ioc.new_user_service().find_by_username(session['username'])
@@ -23,6 +25,7 @@ def refund():
 
 @order_blueprint.route('/')
 @base.authenticated
+@wsgi.catch_exceptions
 def list():
     order_blueprint.logger.debug('['+get_customer_ip()+'] list orders username %s, page=%s'%(session['username'], request.args.get('page')))
     user = order_blueprint.ioc.new_user_service().find_by_username(session['username'])

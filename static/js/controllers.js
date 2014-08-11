@@ -30,6 +30,11 @@ angular.module('hh.controllers', [])
             if (date.indexOf('T') != -1) date = date.substring(0, date.indexOf('T'));
             return date;
         };
+	$scope.formatDateTime = function (date) {
+            if (date == undefined)return '';
+            if (date.indexOf('T') != -1) date = date.replace('T', ' ');
+            return date;
+        };
         $scope.formatPrice = function (price) {
             if ((price + '').indexOf('.') !== -1) {
                 var sufix = (price + '').substring((price + '').indexOf('.') + 1);
@@ -145,6 +150,17 @@ angular.module('hh.controllers', [])
             }
             return euroPrice;
         }
+        setTimeout(function(){
+            jq('#banner_cookie_close').click(function(e){
+                e.preventDefault;
+                var date = new Date();
+                var cookieName = 'elittleangel_cookie_accept';
+                date.setTime(date.getTime()+(365*24*60*60*1000));
+                var expires = "expires="+date.toGMTString();
+                document.cookie =cookieName + '=1;'+ expires +';path=/';
+                jq('#banner_cookie_inner').remove();
+            });
+        }, 1000)
     }])
     .controller('RegisterCtrl', ['$scope', '$routeParams', '$location', 'jaxrs', 'ValidationService', function ($scope, $routeParams, $location, jaxrs, ValidationService) {
         $scope.register = {};
@@ -599,6 +615,8 @@ angular.module('hh.controllers', [])
         function ($scope, $routeParams, $location, jaxrs, $timeout, ValidationService) {
             $scope.messages = window.messages;
             $scope.withdrawals = [];
+            $scope.errors = [];
+            $scope.withdrawal = {};
             $scope.balance = window.balance;
             jaxrs.query('withdraw/balance', null, function (response) {
                 $scope.balance = response.balance;
@@ -606,10 +624,17 @@ angular.module('hh.controllers', [])
             });
             $scope.requestWithdrawal = function () {
                 if (ValidationService.validate($scope.withdrawForm)) {
-                    jaxrs.create('withdraw/request', {amount: $scope.amount, iban: $scope.iban, bic: $scope.bic}, function (response) {
-                        $scope.balance = response.balance;
-                        $scope.withdrawals = response.withdrawals;
-                        $scope.savedSuccessfully = true;
+                    $scope.errors = [];
+                    jaxrs.create('withdraw/request', $scope.withdrawal, function (response, status) {
+                        if (status == 400) {
+                            if (response.msg && response.msg!==undefined) {
+                                $scope.errors[$scope.errors.length]={message:response.msg.replace('&#39;', "'")}
+                            }
+                        } else {
+                            $scope.balance = response.balance;
+                            $scope.withdrawals = response.withdrawals;
+                            $scope.savedSuccessfully = true;
+                        }
                     });
                 }
             }
@@ -659,7 +684,7 @@ angular.module('hh.controllers', [])
             });
             $scope.getOfferPrice = function (item) {
                 var price = 0;
-                if (item.variations) {
+                if (item.variations && item.variations.length!==0 ) {
                     price += (1 * (item.variations[0].net + item.variations[0].tax));
                 } else {
                     price += (1 * (item.net + item.tax));
@@ -703,6 +728,7 @@ angular.module('hh.controllers', [])
             $scope.shoppingCart = jq.cookie("shoppingCart") != null ? angular.fromJson(jq.cookie("shoppingCart")) : {items: []};
             $scope.url = $location.absUrl();
             $scope.account_hash = window.account_hash;
+            $scope.account_name = window.account_name;
             if ($scope.url.indexOf('#') != -1) {
                 $scope.url = $scope.url.substring(0, $scope.url.indexOf('#'));
             }
@@ -863,7 +889,7 @@ angular.module('hh.controllers', [])
             };
             $scope.itemPrice = function (item) {
                 var price = 0;
-                if (item.variations) {
+                if (item.variations && item.variations.length!==0) {
                     for (var j = 0; j < item.variations.length; j++) {
                         if (item.variations[j].id == item.selection) {
                             price += (item.quantity * (item.variations[j].net + item.variations[j].tax));
@@ -1020,6 +1046,8 @@ angular.module('hh.controllers', [])
                             first.focus();
                         }
                     }, 500);
+		            event.preventDefault();
+                    return false;
                 }
             }
         }])

@@ -89,7 +89,7 @@ li {
 }
 .cart-page .cart-summary .cart-items > li .product-title, .cart-items-list .cart-pricing-label {
     display: inline-block;
-    max-width: 79%;
+    max-width: 81%;
     word-break: break-all;
 }
 .cart-items-list {

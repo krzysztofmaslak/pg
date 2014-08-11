@@ -195,12 +195,19 @@ angular.module('hh.directives', [])
          return {
              restrict: 'A',
              link: function (scope, elem, attrs) {
-                jq(elem).popover({
-                    trigger: 'focus',
-                    title: attrs.popovertitle
-                })
-             }
-         }
+		setTimeout(function(){
+			jq(elem)
+   				.popover({
+                    			trigger: 'focus',
+                    			title: attrs.popovertitle
+                		})
+   				.click(function(e) { 
+       					e.preventDefault(); 
+       					jq(this).focus(); 
+   				});
+             	},500);
+              }
+	}
     })
     .directive('fancybox', ['$timeout', function (timer) {
          return {

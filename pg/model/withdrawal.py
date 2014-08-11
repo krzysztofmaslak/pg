@@ -21,7 +21,7 @@ class Withdrawal(base.db.Model, base.JsonSerializable):
         self.creation_date = creation_date
         self.status = False
 
-    def _as_json(self, exclude=(), extra=()):
+    def as_json(self, exclude=(), extra=()):
         return self._as_json(exclude=['account', 'iban', 'bic'])
 
 

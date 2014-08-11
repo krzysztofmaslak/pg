@@ -6,7 +6,7 @@ __author__ = 'root'
 
 import json
 from werkzeug.security import generate_password_hash, check_password_hash
-from pg import model, resource_bundle
+from pg import model, resource_bundle, wsgi
 from pg.wsgi import detect_language
 
 __author__ = 'xxx'
@@ -17,6 +17,7 @@ from flask import request
 password_blueprint = Blueprint('password', __name__, url_prefix='/rest/password')
 
 @password_blueprint.route('/reset', methods=['POST'])
+@wsgi.catch_exceptions
 def reset():
     password_blueprint.logger.info('['+get_customer_ip()+'] Processing reset password request')
     user = password_blueprint.ioc.new_user_service().find_by_username(request.json['username'])
@@ -42,6 +43,7 @@ def reset():
         return Response(json.dumps({"error_message": error_message}), status=204, mimetype='application/json')
 
 @password_blueprint.route('/new', methods=['POST'])
+@wsgi.catch_exceptions
 def new():
     messages = resource_bundle.ResourceBundle()
     password_blueprint.logger.info('['+get_customer_ip()+'] Processing new password request')

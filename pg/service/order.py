@@ -19,7 +19,7 @@ class OrderService:
 
     def refund_order(self, order):
         if isinstance(order, model.Order):
-            order.refund_payment = 1;
+            order.refund_payment = 1
             model.base.db.session.commit()
         else:
             raise TypeError("Expected Order type in OrderService.refund_order %s"%type(order))
@@ -40,7 +40,7 @@ class OrderService:
         order_total = order.total
         variable_fee = order_total*4.0/100.0
         fixed_fee = 0.40
-        total_fee = variable_fee+fixed_fee
+        total_fee = (variable_fee+fixed_fee)*1.23
         order_net = order_total-total_fee
         self.logger.info("Calculated fee for order %s [total=%s, fee=%s, net=%s]"%(order.order_number, order_total, total_fee, order_net))
         return order_net
@@ -179,7 +179,7 @@ class OrderService:
                     oi.variations = variations
                     o.items.append(oi)
                 else:
-                    raise ValueError("Couldn't find offer item for id:"+item_dto.id)
+                    raise ValueError("Couldn't find offer item for id:%s"%str(item_dto.id))
             else:
                 if item_dto.quantity is not None and item_dto.quantity!=0:
                     item = self.find_item_by_id(offer.items, item_dto.id)

@@ -8,11 +8,12 @@ __author__ = 'xxx'
 
 from flask import Blueprint, jsonify, Response
 from flask import request, session
-from pg import model, resource_bundle
+from pg import model, resource_bundle, wsgi
 
 contact_blueprint = Blueprint('contact', __name__, url_prefix='/rest/contact')
 
 @contact_blueprint.route('/', methods=['POST'])
+@wsgi.catch_exceptions
 def new_message():
     contact_blueprint.logger.info('['+get_customer_ip()+'] Send contact message')
     oi = contact_blueprint.ioc.new_contact_service().save_conctact(model.Contact(get_customer_ip(), request.json['email'], request.json['message']))

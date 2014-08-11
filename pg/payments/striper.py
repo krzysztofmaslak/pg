@@ -3,7 +3,7 @@ from pg.util.http_utils import get_customer_ip
 
 __author__ = 'krzysztof.maslak'
 
-from pg import model
+from pg import model, wsgi
 import traceback
 import sys
 from werkzeug.exceptions import BadRequest
@@ -22,6 +22,7 @@ def find_order_total(order):
         return total
 
 @stripe_rest.route('/process', methods=['POST'])
+@wsgi.catch_exceptions
 def process():
     stripe_rest.logger.info('['+get_customer_ip()+'] Process payment with stripe for order:'+str(request.json['order_id']))
     order = stripe_rest.ioc.new_order_service().find_by_id(int(request.json['order_id']))

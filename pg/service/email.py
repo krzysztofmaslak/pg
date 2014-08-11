@@ -3,7 +3,7 @@ import traceback
 from flask import render_template
 from flask.ext.mail import Message
 from werkzeug.security import generate_password_hash
-from pg import model, resource_bundle
+from pg import model, resource_bundle, util
 
 __author__ = 'krzysztof.maslak'
 
@@ -81,18 +81,7 @@ class PurchaseConfirmationEmailHandler(EmailHandler):
         shipping = 0.0
         basket_items = []
         for item in order.items:
-            item_title = ''
-            if order.lang=='en':
-                if item.title_en is not None and len(item.title_en)>0:
-                    item_title = item.title_en
-                else:
-                    item_title = item.title_fr
-            else:
-                if item.title_fr is not None and len(item.title_fr)>0:
-                    item_title = item.title_fr
-                else:
-                    item_title = item.title_en
-
+            item_title = util.LocaleUtil().get_localized_title(item, order.lang)
             if item.variations is not None and item.variations.count()>0:
                 itotal = 0.0
                 for iv in item.variations:
@@ -105,17 +94,7 @@ class PurchaseConfirmationEmailHandler(EmailHandler):
                                 shipping = shipping + iv.shipping_additional
                             else:
                                 shipping = shipping + iv.shipping
-                    item_variation_title = '';
-                    if order.lang=='en':
-                        if iv.title_en is not None and len(iv.title_en)>0:
-                            item_variation_title = iv.title_en
-                        else:
-                            item_variation_title = iv.title_fr
-                    else:
-                        if iv.title_fr is not None and len(iv.title_fr)>0:
-                            item_variation_title = iv.title_fr
-                        else:
-                            item_variation_title = iv.title_en
+                    item_variation_title = util.LocaleUtil().get_localized_title(iv, order.lang)
                     if order.offer.currency!=order.currency:
                         basket_items.append({'index':(i+1), 'title':item_title+'('+item_variation_title+')', 'quantity':iv.quantity, 'value': round(self.ioc.new_currency_service().convert(order.currency, itotal), 2)})
                     else:

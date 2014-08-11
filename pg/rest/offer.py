@@ -2,7 +2,7 @@ from collections import namedtuple
 import glob
 import json
 import os
-from pg import model
+from pg import model, util, wsgi
 from pg.rest import base
 from pg.util.http_utils import get_customer_ip
 
@@ -17,6 +17,7 @@ offer_item_variation = Blueprint('offer_item_variation', __name__, url_prefix='/
 
 @offer.route('/')
 @base.authenticated
+@wsgi.catch_exceptions
 def list():
     offer.logger.debug('['+get_customer_ip()+'] list offers username %s, page=%s'%(session['username'], request.args.get('page')))
     user = offer.ioc.new_user_service().find_by_username(session['username'])
@@ -27,6 +28,7 @@ def list():
     return Response(json.dumps(js),  mimetype='application/json')
 
 @offer.route('/account/<hash>', methods=['GET'])
+@wsgi.catch_exceptions
 def get_by_account(hash):
     offer.logger.debug('['+get_customer_ip()+'] retrieve offers by hash %s'%hash)
     account = offer.ioc.new_account_service().find_by_hash(hash)
@@ -35,12 +37,14 @@ def get_by_account(hash):
     return Response(json.dumps(js),  mimetype='application/json')
 
 @offer.route('/<hash>', methods=['GET'])
+@wsgi.catch_exceptions
 def get_by_hash(hash):
     offer.logger.debug('['+get_customer_ip()+'] retrieve offer by hash %s'%hash)
     js = offer.ioc.new_offer_service().find_by_hash(hash).as_json()
     return Response(json.dumps(js),  mimetype='application/json')
 
 @offer.route('/description/<hash>/<id>', methods=['GET'])
+@wsgi.catch_exceptions
 def get_offer_description_by_hash(hash, id):
     o = offer.ioc.new_offer_service().find_by_hash(hash)
     lang = request.args.get('lang')
@@ -51,22 +55,14 @@ def get_offer_description_by_hash(hash, id):
             if str(item.id)==str(id):
                 item = o.items[0]
                 if item.img is not None:
-                    html += "<img src='/static/images/"+item.img+"_500.png' style='float:left;margin:30px;margin-left:10px;margin-top:10px;width:200px;'/>"
-                if lang=='fr':
-                    if item.description_fr is not None and len(item.description_fr)>0:
-                        html += item.description_fr
-                    else:
-                        html += item.description_en
-                else:
-                    if item.description_en is not None and len(item.description_en)>0:
-                        html += item.description_en
-                    else:
-                        html += item.description_fr
+                    html += "<img src='/static/images/"+item.img+"_500.png' style='float:left;margin:30px;margin-left:10px;margin-top:10px;margin-bottom:10px;width:200px;'/>"
+                html += util.LocaleUtil().get_localized_description(item, lang)
     html = html+'</html>'
     return Response(html,  mimetype='text/html')
 
 @offer.route('/new', methods=['POST'])
 @base.authenticated
+@wsgi.catch_exceptions
 def new_offer():
     user = offer.ioc.new_user_service().find_by_username(session['username'])
     o = offer.ioc.new_offer_service().new_offer(user.account)
@@ -74,6 +70,7 @@ def new_offer():
 
 @offer_item.route('/new', methods=['POST'])
 @base.authenticated
+@wsgi.catch_exceptions
 def new_offer_item():
     user = offer_item.ioc.new_user_service().find_by_username(session['username'])
     oi = offer_item.ioc.new_offer_service().new_offer_item(user.account, request.json['offer_id'])
@@ -81,6 +78,7 @@ def new_offer_item():
 
 @offer_item_variation.route('/new', methods=['POST'])
 @base.authenticated
+@wsgi.catch_exceptions
 def new_offer_item_variation():
     user = offer_item_variation.ioc.new_user_service().find_by_username(session['username'])
     count = int(request.json['count'])
@@ -94,6 +92,7 @@ def new_offer_item_variation():
 
 @offer.route('/', methods=['POST'])
 @base.authenticated
+@wsgi.catch_exceptions
 def save():
     user = offer.ioc.new_user_service().find_by_username(session['username'])
     offer.logger.debug('['+get_customer_ip()+'] save offer %s'%json.dumps(request.json))
@@ -103,6 +102,7 @@ def save():
 
 @offer.route('/<offer_id>', methods=['DELETE'])
 @base.authenticated
+@wsgi.catch_exceptions
 def delete(offer_id):
     user = offer.ioc.new_user_service().find_by_username(session['username'])
     offer.ioc.new_offer_service().delete_offer(user.account, offer_id)
@@ -110,6 +110,7 @@ def delete(offer_id):
 
 @offer.route('/image/<target>/<id>', methods=['DELETE'])
 @base.authenticated
+@wsgi.catch_exceptions
 def delete_image(target, id):
     user = offer.ioc.new_user_service().find_by_username(session['username'])
     if target=='offer_item':

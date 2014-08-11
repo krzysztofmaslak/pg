@@ -17,7 +17,6 @@ class ServiceFactory:
             'UPLOAD_FOLDER':'/usr/share/nginx/html/justsale/static/images',
             'stripe.publishable':'pk_test_Ji7oZwG0vViJbhCaZjNHfRlX',
             'stripe.secret':'sk_test_b482pdSri7rYt2pzyzqtbISd',
-            'paypal.authToken':'BkRqdeXwVMD7RMSw03xAwrwyyG9cs14DZH5XZud_oRZH9SPpfRH2k9_KhtO',
             'paypal.seller':'seller_1302451451_biz@gmail.com',
             'paypal.url':'https://www.sandbox.paypal.com',
             'address.www':'https://www.justsale.it',

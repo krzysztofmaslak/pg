@@ -2,7 +2,7 @@ from itertools import chain
 import urllib
 from urllib.request import urlopen
 import requests
-from pg import resource_bundle, model
+from pg import resource_bundle, model, util, wsgi
 from pg.util import security
 from pg.util.http_utils import get_customer_ip
 
@@ -12,6 +12,7 @@ from flask import request, session, redirect
 paypal_success = Blueprint('paypal_success', __name__, url_prefix='/paypal_success')
 
 @paypal_success.route('/', methods=['GET'])
+@wsgi.catch_exceptions
 def process_success():
     paypal_success.logger.info('['+get_customer_ip()+'] Paypal success')
     # TODO implement payment-successful.html
@@ -100,6 +101,7 @@ def ordered_storage(f):
 
 @ipn.route('/', methods=['POST'])
 @ordered_storage
+@wsgi.catch_exceptions
 def process_ip():
     ipn.logger.info('IPN received')
     ipn_message = IPNMessageParser(request.form).parse()
@@ -134,6 +136,7 @@ def process_ip():
     return Response(status=500)
 
 @paypal_init.route('/', methods=['GET'])
+@wsgi.catch_exceptions
 def process_init():
     order_id = request.args.get('order_id')
     paypal_init.logger.info('['+get_customer_ip()+'] Paypal init [order_id:'+order_id+']')
@@ -143,21 +146,12 @@ def process_init():
     shipping = 0.0
     basket_items = []
     for item in order.items:
-        item_title = ''
-        if order.lang=='fr':
-            if item.title_fr is not None:
-                item_title = item.title_fr
-            else:
-                item_title = item.title_en
-        else:
-            if item.title_en is not None:
-                item_title = item.title_en
-            else:
-                item_title = item.title_fr
+        item_title = util.LocaleUtil().get_localized_title(item, order.lang)
         if item.variations is not None and item.variations.count()>0:
             itotal = 0.0
             for iv in item.variations:
                 itotal = itotal+((iv.quantity*(iv.net+iv.tax)))
+                item_variation_title = util.LocaleUtil().get_localized_title(iv, order.lang)
                 if iv.quantity==1:
                     shipping = shipping + iv.shipping
                 else:
@@ -168,9 +162,9 @@ def process_init():
                         else:
                             shipping = shipping + iv.shipping
                 if order.offer.currency!=order.currency:
-                    basket_items.append({'index':(i+1), 'title':item_title+'('+iv.title+')', 'value':round(paypal_init.ioc.new_currency_service().convert(order.currency, itotal), 2)})
+                    basket_items.append({'index':(i+1), 'title':item_title+'('+item_variation_title+')', 'value':round(paypal_init.ioc.new_currency_service().convert(order.currency, itotal), 2)})
                 else:
-                    basket_items.append({'index':(i+1), 'title':item_title+'('+iv.title+')', 'value': round(itotal, 2)})
+                    basket_items.append({'index':(i+1), 'title':item_title+'('+item_variation_title+')', 'value': round(itotal, 2)})
                 i = i+1
         else:
             if order.offer.currency!=order.currency:

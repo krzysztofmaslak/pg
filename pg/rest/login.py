@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from pg import model, resource_bundle
 from pg.util.http_utils import get_customer_ip
 from pg.wsgi import detect_language
-
+from pg import wsgi
 __author__ = 'xxx'
 
 from flask import Blueprint, Response, session
@@ -13,6 +13,7 @@ from flask import request
 login_blueprint = Blueprint('login', __name__, url_prefix='/rest/login')
 
 @login_blueprint.route('/', methods=['POST'])
+@wsgi.catch_exceptions
 def login():
     username = request.json['username']
     messages = resource_bundle.ResourceBundle()

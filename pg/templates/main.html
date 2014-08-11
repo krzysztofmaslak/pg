@@ -17,44 +17,69 @@
     </script>
 </head>
 
-<body>
-    <div style="opacity: 1;" id="bg" class="bg"></div>
-    <div class="outer">
-        <div class="inner inner-{{ page }}" x-ng-app='pgapp-{{ page }}'>
-            <div data-loading></div>
-            <div class="content" x-ng-controller='PGAppCtrl'>
-                <div class="main">
-                    <div style="" id="identity" class="identity">
-                        <div id="spinner" class="spinner" style="display: none;"></div>
-                        <img src="/static/{{ project_version }}/img/shopping-cart.png" class="logo" id="logo"/>
-                    </div>
-                    <div style="opacity: 1;" id="tagline" class="tagline">
-                        <p><span id="type">Just Sale It</span><span id="typed-cursor" style="visibility: hidden;">|</span></p>
-                    </div>
+<body x-ng-app='pgapp-{{ page }}'>
+    <div x-ng-controller='PGAppCtrl'>
+        <div style="background:white;margin-top:0px;padding:4px;" id="banner_cookie_inner">
+            <a id="banner_cookie_close" style="float:right;cursor:pointer;font-size:12px;">[X]</a>
+            <p style="margin-top:0px;font-size:13px;margin-bottom:0px;"><b><span ng-bind="messages.cookie_heading"></span></b>
+                <span ng-bind="messages.cookie_info1"></span>
+                <span ng-bind="messages.cookie_info2"></span>
+                <a href="/privacy-policy.html" style="margin-left:4px;"><span ng-bind="messages.cookie_policy"></span></a>.
+            </p>                                     </div>
+        <div style="opacity: 1;" id="bg" class="bg"></div>
+        <div class="outer">
+            <div class="inner inner-{{ page }}">
+                <div data-loading></div>
+                <div class="content">
+                    <div class="main">
+                        <div style="" id="identity" class="identity">
+                            <div id="spinner" class="spinner" style="display: none;"></div>
+                            <img src="/static/{{ project_version }}/img/shopping-cart.png" class="logo" id="logo"/>
+                        </div>
+                        <div style="opacity: 1;" id="tagline" class="tagline">
+                            <p><span id="type">Just Sale It</span><span id="typed-cursor" style="visibility: hidden;">|</span></p>
+                        </div>
 
-                    <div x-ng-view></div>
-                    <p style="margin-top: 4px; opacity: 1;" id="footer" class="footer">
-                        {% if page=='register' or page=='reset-password' or page=='logout' or page=='contact' %}
-                            {{ messages.already_a_member }}<a style="margin-left:6px;" href="/login.html">{{ messages.login }}</a>
-                            <a href="/contact.html" style="float:right;">{{ messages.contact }}</a>
-                        {% elif page=='login' %}
-                            {{ messages.need_an_account }}<a style="margin-left:6px;" href="/register.html">{{ messages.register }}</a>
-                            <a href="/contact.html" style="float:right;">{{ messages.contact }}</a>
-                        {% else %}
-                            &copy; 2010 Just Sale It
-                        {% endif %}
-                    </p>
+                        <div x-ng-view></div>
+                        <p style="margin-top: 4px; opacity: 1;" id="footer" class="footer">
+                            {% if page=='register' or page=='reset-password' or page=='logout' or page=='contact' %}
+                                {{ messages.already_a_member }}<a style="margin-left:6px;" href="/login.html">{{ messages.login }}</a>
+                                <a href="/contact.html" style="float:right;">{{ messages.contact }}</a>
+                            {% elif page=='login' %}
+                                 <span ng-bind="messages.need_an_account"></span><a style="margin-left:6px;" href="/register.html"><span ng-bind="messages.register"></span></a>
+                                <a href="/contact.html" style="float:right;">{{ messages.contact }}</a>
+                            {% else %}
+                                &copy; 2010 Just Sale It
+                            {% endif %}
+                        </p>
+                        <section style="color:rgba(255, 255, 255, 0.5);margin-top:30px;" class="fees">
+                          <div style="text-align:center;"><span ng-bind="messages.pricing_title"></span></div>
+                          <h2 style="margin-top:6px;text-align:center;">4% + 40c</h2>
+                          <p style="text-align: center;"><span ng-bind="messages.pricing_per_successful"></span></p>
+
+                          <dl style="background:none repeat scroll 0 0 #fff;border-radius:4px;color:#7e7975;padding:15px;">
+                              <dt class="no-monthly-fees"><strong><span ng-bind="messages.pricing_no_monthly_fees"></span></strong></dt>
+                              <dd><span ng-bind="messages.pricing_only_get_charged_when_earn_money"></span></dd><br>
+
+                              <dt class="refunds"><strong><span ng-bind="messages.pricing_no_refund_costs"></span></strong></dt>
+                              <dd><span ng-bind="messages.pricing_if_you_refund_transaction"></span></dd>
+
+                              <br><dt class="no-hidden-fees"><strong><span ng-bind="messages.pricing_no_hidden_fees"></span></strong></dt>
+                              <dd><span ng-bind="messages.pricing_no_setup_fee"></span></dd>
+                          </dl>
+                        </section>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <!--#include virtual="/static/{{ project_version }}/template/footer.html" -->
+
+        <script type="text/javascript">
+            window.messages = JSON.parse('{{ messages }}'.replaceAll('&amp;#39;', "'").replaceAll('&#39;', '"'))
+        </script>
+        <div id="loadingIndicator" class="loadingIndicator"></div>
     </div>
-
-    <!--#include virtual="/static/{{ project_version }}/template/footer.html" -->
-
-    <script type="text/javascript">
-        window.messages = JSON.parse('{{ messages }}'.replaceAll('&amp;#39;', "'").replaceAll('&#39;', '"'))
-    </script>
-    <div id="loadingIndicator" class="loadingIndicator"></div>
 </body>
 <!--[if lt IE 7]></html><![endif]-->
 <!--[if IE 7]></html><![endif]-->

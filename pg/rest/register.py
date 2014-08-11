@@ -5,7 +5,7 @@ from werkzeug.security import generate_password_hash
 from pg import model, resource_bundle
 from pg.util.http_utils import get_customer_ip
 from pg.wsgi import detect_language
-
+from pg import wsgi
 __author__ = 'xxx'
 
 from flask import Blueprint, Response, session
@@ -14,6 +14,7 @@ from flask import request
 register_rest = Blueprint('register', __name__, url_prefix='/rest/register')
 
 @register_rest.route('/', methods=['POST'])
+@wsgi.catch_exceptions
 def register():
     account_name = request.json['name']
     account = register_rest.ioc.new_account_service().find_by_name(account_name)

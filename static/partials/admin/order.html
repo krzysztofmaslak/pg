@@ -1,5 +1,5 @@
 <div class="min-height300" x-ng-controller="OrderCtrl">
-    <div class="alert alert-error" ng-show="errors.length!=0">
+    <div class="alert alert-danger" ng-show="errors.length!=0">
         <div ng-repeat="error in errors">
             {{error.message}}
         </div>
@@ -33,7 +33,7 @@
                         </tr>
                         <tr ng-repeat="order in orders">
                             <td>{{ order.order_number }}</td>
-                            <td>{{formatDate(order.creation_date)}}</td>
+                            <td>{{formatDateTime(order.creation_date)}}</td>
                             <td>{{formatPrice(order.fee)}}</td>
                             <td>{{formatPrice(order.total)}}</td>
                             <td>{{ order.currency }}</td>
