@@ -233,11 +233,23 @@ angular.module('hh.directives', [])
                 dataType: 'json',
                 autoUpload: true,
                 done: function (e, data) {
-                    console.log('done');
-                    var thumbnail = jq('.thumbnail', jq(this).parent());
-                    thumbnail.css('display', 'block')
-                    thumbnail.attr('src', thumbnail.attr('imagecheck'));
-                    jq('#thumbnail_remove_'+attrs.uploadtarget+'_'+attrs.uploadtargetid).css('display', 'block');
+                    if ( attrs.uploadtarget=='additional_image' ) {
+                        scope.$apply(function() {
+                            for(var i=0;i<scope.$parent.offer.items.length;i++) {
+                                if (scope.$parent.offer.items[i].id===parseInt(attrs.uploadtargetid)) {
+                                    scope.$parent.offer.items[i].images = data.result.images;
+                                }
+                            }
+                        });
+                        for(var i=0;i<scope.$parent.offer.images.length;i++) {
+                            jq('#thumbnail_remove_'+attrs.uploadtarget+'_'+scope.$parent.offer.images[i].id).css('display', 'block');
+                        }
+                    } else {
+                        var thumbnail = jq('.thumbnail', jq(this).parent());
+                        thumbnail.css('display', 'block')
+                        thumbnail.attr('src', thumbnail.attr('imagecheck'));
+                        jq('#thumbnail_remove_'+attrs.uploadtarget+'_'+attrs.uploadtargetid).css('display', 'block');
+                    }
                 }
             });
         };

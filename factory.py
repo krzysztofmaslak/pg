@@ -87,3 +87,6 @@ class ServiceFactory:
 
     def new_event_service(self):
         return service.EventService(self)
+
+    def new_image_service(self):
+        return service.ImageService(self)

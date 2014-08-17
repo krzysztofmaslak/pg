@@ -25,7 +25,7 @@ class OfferService:
         return model.OfferItemVariation.query.get(offer_item_variation_id)
 
     def find_by_account_id(self, account_id):
-        return model.Offer.query.filter(model.Offer.account_id==account_id, model.Offer.status==1).all()
+        return model.Offer.query.filter(model.Offer.account_id==account_id, model.Offer.status==1, model.Offer.visibility==1).all()
 
     def find_by_page(self, account, page):
         if isinstance(account, model.Account):
@@ -83,6 +83,7 @@ class OfferService:
         if hasattr(offer_dto, 'title_fr'):
             o.title_fr = sanitizer.html_to_text(offer_dto.title_fr)
         o.currency = offer_dto.currency
+        o.visibility = offer_dto.visibility
         if o.items is not None and len(o.items.all())>0:
             for item in o.items:
                 offer_item_dto = self.find_item_by_id(item.id, offer_dto.items)
@@ -103,6 +104,7 @@ class OfferService:
 
                     if hasattr(offer_item_dto, 'condition'):
                         item.condition = offer_item_dto.condition
+
                     item.status = 1
 
                     item.multivariate = offer_item_dto.multivariate

@@ -16,3 +16,4 @@ from .paypal import PaypalService
 from .withdraw import WithdrawService
 from .contact import ContactService
 from .event import EventService
+from .image import ImageService

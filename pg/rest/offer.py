@@ -113,10 +113,18 @@ def delete(offer_id):
 @wsgi.catch_exceptions
 def delete_image(target, id):
     user = offer.ioc.new_user_service().find_by_username(session['username'])
-    if target=='offer_item':
+    if target=='additional_image':
+        offer.logger.debug('['+get_customer_ip()+'] delete additional image id:'+id)
+        image = offer.ioc.new_image_service().find_by_id(int(id))
+        if image.offer_item.offer.account_id==user.account_id:
+            for fl in glob.glob(offer.ioc.get_config()['UPLOAD_FOLDER']+'/'+target+'/'+id+'*'):
+                os.remove(fl)
+            offer.ioc.new_image_service().delete(image)
+            return Response(status=200)
+    elif target=='offer_item':
         offer.logger.debug('['+get_customer_ip()+'] delete image - target offer_item')
         offer_item = offer.ioc.new_offer_service().find_offer_item_by_id(id)
-        if offer_item.offer.account_id==user.account:
+        if offer_item.offer.account_id==user.account_id:
             offer_item.img=None
             for fl in glob.glob(offer.ioc.get_config()['UPLOAD_FOLDER']+'/'+target+'/'+id+'*'):
                 os.remove(fl)

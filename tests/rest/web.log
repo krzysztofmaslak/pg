@@ -1,0 +1,156 @@
+pg.app > [INFO] [2014-08-16 10:42:39,297] : [127.0.0.1] Processing authentication request
+pg.app > [INFO] [2014-08-16 10:42:39,377] : [127.0.0.1] Authentication failed password mismatch
+pg.app > [INFO] [2014-08-16 10:42:39,398] : [127.0.0.1] Processing authentication request
+pg.app > [INFO] [2014-08-16 10:42:39,474] : [127.0.0.1] Authentication successful
+pg.app > [INFO] [2014-08-16 10:42:39,935] : [127.0.0.1] Processing authentication request
+pg.app > [INFO] [2014-08-16 10:42:40,013] : [127.0.0.1] Authentication successful
+pg.app > [DEBUG] [2014-08-16 10:42:40,024] : [127.0.0.1] list orders username admin, page=1
+pg.app > [DEBUG] [2014-08-16 10:42:40,051] : [127.0.0.1] returning 1 orders
+pg.app > [INFO] [2014-08-16 10:42:40,455] : [127.0.0.1] Processing reset password request
+pg.app > [INFO] [2014-08-16 10:42:40,518] : [127.0.0.1] Processing new password request
+pg.app > [INFO] [2014-08-16 10:42:40,602] : [127.0.0.1] Authenticating after password reset
+pg.app > [INFO] [2014-08-16 10:42:41,084] : [127.0.0.1] Processing reset password request
+pg.app > [INFO] [2014-08-16 10:42:41,143] : [127.0.0.1] Processing reset password request
+pg.app > [INFO] [2014-08-16 10:42:41,151] : [127.0.0.1] Failed to request reset password, no such user
+pg.app > [INFO] [2014-08-16 10:42:41,465] : [127.0.0.1] Apply payment for order: {"offer_id": 1, "session_id": "kdkdkdkd", "payment_method": "cc", "shipping": {"postal_code": "18", "last_name": "Norris", "company": "Spreadline", "county": "Dublin", "first_name": "Chuck", "city": "Dublin", "email": "krzysztof.maslak@123.ie", "country": "ie", "address2": "Rockbrook", "phone_number": "0842342342", "address1": "South Central"}, "currency": "eur", "subscribe": true, "country": "fr", "items": [{"variations": [], "id": 1, "quantity": 1}], "lang": "en", "billing": {"postal_code": "10", "last_name": "Mouse", "county": "Dublin", "first_name": "Mickey", "city": "Dublin", "email": "dublin.krzysztof.maslak@gmail.com", "country": "ie", "same_address": false, "address2": "Drumcondra", "address1": "Withworth"}}
+pg.app > [INFO] [2014-08-16 10:42:41,901] : [127.0.0.1] Apply payment for order: {"offer_id": 1, "session_id": "kdkdkdkd", "payment_method": "cc", "shipping": {"postal_code": "18", "last_name": "Norris", "company": "Spreadline", "county": "Dublin", "first_name": "Chuck", "city": "Dublin", "email": "krzysztof.maslak@123.ie", "country": "ie", "address2": "Rockbrook", "phone_number": "0842342342", "address1": "South Central"}, "currency": "eur", "subscribe": true, "country": "fr", "items": [{"variations": [], "id": 1, "quantity": 1}], "lang": "en", "billing": {"postal_code": "10", "last_name": "Mouse", "county": "Dublin", "first_name": "Mickey", "city": "Dublin", "email": "dublin.krzysztof.maslak@gmail.com", "country": "ie", "same_address": false, "address2": "Drumcondra", "address1": "Withworth"}}
+pg.app > [INFO] [2014-08-16 10:42:42,027] : [127.0.0.1] Paypal init [order_id:1]
+pg.app > [INFO] [2014-08-16 10:42:42,076] : [127.0.0.1] Paypal generating html [order_id:1]
+pg.app > [ERROR] [2014-08-16 10:42:42,359] : 'name'
+Traceback (most recent call last):
+  File "/home/xxx/workspace/paymentgw/justsale.it/pg/wsgi.py", line 45, in decorated_function
+    return f(*args, **kwargs)
+  File "/home/xxx/workspace/paymentgw/justsale.it/pg/rest/register.py", line 19, in register
+    account_name = request.json['name']
+KeyError: 'name'
+pg.app > [INFO] [2014-08-16 10:42:42,620] : [127.0.0.1] Apply payment for order: {"offer_id": 1, "session_id": "kdkdkdkd", "payment_method": "cc", "shipping": {"postal_code": "18", "last_name": "Norris", "company": "Spreadline", "county": "Dublin", "first_name": "Chuck", "city": "Dublin", "email": "krzysztof.maslak@123.ie", "country": "ie", "address2": "Rockbrook", "phone_number": "0842342342", "address1": "South Central"}, "currency": "eur", "subscribe": true, "country": "fr", "items": [{"variations": [], "id": 1, "quantity": 1}], "lang": "en", "billing": {"postal_code": "10", "last_name": "Mouse", "county": "Dublin", "first_name": "Mickey", "city": "Dublin", "email": "dublin.krzysztof.maslak@gmail.com", "country": "ie", "same_address": false, "address2": "Drumcondra", "address1": "Withworth"}}
+pg.app > [INFO] [2014-08-16 10:42:42,747] : [127.0.0.1] Process payment with stripe for order:1
+pg.app > [INFO] [2014-08-16 10:42:42,757] : [127.0.0.1] Order=1
+pg.app > [INFO] [2014-08-16 10:42:42,796] : [127.0.0.1] stripe charge order=1, amount=5.1
+pg.app > [INFO] [2014-08-16 10:42:42,798] : [127.0.0.1] Success - stripe response <tests.base.An object at 0x7f844a948400> order number: TOJGME
+pg.app > [INFO] [2014-08-16 10:42:43,168] : [127.0.0.1] Processing authentication request
+pg.app > [INFO] [2014-08-16 10:42:43,246] : [127.0.0.1] Authentication successful
+pg.app > [INFO] [2014-08-16 10:42:43,627] : [127.0.0.1] Processing authentication request
+pg.app > [INFO] [2014-08-16 10:42:43,704] : [127.0.0.1] Authentication successful
+pg.app > [DEBUG] [2014-08-16 10:42:43,716] : [127.0.0.1] processing withdrawal request for user admin
+pg.app > [DEBUG] [2014-08-16 10:42:43,731] : [127.0.0.1] not enough funds to make withdrawal for user admin
+pg.app > [DEBUG] [2014-08-16 10:42:43,742] : [127.0.0.1] processing withdrawal request for user admin
+pg.app > [ERROR] [2014-08-16 10:42:44,045] : 'name'
+Traceback (most recent call last):
+  File "/home/xxx/workspace/paymentgw/justsale.it/pg/wsgi.py", line 45, in decorated_function
+    return f(*args, **kwargs)
+  File "/home/xxx/workspace/paymentgw/justsale.it/pg/rest/register.py", line 19, in register
+    account_name = request.json['name']
+KeyError: 'name'
+pg.app > [INFO] [2014-08-16 10:43:55,399] : [127.0.0.1] Processing authentication request
+pg.app > [INFO] [2014-08-16 10:43:55,481] : [127.0.0.1] Authentication failed password mismatch
+pg.app > [INFO] [2014-08-16 10:43:55,501] : [127.0.0.1] Processing authentication request
+pg.app > [INFO] [2014-08-16 10:43:55,577] : [127.0.0.1] Authentication successful
+pg.app > [INFO] [2014-08-16 10:43:56,035] : [127.0.0.1] Processing authentication request
+pg.app > [INFO] [2014-08-16 10:43:56,114] : [127.0.0.1] Authentication successful
+pg.app > [DEBUG] [2014-08-16 10:43:56,125] : [127.0.0.1] list orders username admin, page=1
+pg.app > [DEBUG] [2014-08-16 10:43:56,151] : [127.0.0.1] returning 1 orders
+pg.app > [INFO] [2014-08-16 10:43:56,561] : [127.0.0.1] Processing reset password request
+pg.app > [INFO] [2014-08-16 10:43:56,622] : [127.0.0.1] Processing new password request
+pg.app > [INFO] [2014-08-16 10:43:56,706] : [127.0.0.1] Authenticating after password reset
+pg.app > [INFO] [2014-08-16 10:43:57,177] : [127.0.0.1] Processing reset password request
+pg.app > [INFO] [2014-08-16 10:43:57,237] : [127.0.0.1] Processing reset password request
+pg.app > [INFO] [2014-08-16 10:43:57,244] : [127.0.0.1] Failed to request reset password, no such user
+pg.app > [INFO] [2014-08-16 10:43:57,561] : [127.0.0.1] Apply payment for order: {"shipping": {"city": "Dublin", "county": "Dublin", "last_name": "Norris", "email": "krzysztof.maslak@123.ie", "country": "ie", "address1": "South Central", "first_name": "Chuck", "address2": "Rockbrook", "phone_number": "0842342342", "postal_code": "18", "company": "Spreadline"}, "currency": "eur", "payment_method": "cc", "billing": {"city": "Dublin", "county": "Dublin", "last_name": "Mouse", "email": "dublin.krzysztof.maslak@gmail.com", "country": "ie", "address1": "Withworth", "first_name": "Mickey", "address2": "Drumcondra", "same_address": false, "postal_code": "10"}, "offer_id": 1, "country": "fr", "subscribe": true, "items": [{"variations": [], "quantity": 1, "id": 1}], "lang": "en", "session_id": "kdkdkdkd"}
+pg.app > [INFO] [2014-08-16 10:43:57,996] : [127.0.0.1] Apply payment for order: {"shipping": {"city": "Dublin", "county": "Dublin", "last_name": "Norris", "email": "krzysztof.maslak@123.ie", "country": "ie", "address1": "South Central", "first_name": "Chuck", "address2": "Rockbrook", "phone_number": "0842342342", "postal_code": "18", "company": "Spreadline"}, "currency": "eur", "payment_method": "cc", "billing": {"city": "Dublin", "county": "Dublin", "last_name": "Mouse", "email": "dublin.krzysztof.maslak@gmail.com", "country": "ie", "address1": "Withworth", "first_name": "Mickey", "address2": "Drumcondra", "same_address": false, "postal_code": "10"}, "offer_id": 1, "country": "fr", "subscribe": true, "items": [{"variations": [], "quantity": 1, "id": 1}], "lang": "en", "session_id": "kdkdkdkd"}
+pg.app > [INFO] [2014-08-16 10:43:58,121] : [127.0.0.1] Paypal init [order_id:1]
+pg.app > [INFO] [2014-08-16 10:43:58,169] : [127.0.0.1] Paypal generating html [order_id:1]
+pg.app > [INFO] [2014-08-16 10:43:58,462] : [127.0.0.1] Processing registration request
+pg.app > [INFO] [2014-08-16 10:43:58,601] : [127.0.0.1] Registration successful
+pg.app > [INFO] [2014-08-16 10:43:58,626] : [127.0.0.1] Registration failed, account already exist
+pg.app > [INFO] [2014-08-16 10:43:58,948] : [127.0.0.1] Apply payment for order: {"shipping": {"city": "Dublin", "county": "Dublin", "last_name": "Norris", "email": "krzysztof.maslak@123.ie", "country": "ie", "address1": "South Central", "first_name": "Chuck", "address2": "Rockbrook", "phone_number": "0842342342", "postal_code": "18", "company": "Spreadline"}, "currency": "eur", "payment_method": "cc", "billing": {"city": "Dublin", "county": "Dublin", "last_name": "Mouse", "email": "dublin.krzysztof.maslak@gmail.com", "country": "ie", "address1": "Withworth", "first_name": "Mickey", "address2": "Drumcondra", "same_address": false, "postal_code": "10"}, "offer_id": 1, "country": "fr", "subscribe": true, "items": [{"variations": [], "quantity": 1, "id": 1}], "lang": "en", "session_id": "kdkdkdkd"}
+pg.app > [INFO] [2014-08-16 10:43:59,074] : [127.0.0.1] Process payment with stripe for order:1
+pg.app > [INFO] [2014-08-16 10:43:59,085] : [127.0.0.1] Order=1
+pg.app > [INFO] [2014-08-16 10:43:59,122] : [127.0.0.1] stripe charge order=1, amount=5.1
+pg.app > [INFO] [2014-08-16 10:43:59,124] : [127.0.0.1] Success - stripe response <tests.base.An object at 0x7fac72ea8240> order number: TOJYGF
+pg.app > [INFO] [2014-08-16 10:43:59,502] : [127.0.0.1] Processing authentication request
+pg.app > [INFO] [2014-08-16 10:43:59,580] : [127.0.0.1] Authentication successful
+pg.app > [INFO] [2014-08-16 10:43:59,960] : [127.0.0.1] Processing authentication request
+pg.app > [INFO] [2014-08-16 10:44:00,038] : [127.0.0.1] Authentication successful
+pg.app > [DEBUG] [2014-08-16 10:44:00,050] : [127.0.0.1] processing withdrawal request for user admin
+pg.app > [DEBUG] [2014-08-16 10:44:00,064] : [127.0.0.1] not enough funds to make withdrawal for user admin
+pg.app > [DEBUG] [2014-08-16 10:44:00,075] : [127.0.0.1] processing withdrawal request for user admin
+pg.app > [ERROR] [2014-08-16 10:44:00,376] : 'name'
+Traceback (most recent call last):
+  File "/home/xxx/workspace/paymentgw/justsale.it/pg/wsgi.py", line 45, in decorated_function
+    return f(*args, **kwargs)
+  File "/home/xxx/workspace/paymentgw/justsale.it/pg/rest/register.py", line 19, in register
+    account_name = request.json['name']
+KeyError: 'name'
+pg.app > [INFO] [2014-08-16 10:45:08,798] : [127.0.0.1] Processing authentication request
+pg.app > [INFO] [2014-08-16 10:45:08,879] : [127.0.0.1] Authentication failed password mismatch
+pg.app > [INFO] [2014-08-16 10:45:08,899] : [127.0.0.1] Processing authentication request
+pg.app > [INFO] [2014-08-16 10:45:08,974] : [127.0.0.1] Authentication successful
+pg.app > [INFO] [2014-08-16 10:45:09,436] : [127.0.0.1] Processing authentication request
+pg.app > [INFO] [2014-08-16 10:45:09,513] : [127.0.0.1] Authentication successful
+pg.app > [DEBUG] [2014-08-16 10:45:09,525] : [127.0.0.1] list orders username admin, page=1
+pg.app > [DEBUG] [2014-08-16 10:45:09,551] : [127.0.0.1] returning 1 orders
+pg.app > [INFO] [2014-08-16 10:45:09,959] : [127.0.0.1] Processing reset password request
+pg.app > [INFO] [2014-08-16 10:45:10,024] : [127.0.0.1] Processing new password request
+pg.app > [INFO] [2014-08-16 10:45:10,107] : [127.0.0.1] Authenticating after password reset
+pg.app > [INFO] [2014-08-16 10:45:10,579] : [127.0.0.1] Processing reset password request
+pg.app > [INFO] [2014-08-16 10:45:10,640] : [127.0.0.1] Processing reset password request
+pg.app > [INFO] [2014-08-16 10:45:10,647] : [127.0.0.1] Failed to request reset password, no such user
+pg.app > [INFO] [2014-08-16 10:45:10,966] : [127.0.0.1] Apply payment for order: {"session_id": "kdkdkdkd", "items": [{"quantity": 1, "id": 1, "variations": []}], "lang": "en", "currency": "eur", "billing": {"postal_code": "10", "same_address": false, "county": "Dublin", "country": "ie", "last_name": "Mouse", "address2": "Drumcondra", "address1": "Withworth", "first_name": "Mickey", "city": "Dublin", "email": "dublin.krzysztof.maslak@gmail.com"}, "subscribe": true, "offer_id": 1, "country": "fr", "payment_method": "cc", "shipping": {"postal_code": "18", "county": "Dublin", "country": "ie", "last_name": "Norris", "address2": "Rockbrook", "address1": "South Central", "first_name": "Chuck", "email": "krzysztof.maslak@123.ie", "phone_number": "0842342342", "city": "Dublin", "company": "Spreadline"}}
+pg.app > [INFO] [2014-08-16 10:45:11,408] : [127.0.0.1] Apply payment for order: {"session_id": "kdkdkdkd", "items": [{"quantity": 1, "id": 1, "variations": []}], "lang": "en", "currency": "eur", "billing": {"postal_code": "10", "same_address": false, "county": "Dublin", "country": "ie", "last_name": "Mouse", "address2": "Drumcondra", "address1": "Withworth", "first_name": "Mickey", "city": "Dublin", "email": "dublin.krzysztof.maslak@gmail.com"}, "subscribe": true, "offer_id": 1, "country": "fr", "payment_method": "cc", "shipping": {"postal_code": "18", "county": "Dublin", "country": "ie", "last_name": "Norris", "address2": "Rockbrook", "address1": "South Central", "first_name": "Chuck", "email": "krzysztof.maslak@123.ie", "phone_number": "0842342342", "city": "Dublin", "company": "Spreadline"}}
+pg.app > [INFO] [2014-08-16 10:45:11,536] : [127.0.0.1] Paypal init [order_id:1]
+pg.app > [INFO] [2014-08-16 10:45:11,584] : [127.0.0.1] Paypal generating html [order_id:1]
+pg.app > [INFO] [2014-08-16 10:45:11,878] : [127.0.0.1] Processing registration request
+pg.app > [INFO] [2014-08-16 10:45:12,014] : [127.0.0.1] Registration successful
+pg.app > [INFO] [2014-08-16 10:45:12,040] : [127.0.0.1] Registration failed, account already exist
+pg.app > [INFO] [2014-08-16 10:45:12,363] : [127.0.0.1] Apply payment for order: {"session_id": "kdkdkdkd", "items": [{"quantity": 1, "id": 1, "variations": []}], "lang": "en", "currency": "eur", "billing": {"postal_code": "10", "same_address": false, "county": "Dublin", "country": "ie", "last_name": "Mouse", "address2": "Drumcondra", "address1": "Withworth", "first_name": "Mickey", "city": "Dublin", "email": "dublin.krzysztof.maslak@gmail.com"}, "subscribe": true, "offer_id": 1, "country": "fr", "payment_method": "cc", "shipping": {"postal_code": "18", "county": "Dublin", "country": "ie", "last_name": "Norris", "address2": "Rockbrook", "address1": "South Central", "first_name": "Chuck", "email": "krzysztof.maslak@123.ie", "phone_number": "0842342342", "city": "Dublin", "company": "Spreadline"}}
+pg.app > [INFO] [2014-08-16 10:45:12,491] : [127.0.0.1] Process payment with stripe for order:1
+pg.app > [INFO] [2014-08-16 10:45:12,503] : [127.0.0.1] Order=1
+pg.app > [INFO] [2014-08-16 10:45:12,541] : [127.0.0.1] stripe charge order=1, amount=5.1
+pg.app > [INFO] [2014-08-16 10:45:12,544] : [127.0.0.1] Success - stripe response <tests.base.An object at 0x7f1f81bf0208> order number: TOJB31
+pg.app > [INFO] [2014-08-16 10:45:12,913] : [127.0.0.1] Processing authentication request
+pg.app > [INFO] [2014-08-16 10:45:12,989] : [127.0.0.1] Authentication successful
+pg.app > [INFO] [2014-08-16 10:45:13,369] : [127.0.0.1] Processing authentication request
+pg.app > [INFO] [2014-08-16 10:45:13,443] : [127.0.0.1] Authentication successful
+pg.app > [DEBUG] [2014-08-16 10:45:13,455] : [127.0.0.1] processing withdrawal request for user admin
+pg.app > [DEBUG] [2014-08-16 10:45:13,470] : [127.0.0.1] not enough funds to make withdrawal for user admin
+pg.app > [DEBUG] [2014-08-16 10:45:13,481] : [127.0.0.1] processing withdrawal request for user admin
+pg.app > [INFO] [2014-08-16 10:45:13,789] : [127.0.0.1] Processing registration request
+pg.app > [INFO] [2014-08-16 10:45:13,927] : [127.0.0.1] Registration successful
+pg.app > [INFO] [2014-08-16 10:45:13,945] : [127.0.0.1] Starting user activation with h=1faee7c6-3f5b-40c2-9d5d-2655c6e39655,e=58acb7acccce58ffa8b953b12b5a7702bd42dae441c1ad85057fa70b
+pg.app > [INFO] [2014-08-16 10:49:00,203] : [127.0.0.1] Processing authentication request
+pg.app > [INFO] [2014-08-16 10:49:00,400] : [127.0.0.1] Authentication failed password mismatch
+pg.app > [INFO] [2014-08-16 10:49:00,420] : [127.0.0.1] Processing authentication request
+pg.app > [INFO] [2014-08-16 10:49:00,500] : [127.0.0.1] Authentication successful
+pg.app > [INFO] [2014-08-16 10:49:00,967] : [127.0.0.1] Processing authentication request
+pg.app > [INFO] [2014-08-16 10:49:01,046] : [127.0.0.1] Authentication successful
+pg.app > [DEBUG] [2014-08-16 10:49:01,058] : [127.0.0.1] list orders username admin, page=1
+pg.app > [DEBUG] [2014-08-16 10:49:01,084] : [127.0.0.1] returning 1 orders
+pg.app > [INFO] [2014-08-16 10:49:01,496] : [127.0.0.1] Processing reset password request
+pg.app > [INFO] [2014-08-16 10:49:01,560] : [127.0.0.1] Processing new password request
+pg.app > [INFO] [2014-08-16 10:49:01,648] : [127.0.0.1] Authenticating after password reset
+pg.app > [INFO] [2014-08-16 10:49:02,131] : [127.0.0.1] Processing reset password request
+pg.app > [INFO] [2014-08-16 10:49:02,192] : [127.0.0.1] Processing reset password request
+pg.app > [INFO] [2014-08-16 10:49:02,199] : [127.0.0.1] Failed to request reset password, no such user
+pg.app > [INFO] [2014-08-16 10:49:02,518] : [127.0.0.1] Apply payment for order: {"items": [{"quantity": 1, "variations": [], "id": 1}], "payment_method": "cc", "currency": "eur", "shipping": {"city": "Dublin", "email": "krzysztof.maslak@123.ie", "county": "Dublin", "phone_number": "0842342342", "postal_code": "18", "country": "ie", "address2": "Rockbrook", "first_name": "Chuck", "address1": "South Central", "last_name": "Norris", "company": "Spreadline"}, "country": "fr", "billing": {"city": "Dublin", "email": "dublin.krzysztof.maslak@gmail.com", "county": "Dublin", "postal_code": "10", "country": "ie", "address2": "Drumcondra", "first_name": "Mickey", "address1": "Withworth", "last_name": "Mouse", "same_address": false}, "subscribe": true, "lang": "en", "session_id": "kdkdkdkd", "offer_id": 1}
+pg.app > [INFO] [2014-08-16 10:49:02,952] : [127.0.0.1] Apply payment for order: {"items": [{"quantity": 1, "variations": [], "id": 1}], "payment_method": "cc", "currency": "eur", "shipping": {"city": "Dublin", "email": "krzysztof.maslak@123.ie", "county": "Dublin", "phone_number": "0842342342", "postal_code": "18", "country": "ie", "address2": "Rockbrook", "first_name": "Chuck", "address1": "South Central", "last_name": "Norris", "company": "Spreadline"}, "country": "fr", "billing": {"city": "Dublin", "email": "dublin.krzysztof.maslak@gmail.com", "county": "Dublin", "postal_code": "10", "country": "ie", "address2": "Drumcondra", "first_name": "Mickey", "address1": "Withworth", "last_name": "Mouse", "same_address": false}, "subscribe": true, "lang": "en", "session_id": "kdkdkdkd", "offer_id": 1}
+pg.app > [INFO] [2014-08-16 10:49:03,077] : [127.0.0.1] Paypal init [order_id:1]
+pg.app > [INFO] [2014-08-16 10:49:03,125] : [127.0.0.1] Paypal generating html [order_id:1]
+pg.app > [INFO] [2014-08-16 10:49:03,419] : [127.0.0.1] Processing registration request
+pg.app > [INFO] [2014-08-16 10:49:03,559] : [127.0.0.1] Registration successful
+pg.app > [INFO] [2014-08-16 10:49:03,585] : [127.0.0.1] Registration failed, account already exist
+pg.app > [INFO] [2014-08-16 10:49:03,907] : [127.0.0.1] Apply payment for order: {"items": [{"quantity": 1, "variations": [], "id": 1}], "payment_method": "cc", "currency": "eur", "shipping": {"city": "Dublin", "email": "krzysztof.maslak@123.ie", "county": "Dublin", "phone_number": "0842342342", "postal_code": "18", "country": "ie", "address2": "Rockbrook", "first_name": "Chuck", "address1": "South Central", "last_name": "Norris", "company": "Spreadline"}, "country": "fr", "billing": {"city": "Dublin", "email": "dublin.krzysztof.maslak@gmail.com", "county": "Dublin", "postal_code": "10", "country": "ie", "address2": "Drumcondra", "first_name": "Mickey", "address1": "Withworth", "last_name": "Mouse", "same_address": false}, "subscribe": true, "lang": "en", "session_id": "kdkdkdkd", "offer_id": 1}
+pg.app > [INFO] [2014-08-16 10:49:04,031] : [127.0.0.1] Process payment with stripe for order:1
+pg.app > [INFO] [2014-08-16 10:49:04,042] : [127.0.0.1] Order=1
+pg.app > [INFO] [2014-08-16 10:49:04,081] : [127.0.0.1] stripe charge order=1, amount=5.1
+pg.app > [INFO] [2014-08-16 10:49:04,083] : [127.0.0.1] Success - stripe response <tests.base.An object at 0x7f76211f4c50> order number: TOJUCF
+pg.app > [INFO] [2014-08-16 10:49:04,458] : [127.0.0.1] Processing authentication request
+pg.app > [INFO] [2014-08-16 10:49:04,537] : [127.0.0.1] Authentication successful
+pg.app > [INFO] [2014-08-16 10:49:04,921] : [127.0.0.1] Processing authentication request
+pg.app > [INFO] [2014-08-16 10:49:05,001] : [127.0.0.1] Authentication successful
+pg.app > [DEBUG] [2014-08-16 10:49:05,013] : [127.0.0.1] processing withdrawal request for user admin
+pg.app > [DEBUG] [2014-08-16 10:49:05,027] : [127.0.0.1] not enough funds to make withdrawal for user admin
+pg.app > [DEBUG] [2014-08-16 10:49:05,038] : [127.0.0.1] processing withdrawal request for user admin
+pg.app > [INFO] [2014-08-16 10:49:05,349] : [127.0.0.1] Processing registration request
+pg.app > [INFO] [2014-08-16 10:49:05,492] : [127.0.0.1] Registration successful
+pg.app > [INFO] [2014-08-16 10:49:05,511] : [127.0.0.1] Starting user activation with h=bc00bec9-6ba2-4546-a66b-989dedce9425,e=58acb7acccce58ffa8b953b12b5a7702bd42dae441c1ad85057fa70b

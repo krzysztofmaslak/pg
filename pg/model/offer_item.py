@@ -20,6 +20,7 @@ class OfferItem(base.db.Model, base.JsonSerializable):
     offer_id = base.db.Column(base.db.Integer, base.db.ForeignKey('offer.id'))
 
     variations = base.db.relationship('OfferItemVariation', backref='offer_item', lazy='dynamic')
+    images = base.db.relationship('Image', backref='offer_item', lazy='dynamic')
 
     def __init__(self, offer, title_en='', title_fr='', quantity=0, net=0, tax=0, shipping=0, status=0):
         self.offer = offer

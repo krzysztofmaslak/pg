@@ -62,14 +62,14 @@ class OfferServiceTest(TestCase):
             items.append(item)
         # modify item 2
         offer_service = self.ioc.new_offer_service()
-        offer_service.save_offer(a, base.An(items= items, id= o.id, title_en='My offer', currency='USD'))
+        offer_service.save_offer(a, base.An(items= items, id= o.id, title_en='My offer', currency='USD', visibility=1))
         o = model.Offer.query.filter(model.Offer.id == o.id).first()
         for item in o.items:
             if item.id == item_id:
                 self.assertEqual(item.title_en, 'MyItem2')
                 self.assertEqual(item.condition, 'used')
         # remove item 3
-        offer_service.save_offer(a, base.An(items= items[0:2], id= o.id, title_en='My offer', currency='USD'))
+        offer_service.save_offer(a, base.An(items= items[0:2], id= o.id, title_en='My offer', currency='USD', visibility=1))
         o = model.Offer.query.filter(model.Offer.id == o.id).first()
         self.assertEqual(2, len(o.items.all()))
         # add variations to item 1
@@ -84,7 +84,7 @@ class OfferServiceTest(TestCase):
         for item in o.items:
             items.append(item)
         items[0].variations = variations
-        offer_service.save_offer(a, base.An(items= items, id= o.id, title_en='My offer', currency='USD'))
+        offer_service.save_offer(a, base.An(items= items, id= o.id, title_en='My offer', currency='USD', visibility=1))
         o = model.Offer.query.filter(model.Offer.id == o.id).first()
         self.assertEqual('Red2', o.items[0].variations[1].title_en)
 
@@ -114,7 +114,7 @@ class OfferServiceTest(TestCase):
             items.append(item)
         # modify item 2
         offer_service = self.ioc.new_offer_service()
-        offer_service.save_offer(a, base.An(items= items, id= o.id, title_en='My offer', currency='USD'))
+        offer_service.save_offer(a, base.An(items= items, id= o.id, title_en='My offer', currency='USD', visibility=1))
         o = model.Offer.query.filter(model.Offer.id == o.id).first()
         for item in o.items:
             if item.id == item_id:

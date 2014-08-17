@@ -23,3 +23,4 @@ from .user import User
 from .withdrawal import Withdrawal
 from .contact import Contact
 from .event import Event
+from .image import Image

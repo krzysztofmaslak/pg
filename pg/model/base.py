@@ -1,6 +1,8 @@
+import calendar
 import datetime
 from datetime import date
 from flask_sqlalchemy import SQLAlchemy
+from pg import util
 
 __author__ = 'root'
 primitive = (int, str, float, bool)
@@ -11,26 +13,30 @@ def json_date(datetime):
     return ''
 
 class JsonSerializable:
-    def _as_json(self, exclude=(), extra=()):
+    def _as_json(self, longdate=False, exclude=(), extra=()):
         data = {}
         keys = self._sa_instance_state.attrs.items()
         for k, field in  keys:
             if k in exclude: continue
-            value = self._serialize(field.value)
+            value = self._serialize(field.value, longdate)
             if value is not None:
                 data[k] = value
         return data
 
-    def as_json(self, exclude=(), extra=()):
-        return self._as_json(exclude, extra)
+    def as_json(self, longdate=False, exclude=(), extra=()):
+        return self._as_json(longdate, exclude, extra)
 
     @classmethod
-    def _serialize(cls, value, follow_fk=False):
-        if isinstance(value, datetime.datetime):
+    def _serialize(cls, value, longdate=False):
+        if longdate==False and isinstance(value, datetime.datetime):
             if value.utcoffset() is not None:
                 value = value - value.utcoffset()
             return value.strftime('%Y-%m-%dT%H:%M:%S')
-        if type(value) in (datetime, date):
+        elif longdate==True and isinstance(value, datetime.datetime):
+            if value.utcoffset() is not None:
+                value = value - value.utcoffset()
+            return util.TimeUtil.unix_time_millis(value)
+        elif type(value) in (datetime, date):
             ret = value.isoformat()
         elif isinstance(value, primitive):
             ret = value

@@ -295,4 +295,4 @@ class OrderServiceTest(Base):
         self.assertEqual(190.95, total)
         order.total = total
         order_net = self.ioc.new_order_service().get_order_total_reduced_by_fee(order)
-        self.assertEqual(182.91, round(order_net, 2))
+        self.assertEqual(181.06, round(order_net, 2))

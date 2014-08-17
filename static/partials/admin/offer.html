@@ -84,6 +84,15 @@
                 <option value="usd">USD</option>
             </select>
         </div>
+        <div style="margin-bottom:10px">
+            <label>{{ messages.offer_form_visibility }}</label>
+            <select x-ng-model="offer.visibility" name="input_visibility"
+                    ng-class="{fieldError: offerForm.input_visibility.$dirty && offerForm.input_visibility.$invalid}"
+                    select-required="true" style="background-color:white;padding:6px;">
+                <option value="0">{{ messages.offer_form_visibility_no }}</option>
+                <option value="1">{{ messages.offer_form_visibility_yes }}</option>
+            </select>
+        </div>
         <div ng-show="offer.hash && offer.hash.length>0">
             <label><b>{{ messages.offer_form_creation_date }}</b></label>
             <span ng-if="offer!=null">{{formatDate(offer.creation_date)}}</span>
@@ -273,14 +282,37 @@
                         <td>
                             <div>
                                 <label>{{ messages.offer_form_photos }}</label>
-                                <input id="imageupload" type="file" imageupload name="file" uploadTarget="offer_item" uploadTargetId="{{item.id}}" uploadItemId="{{item.id}}" style="display: none;"/>
-                                <div style="position: relative; width:100px;">
-                                    <img class='thumbnail' id="thumbnail_offer_item_{{ item.id }}" src="/static/${pom.version}/img/blank.png" imagepresent="{{ item.img && item.img!='' }}" imagecheck="/static/images/offer_item/{{item.id}}_thumb.png" style="width:100px;display:none;"/>
-                                    <div style="position:absolute;top:0px;right:0px;background:white;padding-left:2px;" ng-show="item.img && item.img!=''" id="thumbnail_remove_offer_item_{{ item.id }}">
-                                        <a href="#" onclick="return false" ng-click="removeImage('offer_item', item.id);">x</a>
+                                <div style="float:left;border-right:1px dashed #cccccc;width:115px;">
+                                    <p>{{ messages.offer_form_main_image }}</p>
+                                    <input id="imageupload" type="file" imageupload name="file" uploadTarget="offer_item" uploadTargetId="{{item.id}}" uploadItemId="{{item.id}}" style="display: none;"/>
+                                    <div style="position: relative; width:100px;">
+                                        <img class='thumbnail' id="thumbnail_offer_item_{{ item.id }}" src="/static/${pom.version}/img/blank.png" imagepresent="{{ item.img && item.img!='' }}" imagecheck="/static/images/offer_item/{{item.id}}_thumb.png" style="width:100px;display:none;"/>
+                                        <div style="position:absolute;top:0px;right:0px;background:white;padding-left:2px;" ng-show="item.img && item.img!=''" id="thumbnail_remove_offer_item_{{ item.id }}">
+                                            <a href="#" onclick="return false" ng-click="removeImage('offer_item', item.id);">x</a>
+                                        </div>
+                                        <a href="#" onclick="clickOnParentSibling(this, 'input');event.preventDefault();return false;">
+                                            {{ messages.offer_form_click_to_add }}
+                                        </a>
                                     </div>
-                                    <img src="/static/${pom.version}/img/chooseimageabove.png"
-                                         style="cursor:pointer;" onclick="clickOnParentSibling(this, 'input');event.preventDefault();return false;"/>
+                                </div>
+                                <div style="float: left; margin-left:10px">
+                                    <p>{{ messages.offer_form_extra_images }}</p>
+                                    <div>
+                                        <input id="imageupload" type="file" imageupload name="file" uploadTarget="additional_image" uploadTargetId="{{item.id}}" uploadItemId="{{item.id}}" style="display: none;"/>
+                                        <div style="position: relative; float:left; margin-right:6px; width:100px;" ng-repeat="img in item.images">
+                                            <img class='thumbnail' id="thumbnail_additional_image_{{ img.id }}" src="/static/${pom.version}/img/blank.png"
+                                                 imagepresent="true" imagecheck="/static/images/additional_image/{{img.id}}{{img.creation_date}}_thumb.png" style="width:100px;display:none;"/>
+                                            <div style="position:absolute;top:0px;right:0px;background:white;padding-left:2px;" ng-show="true" id="thumbnail_remove_additional_image_{{ img.id }}">
+                                                <a href="#" onclick="return false" ng-click="removeImage('additional_image', img.id);">x</a>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <div>
+                                            <a href="#" onclick="clickOnParentSibling(this, 'input');event.preventDefault();return false;">
+                                                {{ messages.offer_form_click_to_add }}
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </td>

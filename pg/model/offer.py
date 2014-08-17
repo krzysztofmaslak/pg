@@ -13,14 +13,16 @@ class Offer(base.db.Model, base.JsonSerializable):
     hash = base.db.Column(base.db.String(15))
     status = base.db.Column(base.db.Integer)
     currency = base.db.Column(base.db.String(3))
-    
+    visibility = base.db.Column(base.db.Integer)
+
     account_id = base.db.Column(base.db.Integer, base.db.ForeignKey('account.id'))
     account = base.db.relationship('Account', backref=base.db.backref('offers', lazy='dynamic'))
     items = base.db.relationship('OfferItem', backref='offer', lazy='dynamic')
 
-    def __init__(self, account, title_en='', title_fr='', hash='', status=0, currency='', creation_date=datetime.datetime.now()):
+    def __init__(self, account, title_en='', title_fr='', hash='', status=0, currency='', creation_date=datetime.datetime.now(), visibility=1):
         self.title_en = title_en
         self.title_fr = title_fr
+        self.visibility = visibility
         self.hash = hash
         self.status = status
         self.currency = currency

@@ -1,6 +1,8 @@
 from argparse import _ActionsContainer
+import calendar
 from functools import wraps
 import hashlib
+import json
 import os
 import traceback
 import sys
@@ -164,20 +166,29 @@ def upload_image(offer_item_id, target, id):
             wsgi_blueprint.logger.debug('['+get_customer_ip()+'] image extenssion allowed')
             filename = secure_filename(file.filename)
             mkdirs(wsgi_blueprint.ioc.get_config()['UPLOAD_FOLDER']+'/'+target)
-            file.save(wsgi_blueprint.ioc.get_config()['UPLOAD_FOLDER']+'/'+target+'/'+id+'.png')
             offer_item = wsgi_blueprint.ioc.new_offer_service().find_offer_item_by_id(offer_item_id)
             user = wsgi_blueprint.ioc.new_user_service().find_by_username(session['username'])
             if offer_item.offer.account_id!=user.account_id:
-                raise RuntimeError('Tried to change image for different account') 
-            if target=='offer_item':
+                raise RuntimeError('Tried to change image for different account')
+
+            if target=='additional_image':
+                additional_image = model.Image(offer_item)
+                offer_item.images.append(additional_image)
+            elif target=='offer_item':
                 offer_item.img = target+'/'+id
             elif offer_item.img is not None and offer_item.img.startswith('offer_item_variation'):
                 offer_item.img = target+'/'+id
+
             if target.startswith('offer_item_variation'):
                 offer_item_variation = wsgi_blueprint.ioc.new_offer_service().find_offer_item_variation_by_id(id)
                 offer_item_variation.img = target+'/'+id
             model.base.db.session.commit()
+
+            if target=='additional_image':
+                value = additional_image.creation_date
+                id = str(additional_image.id)+str(value)
             try:
+                file.save(wsgi_blueprint.ioc.get_config()['UPLOAD_FOLDER']+'/'+target+'/'+id+'.png')
                 with Image(filename=wsgi_blueprint.ioc.get_config()['UPLOAD_FOLDER']+'/'+target+'/'+id+'.png') as img:
                     with img.clone() as i:
                         i.resize(int(100), int(100/i.width*i.height))
@@ -186,7 +197,11 @@ def upload_image(offer_item_id, target, id):
                         i.compression_quality=99
                         i.resize(int(500), int(500/i.width*i.height))
                         i.save(filename=wsgi_blueprint.ioc.get_config()['UPLOAD_FOLDER']+'/'+target+'/'+id+'_500.png')
-                return Response(status=200)
+                if target=='additional_image':
+                    js = { "images" : [o.as_json() for o in offer_item.images]}
+                    return Response(json.dumps(js),  mimetype='application/json')
+                else:
+                    return Response(status=200)
             except IOError:
                 traceback.print_exc(file=sys.stdout)
                 print("cannot create thumbnail for '%s'" % filename)

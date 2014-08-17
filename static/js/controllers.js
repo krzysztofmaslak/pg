@@ -457,8 +457,9 @@ angular.module('hh.controllers', [])
         };
         $scope.removeImage = function(target, id) {
             jaxrs.remove('offer/image/'+target, id, function (response) {
-                jq('thumbnail_'+target+'_'+id).attr('src', '/static/${pom.version}/img/blank.png');
-                jq('thumbnail_'+target+'_'+id).css('display', 'none');
+                jq('#thumbnail_'+target+'_'+id).attr('src', '/static/${pom.version}/img/blank.png');
+                jq('#thumbnail_'+target+'_'+id).css('display', 'none');
+                jq('#thumbnail_remove_'+target+'_'+id).css('display', 'none');
             });
         }
         $scope.formatDate = function (date) {
@@ -547,7 +548,7 @@ angular.module('hh.controllers', [])
                     $scope.errors.length = 0;
                     $scope.errors[$scope.errors.length] = {message: response.error};
                 } else {
-                    $scope.offer = {id: response.id};
+                    $scope.offer = {id: response.id, visibility: 1, images:[]};
                     $scope.resetUsed($scope.offerForm);
                     $scope.addItem();
                 }
@@ -558,6 +559,9 @@ angular.module('hh.controllers', [])
         }
         $scope.edit = function (offer) {
             $scope.offer = offer;
+            if ( $scope.offer.images===undefined ) {
+                $scope.offer.images = [];
+            }
             $scope.enableClipboardCopy();
         };
     }])
@@ -765,7 +769,7 @@ angular.module('hh.controllers', [])
                     var oi = $scope.offer.items[i];
                     if (oi.multivariate) {
                         if (!$scope.payment.items) $scope.payment.items = [];
-                        var item = {id: oi.id, img: oi.img, title_en: oi.title_en, title_fr: oi.title_fr, description_en:oi.description_en, description_fr:oi.description_fr, multivariate: true, selection: oi.variations[0].id };
+                        var item = {id: oi.id, img: oi.img, images:oi.images, title_en: oi.title_en, title_fr: oi.title_fr, description_en:oi.description_en, description_fr:oi.description_fr, multivariate: true, selection: oi.variations[0].id };
                         for (var j = 0; j < oi.variations.length; j++) {
                             if (!item.variations) item.variations = [];
                             var oiv = oi.variations[j];
@@ -781,7 +785,7 @@ angular.module('hh.controllers', [])
                     } else {
                         if (!$scope.payment.items) $scope.payment.items = [];
                         if (oi.quantity > 0) {
-                            $scope.payment.items[$scope.payment.items.length] = {id: oi.id, img: oi.img, available: oi.quantity, title_en: oi.title_en, title_fr: oi.title_fr, description_en:oi.description_en, description_fr:oi.description_fr, net: oi.net, tax: oi.tax, shipping: oi.shipping, shipping_additional: oi.shipping_additional, quantity: 1}
+                            $scope.payment.items[$scope.payment.items.length] = {id: oi.id, img: oi.img, images:oi.images, available: oi.quantity, title_en: oi.title_en, title_fr: oi.title_fr, description_en:oi.description_en, description_fr:oi.description_fr, net: oi.net, tax: oi.tax, shipping: oi.shipping, shipping_additional: oi.shipping_additional, quantity: 1}
                         }
                     }
                 }
